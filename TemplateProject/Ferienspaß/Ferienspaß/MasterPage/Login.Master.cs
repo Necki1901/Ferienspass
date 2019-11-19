@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 
 namespace Ferienspaß
 {
-    public partial class _Default : Page
+    public partial class LoginMaster : MasterPage
     {
         protected void Page_Load(object sender, EventArgs e)
         {

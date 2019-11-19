@@ -1,0 +1,10 @@
+MAIL CONFIGURATION
+
+
+HOST  ==> mail.pohn-development.com
+PORT  ==> 587
+SSL   ==> JA
+EMAIL ==> test@pohn-development.com
+PWD   ==> Test2019#
+
+WEBMAIL ==> http://mail.pohn-development.com:8888/SOGo/so/

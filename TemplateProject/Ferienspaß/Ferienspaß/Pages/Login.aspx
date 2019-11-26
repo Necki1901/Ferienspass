@@ -11,25 +11,25 @@
             </div>
             <div class="card-body">
                 <div>
-                    <div class="input-group form-group">
+                    <div id="grp_user" runat="server" class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-user"></i></span>
                         </div>
-                        <asp:TextBox ID="tbx_user" CssClass="form-control" runat="server" Text=""></asp:TextBox>
+                        <asp:TextBox ID="tbx_user" CssClass="form-control" runat="server" Text="stefan.pohn@htlvb.at"></asp:TextBox>
 
                         <%--<input type="text" class="form-control" placeholder="E-Mail Adresse">--%>
                     </div>
-                    <div class="input-group form-group">
+                    <div id="grp_pwd"  runat="server" class="input-group form-group">
                         <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-key"></i></span>
                         </div>
-                        <asp:TextBox ID="tbx_pass" CssClass="form-control" runat="server" Text=""></asp:TextBox>     
+                        <asp:TextBox ID="tbx_pass" CssClass="form-control" runat="server" Text="Soek"></asp:TextBox>     
                     </div>
 
                     <div class="form-group ml-auto mr-auto d-flex">
-                        <asp:Button Text="Anmelden" CssClass="btn btn-primary col-md-5 ml-auto mr-auto align-content-center login_btn" OnClick="Login_Click" runat="server" />
-                        <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
+                        <asp:Button ID="btn_login" Text="Anmelden" CssClass="btn btn-primary col-md-5 ml-auto mr-auto align-content-center login_btn" OnClick="Login_Click" runat="server" /><br />
                     </div>
+                    <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
                 </div>
             </div>
             <div class="card-footer">

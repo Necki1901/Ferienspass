@@ -13,6 +13,15 @@ namespace Ferienspaß {
     public partial class Login {
 
         /// <summary>
+        /// grp_user control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl grp_user;
+
+        /// <summary>
         /// tbx_user control.
         /// </summary>
         /// <remarks>
@@ -22,6 +31,15 @@ namespace Ferienspaß {
         protected global::System.Web.UI.WebControls.TextBox tbx_user;
 
         /// <summary>
+        /// grp_pwd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl grp_pwd;
+
+        /// <summary>
         /// tbx_pass control.
         /// </summary>
         /// <remarks>
@@ -29,6 +47,15 @@ namespace Ferienspaß {
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox tbx_pass;
+
+        /// <summary>
+        /// btn_login control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btn_login;
 
         /// <summary>
         /// lit_msg control.

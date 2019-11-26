@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ferienspaß {
+namespace WebApplication1 {
     
     
     public partial class ViewSwitcher {

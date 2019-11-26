@@ -116,7 +116,7 @@ namespace Ferienspaß
             try {
                 string sendemail = GetPortalOption("MAIL_SEND_ADDRESS");
                 var credentials = new NetworkCredential(sendemail, GetPortalOption("MAIL_SEND_PASSWORD"));
-
+                
                 var mail = new MailMessage() {
                     From = new MailAddress(sendemail),
                     Subject = subject,

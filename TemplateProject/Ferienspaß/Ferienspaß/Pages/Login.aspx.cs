@@ -14,10 +14,10 @@ namespace Ferienspaß {
         private CsharpDB db;
 
         protected void Page_Load(object sender, EventArgs e) {
-            db = new CsharpDB();
+            /*db = new CsharpDB();
             try {
                 MaxLoginAttempts = Convert.ToInt32(db.GetPortalOption("MAX_LOGIN_ATTEMPTS"));
-            } catch (Exception ex) { lit_msg.Text = "Ein interner Fehler ist aufgetreten! " + Environment.NewLine + ex; }
+            } catch (Exception ex) { lit_msg.Text = "Ein interner Fehler ist aufgetreten! " + Environment.NewLine + ex; }*/
 
         }
 

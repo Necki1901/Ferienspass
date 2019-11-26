@@ -27,7 +27,7 @@
                     </div>
 
                     <div class="form-group ml-auto mr-auto d-flex">
-                        <asp:Button Text="Anmelden" CssClass="btn btn-primary col-md-4 ml-auto mr-auto align-content-center login_btn" OnClick="Login_Click" runat="server" />
+                        <asp:Button Text="Anmelden" CssClass="btn btn-primary col-md-5 ml-auto mr-auto align-content-center login_btn" OnClick="Login_Click" runat="server" />
                         <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
                     </div>
                 </div>

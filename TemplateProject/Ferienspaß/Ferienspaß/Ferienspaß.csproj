@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Themes\default\details.jpg" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-reboot.css" />
@@ -188,6 +189,7 @@
     <Compile Include="Classes\Child.cs" />
     <Compile Include="Classes\cryptography.cs" />
     <Compile Include="Classes\CsharpDB.cs" />
+    <Compile Include="Classes\RemainingCapacity.cs" />
     <Compile Include="MasterPage\Login.Master.cs">
       <DependentUpon>Login.Master</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -324,7 +326,6 @@
     <MakeDir Directories="$(WebProjectOutputDir)\bin\roslyn" />
     <Copy SourceFiles="@(RoslynFiles)" DestinationFolder="$(WebProjectOutputDir)\bin\roslyn" SkipUnchangedFiles="true" Retries="$(CopyRetryCount)" RetryDelayMilliseconds="$(CopyRetryDelayMilliseconds)" />
   </Target>
-  
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

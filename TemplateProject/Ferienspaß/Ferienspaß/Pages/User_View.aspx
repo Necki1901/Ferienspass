@@ -15,9 +15,41 @@
             AllowSorting="True" >
 
             <Columns>
-                <asp:TemplateField HeaderText="Projekte">
+                <asp:TemplateField HeaderText="Projekt">
                     <ItemTemplate>
-                        <asp:Label ID="lblAvailable" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
+                        <asp:Label ID="lblFragenID" runat="server" Text='<%# Eval("Name") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Beschreibung">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("Description") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Datum">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFrage" runat="server" Text='<%# Convert.ToDateTime(Eval("Date")).ToString("dd/MM/yyyy") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>    
+                <asp:TemplateField HeaderText="Straße">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("Place") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Nr.">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("Number") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+                 <asp:TemplateField HeaderText="Nr.">
+                    <ItemTemplate>
+                        <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("participants") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                 <%-- Details --%>
+                <asp:TemplateField HeaderText="Details">
+                    <ItemTemplate>
+                        <asp:ImageButton ID="btnCancelInsert" runat="server" CommandName="Details" ImageUrl="~/App_Themes/default/details.jpg" />
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

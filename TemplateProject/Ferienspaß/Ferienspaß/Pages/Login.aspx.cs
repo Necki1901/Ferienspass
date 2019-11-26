@@ -11,13 +11,26 @@ namespace Ferienspaß {
     public partial class Login : Page {
 
         private int MaxLoginAttempts { get; set; }
-
         private CsharpDB db;
 
         private int SessionLoginAttempt {
             get { return Convert.ToInt32(Session["loginAttemptCount"]); }
             set { Session["loginAttemptCount"] = value; }
         }
+
+        private bool PwdVisible {
+            get { return Convert.ToBoolean(Session["pwdVisible"]); }
+            set { Session["pwdVisible"] = value; }
+        }
+
+        private string LoginUser {
+            get {
+                return Session["userId"].ToString(); 
+            }
+            set { Session["userId"] = value; }
+        }
+
+
 
         protected void Page_Load(object sender, EventArgs e) {
             db = new CsharpDB();
@@ -27,16 +40,22 @@ namespace Ferienspaß {
 
             if (!Page.IsPostBack) {
                 Session["loginAttemptCount"] = 0;
+                LoginUser = "";
             }
 
             if(SessionLoginAttempt+1>=MaxLoginAttempts) {
                 btn_login.Enabled = false;
                 grp_user.Visible = false;
-                grp_pwd.Visible = false;
                 btn_login.Visible = false;
+                grp_pwd.Visible = false;
 
-                lit_msg.Text = CreateMSGString("Anzahl der Anmeldeversuche wurde überschritten! Wenden Sie sich an einen Administrator!",0);
-            }
+                lit_msg.Text = CreateMSGString("Anzahl der Anmeldeversuche wurde überschritten!<br/> <strong>Ihr Benutzer wird aus Sicherheitsgründen gesperrt!</strong><br/>Wenden Sie sich an einen Administrator!",-1);
+                LockAccount(LoginUser);
+            } 
+
+
+            //grp_pwd.Visible = PwdVisible;
+            
         }
 
         protected void Login_Click(object sender, EventArgs e) {
@@ -45,10 +64,25 @@ namespace Ferienspaß {
 
             if (SessionLoginAttempt+1 >= MaxLoginAttempts) return;
 
-            if (!String.IsNullOrEmpty(tbx_user.Text) && !String.IsNullOrEmpty(tbx_pass.Text)) {
+            if(String.IsNullOrEmpty(tbx_pass.Text) && !String.IsNullOrEmpty(tbx_user.Text)) {
+                DataTable u = db.Query("SELECT UID FROM user WHERE EMAIL LIKE ? LIMIT 1", tbx_user.Text);
+                if (u.Rows.Count == 0) LoginUser = "-1";
+                else {
+                    LoginUser = u.Rows[0].ItemArray[0].ToString();
+                }
+
+                PwdVisible = true;
+                grp_pwd.Visible = true;
+                tbx_user.CssClass = "form-control border-success";
+                tbx_user.Enabled = false;
+                span_iconMail.Attributes["class"] = "input-group-text border-success";
+
+                return;
+
+            }else if (!String.IsNullOrEmpty(LoginUser) && !String.IsNullOrEmpty(tbx_pass.Text)) {
                 try {
                     db = new CsharpDB();
-                    DataTable user = db.Query("SELECT SALT,ENCODEDPASS,UID,LOCKED,UGID FROM user WHERE EMAIL LIKE ? LIMIT 1;", tbx_user.Text, tbx_user.Text);
+                    DataTable user = db.Query("SELECT SALT,ENCODEDPASS,UID,LOCKED,UGID FROM user WHERE UID = ?;", LoginUser);
 
 
                     if (user.Rows.Count == 0) {
@@ -59,7 +93,7 @@ namespace Ferienspaß {
 
                     if (user.Rows[0]["LOCKED"] != DBNull.Value) {
                         if(Convert.ToInt32(user.Rows[0]["LOCKED"])==1) {
-                            lit_msg.Text = CreateMSGString("<strong>Benutzer gesperrt!</strong> Wenden Sie sich an einen Administrator!", -1);
+                            lit_msg.Text = CreateMSGString("<strong>Benutzer gesperrt!<br/></strong> Wenden Sie sich an einen Administrator!", -1);
                             throw new ApplicationException("Benutzer gesperrt!");
                         }
                     }
@@ -100,7 +134,8 @@ namespace Ferienspaß {
 
                     } else {
                         if (SessionLoginAttempt + 1 >= MaxLoginAttempts) {
-                            lit_msg.Text = CreateMSGString("<strong>Erlaubte Anmeldeversuche überschritten!</strong> Wenden Sie sich an einen Administrator!", -1);
+                            LockAccount(LoginUser);
+                            lit_msg.Text = CreateMSGString("<strong>Erlaubte Anmeldeversuche überschritten! Benutzer gesperrt!<br/></strong> Wenden Sie sich an einen Administrator!", -1);
                         } else {
                             SessionLoginAttempt++;
                             lit_msg.Text = CreateMSGString("Benutzer und/oder Passwort ungültig!", (MaxLoginAttempts - SessionLoginAttempt));
@@ -124,7 +159,7 @@ namespace Ferienspaß {
         }
 
         private void LockAccount(string userid) {
-            db.ExecuteNonQuery("UPDATE portalusers SET locked=? WHERE userId=?;", 1, userid);
+            if(userid!="-1") db.ExecuteNonQuery("UPDATE user SET LOCKED=? WHERE UID=?;", 1, userid);
         }
 
         protected void btn_pwdforget_Click(object sender, EventArgs e) {

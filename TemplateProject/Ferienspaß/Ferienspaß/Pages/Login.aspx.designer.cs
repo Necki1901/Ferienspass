@@ -7,11 +7,36 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Ferienspaß
-{
+namespace Ferienspaß {
 
 
-    public partial class Login
-    {
+    public partial class Login {
+
+        /// <summary>
+        /// tbx_user control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbx_user;
+
+        /// <summary>
+        /// tbx_pass control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbx_pass;
+
+        /// <summary>
+        /// lit_msg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lit_msg;
     }
 }

@@ -59,7 +59,7 @@
                  <%-- Details --%>
                 <asp:TemplateField HeaderText="Details">
                     <ItemTemplate>
-                        <asp:ImageButton ID="btnShowDetails" runat="server" CommandName="details" ImageUrl="~/App_Themes/default/details.jpg" />
+                        <asp:Button ID="btnShowDetails" runat="server" Text="Zur Anmeldung" CommandName="details" />
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

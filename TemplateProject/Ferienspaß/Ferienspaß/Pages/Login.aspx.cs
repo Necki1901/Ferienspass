@@ -43,7 +43,10 @@ namespace Ferienspaß {
                 LoginUser = "";
             }
 
-            if(SessionLoginAttempt+1>=MaxLoginAttempts) {
+            FormsAuthentication.RedirectFromLoginPage("1", false);
+
+
+            if (SessionLoginAttempt+1>=MaxLoginAttempts) {
                 btn_login.Enabled = false;
                 grp_user.Visible = false;
                 btn_login.Visible = false;

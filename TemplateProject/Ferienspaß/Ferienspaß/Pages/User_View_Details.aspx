@@ -10,7 +10,7 @@
     <form id="form1" runat="server">
         <div>
         </div>
-        <asp:GridView ID="gv_User_View_Details" runat="server" AutoGenerateColumns="False">
+        <asp:GridView ID="gv_User_View_Details" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_User_View_Details_RowCommand">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
                     <ItemTemplate>
@@ -60,14 +60,50 @@
                   <%-- Details --%>
                 <asp:TemplateField HeaderText="Aktion">
                     <ItemTemplate>
-                        <asp:ImageButton ID="btnRegister" runat="server" CommandName="details" ImageUrl="~/App_Themes/default/anmelden.png" Width="400" Height="400" />
-                        <asp:ImageButton ID="btnQueue" runat="server" CommandName="details" ImageUrl="~/App_Themes/default/johannes-egger.jpg" Visible="false" Width="400" Height="400" />
+                        <asp:Button ID="btnRegister" runat="server" Text="Anmelden" CommandName="register"/>
+                        <asp:Button ID="btnQueue" runat="server" Text="In die Warteschlange" CommandName="queue" Visible="false" />
                     </ItemTemplate>
                 </asp:TemplateField>
                
              </Columns>
         </asp:GridView>
         <asp:Label ID="lblMessage" runat="server"></asp:Label>
+
+        <asp:GridView ID="gv_Children" runat="server" AutoGenerateColumns="False" Visible="False">
+            <columns>
+                 <asp:TemplateField HeaderText="ChildID" Visible="false">
+                    <ItemTemplate>
+                        <asp:Label ID="lblChildID" runat="server" Text='<%# Eval("CID") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                 <asp:TemplateField HeaderText="Vorname">
+                    <ItemTemplate>
+                        <asp:Label ID="lblGivenname" runat="server" Text='<%# Eval("GN") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Nachname">
+                    <ItemTemplate>
+                        <asp:Label ID="lblSurname" runat="server" Text='<%# Eval("SN") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                 <asp:TemplateField HeaderText="Geburtsdatum">
+                    <ItemTemplate>
+                        <asp:Label ID="lblBirthday" runat="server" Text='<%# Convert.ToDateTime(Eval("BD")).ToString("dd/MM/yyyy") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                 <asp:TemplateField HeaderText="Aktion">
+                    <ItemTemplate>
+                        <asp:CheckBox ID="chkUseChildren" runat="server" CommandName="checked" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+
+
+            </columns>
+        </asp:GridView>
+
+        <asp:Label ID="lblChildrenMessage" runat="server"></asp:Label>
+
+        <asp:Button ID="btnAddChildren" runat="server" OnClick="btnAddChildren_Click" Text="Kinder hinzufügen" Visible="False" />
     </form>
 </body>
 </html>

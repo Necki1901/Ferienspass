@@ -112,12 +112,12 @@ namespace Ferienspaß
 
 
         internal string GetUserName(object userid) {
-            DataTable loggedInUser = Query("SELECT firstname,lastname FROM portalusers WHERE UserID=?", userid.ToString());
+            DataTable loggedInUser = Query("SELECT GN,SN FROM user WHERE UID=?", userid.ToString());
             return loggedInUser.Rows[0].ItemArray[0].ToString() + " " + loggedInUser.Rows[0].ItemArray[1].ToString();
         }
 
         internal string GetPortalOption(string optionname) {
-            DataTable option = Query("SELECT Value FROM settings WHERE Key=?", optionname);
+            DataTable option = Query("SELECT MyValue FROM settings WHERE MyKey=?", optionname);
             if (option.Rows[0].ItemArray[0].ToString().Length < 1) return null;
             else return option.Rows[0].ItemArray[0].ToString();
         }

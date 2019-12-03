@@ -13,93 +13,145 @@ namespace Ferienspaß {
         private int MaxLoginAttempts { get; set; }
         private CsharpDB db;
 
+        private int SessionLoginAttempt {
+            get { return Convert.ToInt32(Session["loginAttemptCount"]); }
+            set { Session["loginAttemptCount"] = value; }
+        }
+
+        private bool PwdVisible {
+            get { return Convert.ToBoolean(Session["pwdVisible"]); }
+            set { Session["pwdVisible"] = value; }
+        }
+
+        private string LoginUser {
+            get {
+                return Session["userId"].ToString(); 
+            }
+            set { Session["userId"] = value; }
+        }
+
+
+
         protected void Page_Load(object sender, EventArgs e) {
             db = new CsharpDB();
             try {
                 MaxLoginAttempts = Convert.ToInt32(db.GetPortalOption("MAX_LOGIN_ATTEMPTS"));
-            } catch (Exception ex) { lit_msg.Text = "Ein interner Fehler ist aufgetreten! " + Environment.NewLine + ex; }
+            } catch (Exception ex) { lit_msg.Text = CreateMSGString("Ein interner Fehler ist aufgetreten! " + Environment.NewLine + ex, 0); }
 
+            if (!Page.IsPostBack) {
+                Session["loginAttemptCount"] = 0;
+                LoginUser = "";
+            }
+
+            if(SessionLoginAttempt+1>=MaxLoginAttempts) {
+                btn_login.Enabled = false;
+                grp_user.Visible = false;
+                btn_login.Visible = false;
+                grp_pwd.Visible = false;
+
+                lit_msg.Text = CreateMSGString("Anzahl der Anmeldeversuche wurde überschritten!<br/> <strong>Ihr Benutzer wird aus Sicherheitsgründen gesperrt!</strong><br/>Wenden Sie sich an einen Administrator!",-1);
+                LockAccount(LoginUser);
+            } 
+
+
+            //grp_pwd.Visible = PwdVisible;
+            
         }
 
         protected void Login_Click(object sender, EventArgs e) {
             //FormsAuthentication.RedirectFromLoginPage("2", false);
             //Response.Redirect("projects");
 
+            if (SessionLoginAttempt+1 >= MaxLoginAttempts) return;
 
-            if (!String.IsNullOrEmpty(tbx_user.Text) && !String.IsNullOrEmpty(tbx_pass.Text)) {
+            if(String.IsNullOrEmpty(tbx_pass.Text) && !String.IsNullOrEmpty(tbx_user.Text)) {
+                DataTable u = db.Query("SELECT UID FROM user WHERE EMAIL LIKE ? LIMIT 1", tbx_user.Text);
+                if (u.Rows.Count == 0) LoginUser = "-1";
+                else {
+                    LoginUser = u.Rows[0].ItemArray[0].ToString();
+                }
+
+                PwdVisible = true;
+                grp_pwd.Visible = true;
+                tbx_user.CssClass = "form-control border-success";
+                tbx_user.Enabled = false;
+                span_iconMail.Attributes["class"] = "input-group-text border-success";
+
+                return;
+
+            }else if (!String.IsNullOrEmpty(LoginUser) && !String.IsNullOrEmpty(tbx_pass.Text)) {
                 try {
                     db = new CsharpDB();
-                    DataTable user = db.Query("SELECT salt,EncodedPassword,userid,NumInvalidLogins,locked,usertyp FROM portalusers WHERE username LIKE ? OR  email LIKE ? LIMIT 1;", tbx_user.Text, tbx_user.Text);
+                    DataTable user = db.Query("SELECT SALT,ENCODEDPASS,UID,LOCKED,UGID FROM user WHERE UID = ?;", LoginUser);
 
-                    int logincnt;
-                    if (user.Rows[0]["NumInvalidLogins"] is DBNull) {
-                        logincnt = 0;
-                    } else {
-                        logincnt = Convert.ToInt32(user.Rows[0]["NumInvalidLogins"]);
+
+                    if (user.Rows.Count == 0) {
+                        SessionLoginAttempt++;
+                        lit_msg.Text = CreateMSGString("Benutzer und/oder Passwort ungültig!", (MaxLoginAttempts - SessionLoginAttempt));
+                        throw new ApplicationException("Benutzer nicht vorhanden!");
                     }
 
-                    int locked;
-                    if (user.Rows[0]["locked"] is DBNull) {
-                        locked = 0;
-                    } else {
-                        locked = Convert.ToInt32(user.Rows[0]["locked"]);
-                    }
-
-                    int usertype = Convert.ToInt32(user.Rows[0]["usertyp"]);
-
-                    if (locked != 1) {
-                        if (logincnt >= MaxLoginAttempts) {
-                            LockAccount(user.Rows[0]["userid"].ToString());
-                            lit_msg.Text = CreateMSGString("Anzahl der Anmeldeversuche wurde überschritten! Wenden Sie sich an einen Administrator!", -1);
-                            throw new ApplicationException("Anzahl der Anmeldeversuche wurde überschritten! Wenden Sie sich an einen Administrator!");
-                        } else {
-                            if (user.Rows.Count > 0) {
-                                string salt = user.Rows[0]["salt"].ToString();
-                                string hashpw = Crypt.GenerateSHA512String(tbx_pass.Text + salt.ToString());
-
-                                string dbPass = user.Rows[0]["EncodedPassword"].ToString();
-                                if (String.Compare(hashpw, dbPass) == 0) {
-
-                                    SetLoginCnt(user.Rows[0]["userid"].ToString(), 0, true);
-
-                                    switch (usertype) {
-                                        case 1:
-                                            FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["userid"].ToString(), false);
-                                            Response.Redirect("firmenregister.aspx");
-                                            break;
-                                        default:
-
-                                            FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["userid"].ToString(), false);
-                                            Response.Redirect("firmenDaten.aspx");
-                                            break;
-                                    }
-
-                                    Session["usertype"] = usertype;
-
-
-
-                                } else {
-                                    if (logincnt + 1 >= MaxLoginAttempts) {
-                                        LockAccount(user.Rows[0]["userid"].ToString());
-                                        lit_msg.Text = CreateMSGString("<strong>Benutzer gesperrt!</strong> Wenden Sie sich an einen Administrator!", -1);
-                                    } else {
-                                        SetLoginCnt(user.Rows[0]["userid"].ToString(), logincnt + 1, false);
-                                        lit_msg.Text = CreateMSGString("Benutzer und/oder Passwort ungültig!", (MaxLoginAttempts - logincnt - 1));
-                                        throw new ApplicationException("Passwort stimmt nicht überien");
-                                    }
-                                }
-                            } else lit_msg.Text = CreateMSGString("Benutzer und/oder Passwort ungültig!", -1); throw new ApplicationException("Kein Benutzer gefunden");
+                    if (user.Rows[0]["LOCKED"] != DBNull.Value) {
+                        if(Convert.ToInt32(user.Rows[0]["LOCKED"])==1) {
+                            lit_msg.Text = CreateMSGString("<strong>Benutzer gesperrt!<br/></strong> Wenden Sie sich an einen Administrator!", -1);
+                            throw new ApplicationException("Benutzer gesperrt!");
                         }
-                    } else lit_msg.Text = CreateMSGString("<strong>Benutzer gesperrt!</strong> Wenden Sie sich an einen Administrator!", -1); throw new ApplicationException("Benutzer gesperrt!");
+                    }
 
-                } catch (Exception ex) { Console.WriteLine(ex); };
-            } else lit_msg.Text = CreateMSGString("Alle Felder müssen ausgefüllt werden!", -1);
+
+                    int usertype = Convert.ToInt32(user.Rows[0]["UGID"]);
+                    
+                    string salt = user.Rows[0]["SALT"].ToString();
+                    string hashpw = Crypt.GenerateSHA512String(tbx_pass.Text + salt.ToString());
+
+                    string dbPass = user.Rows[0]["ENCODEDPASS"].ToString();
+                    if (String.Compare(hashpw, dbPass) == 0) {
+
+                        SessionLoginAttempt = 0;
+
+                        switch (usertype) {
+
+                            case 0:
+                                //MANAGEMENT
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("Admin");
+                                break;
+
+                            case 1:
+                                //MANAGEMENT
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("Admin");
+                                break;
+
+                            default:
+                                // NORMALER  BENUTZER
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("MyRegistrations");
+                                break;
+                        }
+
+                        Session["usertype"] = usertype;
+
+                    } else {
+                        if (SessionLoginAttempt + 1 >= MaxLoginAttempts) {
+                            LockAccount(LoginUser);
+                            lit_msg.Text = CreateMSGString("<strong>Erlaubte Anmeldeversuche überschritten! Benutzer gesperrt!<br/></strong> Wenden Sie sich an einen Administrator!", -1);
+                        } else {
+                            SessionLoginAttempt++;
+                            lit_msg.Text = CreateMSGString("Benutzer und/oder Passwort ungültig!", (MaxLoginAttempts - SessionLoginAttempt));
+                            throw new ApplicationException("Passwort stimmt nicht überien");
+                        }
+                    }
+
+                } catch (Exception ex) {
+                    Console.WriteLine(ex);
+                };
+
+            } else {
+                lit_msg.Text = CreateMSGString("Alle Felder müssen ausgefüllt werden!", -1);
+            }
         }
 
-        private void SetLoginCnt(string userid, int cnt, bool successfulLogin) {
-            if (!successfulLogin) db.ExecuteNonQuery("UPDATE portalusers SET NumInvalidLogins=? WHERE userId=?;", cnt, userid);
-            else db.ExecuteNonQuery("UPDATE portalusers SET NumInvalidLogins=?,PasswordSent=? WHERE userId=?;", cnt, 0, userid);
-        }
 
         private string CreateMSGString(string msg, int loginAttemptleft) {
             if (loginAttemptleft != -1) return "<div class=\"alert alert-danger mt-3 mb-1\" role=\"alert\">" + msg + "<br/><strong>" + loginAttemptleft + " Anmeldeversuche Verbleibend</strong></div>";
@@ -107,7 +159,7 @@ namespace Ferienspaß {
         }
 
         private void LockAccount(string userid) {
-            db.ExecuteNonQuery("UPDATE portalusers SET locked=? WHERE userId=?;", 1, userid);
+            if(userid!="-1") db.ExecuteNonQuery("UPDATE user SET LOCKED=? WHERE UID=?;", 1, userid);
         }
 
         protected void btn_pwdforget_Click(object sender, EventArgs e) {

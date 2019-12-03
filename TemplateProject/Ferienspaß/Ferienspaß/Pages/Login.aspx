@@ -10,26 +10,38 @@
 
             </div>
             <div class="card-body">
-                <div>
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text"><i class="fa fa-user"></i></span>
-                        </div>
-                        <asp:TextBox ID="tbx_user" CssClass="form-control" runat="server" Text=""></asp:TextBox>
+                <div class=" ml-auto mr-auto">
+                   
+                    
+                    <div id="grp_user" style="align-content:center" runat="server" >
+                        <div class="text-center"><asp:Label runat="server" CssClass="text-center text-dark" Text="E-Mail Adresse"></asp:Label></div>
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend ">
+                                <span id="span_iconMail" runat="server" class="input-group-text"><i class="fa fa-user"></i></span>
+                            </div>
+                            <asp:TextBox ID="tbx_user" CssClass="form-control col-12" runat="server" Text="stefan.pohn@htlvb.at"></asp:TextBox>
 
-                        <%--<input type="text" class="form-control" placeholder="E-Mail Adresse">--%>
+                        </div>
+                        
                     </div>
-                    <div class="input-group form-group">
-                        <div class="input-group-prepend">
+
+
+                    <div id="grp_pwd" visible="false"  runat="server" >
+                        <div class="text-center"><asp:Label runat="server" CssClass="text-center text-dark" Text="Passwort"></asp:Label></div>
+                    
+                        <div class="input-group form-group">
+                            <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-key"></i></span>
                         </div>
-                        <asp:TextBox ID="tbx_pass" CssClass="form-control" runat="server" Text=""></asp:TextBox>     
+                        <asp:TextBox ID="tbx_pass" CssClass="form-control" runat="server" Text=""></asp:TextBox>    
+                        </div>
                     </div>
 
+                   
                     <div class="form-group ml-auto mr-auto d-flex">
-                        <asp:Button Text="Anmelden" CssClass="btn btn-primary col-md-4 ml-auto mr-auto align-content-center login_btn" OnClick="Login_Click" runat="server" />
-                        <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
+                        <asp:Button ID="btn_login" Text="Anmelden" CssClass="btn btn-primary col-md-5 ml-auto mr-auto align-content-center login_btn" OnClick="Login_Click" runat="server" /><br />
                     </div>
+                    <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
                 </div>
             </div>
             <div class="card-footer">

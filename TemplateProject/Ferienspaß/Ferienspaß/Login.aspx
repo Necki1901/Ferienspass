@@ -46,10 +46,10 @@
             </div>
             <div class="card-footer">
                 <div class="d-flex justify-content-center links">
-                    Noch nicht registriert?&nbsp;&nbsp;<a href="#">Jetzt registrieren</a>
+                    Noch nicht registriert?&nbsp;&nbsp;<a href="registration.aspx">Jetzt registrieren</a>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <a href="#">Passwort vergessen?</a>
+                    <a href="PasswordReset.aspx">Passwort vergessen?</a>
                 </div>
             </div>
         </div>

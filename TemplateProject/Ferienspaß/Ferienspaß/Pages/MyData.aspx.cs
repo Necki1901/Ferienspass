@@ -21,7 +21,6 @@ namespace Ferienspaß
             HtmlGenericControl c = (HtmlGenericControl)Master.FindControl("menu_mydata");
             if (c != null) c.Attributes.Add("class", "active");
 
-
             lbl_loggedInUser.Text = db.GetUserName(User.Identity.Name);
         }
 

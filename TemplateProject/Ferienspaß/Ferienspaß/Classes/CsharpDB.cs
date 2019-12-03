@@ -83,6 +83,24 @@ namespace Ferienspaß
             return dt;
         }
 
+        public object ExecuteScalar(string sql, params object[] parametervalues)
+        {
+            OdbcCommand cmd = CreateCommand(sql, parametervalues);
+            Open();
+            object ret = cmd.ExecuteScalar();
+            Close();
+            return ret;
+        }
+
+        public object ExecuteScalar(string sql)
+        {
+            OdbcCommand cmd = CreateCommand(sql);
+            Open();
+            object ret = cmd.ExecuteScalar();
+            Close();
+            return ret;
+        }
+
         internal int ExecuteNonQuery(string sql, params object[] parametervalues)
         {
             OdbcCommand cmd = CreateCommand(sql, parametervalues);
@@ -94,12 +112,12 @@ namespace Ferienspaß
 
 
         internal string GetUserName(object userid) {
-            DataTable loggedInUser = Query("SELECT firstname,lastname FROM portalusers WHERE UserID=?", userid.ToString());
+            DataTable loggedInUser = Query("SELECT GN,SN FROM user WHERE UID=?", userid.ToString());
             return loggedInUser.Rows[0].ItemArray[0].ToString() + " " + loggedInUser.Rows[0].ItemArray[1].ToString();
         }
 
         internal string GetPortalOption(string optionname) {
-            DataTable option = Query("SELECT Value FROM settings WHERE Key=?", optionname);
+            DataTable option = Query("SELECT MyValue FROM settings WHERE MyKey=?", optionname);
             if (option.Rows[0].ItemArray[0].ToString().Length < 1) return null;
             else return option.Rows[0].ItemArray[0].ToString();
         }

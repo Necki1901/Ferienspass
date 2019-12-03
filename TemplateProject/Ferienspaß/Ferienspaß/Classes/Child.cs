@@ -8,6 +8,7 @@ namespace Ferienspaß.Classes
 {
     public class Child
     {
+        public int? ChildID { get; set; } 
         public string Givenname { get; set; }
         public string Surname { get; set; }
 
@@ -20,6 +21,14 @@ namespace Ferienspaß.Classes
 
         public Child(string _givenname, string _surname, DateTime _birthday)
         {
+            Givenname = _givenname;
+            Surname = _surname;
+            Birthday = _birthday;
+        }
+
+        public Child(int _childID, string _givenname, string _surname, DateTime _birthday)
+        {
+            ChildID = _childID;
             Givenname = _givenname;
             Surname = _surname;
             Birthday = _birthday;
@@ -51,12 +60,12 @@ namespace Ferienspaß.Classes
             CsharpDB db = new CsharpDB();
             try
             {
-                if(Convert.ToInt32(db.ExecuteScalar("SELECT Count(*) FROM child WHERE GN=? AND SN=?", Givenname, Surname)) > 0)
+                if(Convert.ToInt32(db.ExecuteScalar("SELECT Count(*) FROM child WHERE GN=? AND SN=? AND BD=?", Givenname, Surname, Birthday)) > 0)
                 {
-                    DataRow row = db.Query("SELECT GN, SN, BD, UID FROM child WHERE GN=? AND SN=?", Givenname, Surname).Rows[0];
-                    Child toDelete = new Child(row["GN"].ToString(), row["SN"].ToString(), (DateTime)row["BD"]);
-                    db.ExecuteNonQuery("DELETE FROM child WHERE GN=? AND SN=?", Givenname, Surname);
-                    return toDelete.ToString();
+                    DataRow row = db.Query("SELECT CID FROM child WHERE GN=? AND SN=? AND BD=?", Givenname, Surname, Birthday).Rows[0];
+                    ChildID = Convert.ToInt32(row["CID"]);
+                    db.ExecuteNonQuery("DELETE FROM child WHERE CID=?",ChildID);
+                    return ToString();
                 }
                 else
                 {
@@ -74,10 +83,13 @@ namespace Ferienspaß.Classes
             CsharpDB db = new CsharpDB();
             try
             {
-                db.ExecuteNonQuery("UPDATE child SET GN=?, SN=?, BD=? WHERE GN=? AND SN=?", _givenname, _surname, _birthday.Date, Givenname, Surname);
+                DataRow row = db.Query("SELECT CID FROM child WHERE GN=? AND SN=? AND BD=?", Givenname, Surname, Birthday).Rows[0];
+                ChildID = Convert.ToInt32(row["CID"]);
+                db.ExecuteNonQuery("UPDATE child SET GN=?, SN=?, BD=? WHERE CID=?", _givenname, _surname, _birthday.Date, ChildID);
                 Givenname = _givenname;
                 Surname = _surname;
-                DataRow row = db.Query("SELECT GN, SN, BD, UID FROM child WHERE GN=? AND SN=?", Givenname, Surname).Rows[0];
+                Birthday = _birthday;
+                row = db.Query("SELECT GN, SN, BD, UID FROM child WHERE CID=?", ChildID).Rows[0];
                 return new Child(row["GN"].ToString(), row["SN"].ToString(), (DateTime)row["BD"]);
             }
             catch (Exception ex)

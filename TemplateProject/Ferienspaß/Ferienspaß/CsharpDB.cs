@@ -137,7 +137,7 @@ namespace Ferienspaß
         
                 client.Send(mail);
                 return true;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 return false;
             }
         }

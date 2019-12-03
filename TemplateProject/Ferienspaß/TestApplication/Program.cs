@@ -14,6 +14,9 @@ namespace TestApplication
             Child test = new Child("Michi", "Plasser", Convert.ToDateTime("19.08.2000"));
 
             Console.WriteLine(test.CreateChild().ToString());
+            //Console.WriteLine(test.DeleteChild().ToString());
+            Console.WriteLine(test.UpdateChild("Michael", "Reiter", Convert.ToDateTime("19.08.2000")).ToString());
+            Console.ReadLine();
 
         }
     }

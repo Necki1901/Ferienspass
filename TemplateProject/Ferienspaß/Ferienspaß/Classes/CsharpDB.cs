@@ -83,6 +83,24 @@ namespace Ferienspaß
             return dt;
         }
 
+        public object ExecuteScalar(string sql, params object[] parametervalues)
+        {
+            OdbcCommand cmd = CreateCommand(sql, parametervalues);
+            Open();
+            object ret = cmd.ExecuteScalar();
+            Close();
+            return ret;
+        }
+
+        public object ExecuteScalar(string sql)
+        {
+            OdbcCommand cmd = CreateCommand(sql);
+            Open();
+            object ret = cmd.ExecuteScalar();
+            Close();
+            return ret;
+        }
+
         internal int ExecuteNonQuery(string sql, params object[] parametervalues)
         {
             OdbcCommand cmd = CreateCommand(sql, parametervalues);
@@ -137,7 +155,7 @@ namespace Ferienspaß
         
                 client.Send(mail);
                 return true;
-            } catch (Exception ex) {
+            } catch (Exception) {
                 return false;
             }
         }

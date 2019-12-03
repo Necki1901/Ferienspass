@@ -105,6 +105,21 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Themes\default\add.png" />
+    <Content Include="App_Themes\default\ascending.png" />
+    <Content Include="App_Themes\default\cancel.png" />
+    <Content Include="App_Themes\default\descending.png" />
+    <Content Include="App_Themes\default\edit.png" />
+    <Content Include="App_Themes\default\filter.png" />
+    <Content Include="App_Themes\default\filter_clear.png" />
+    <Content Include="App_Themes\default\filter_on.png" />
+    <Content Include="App_Themes\default\first.png" />
+    <Content Include="App_Themes\default\last.png" />
+    <Content Include="App_Themes\default\lupe.png" />
+    <Content Include="App_Themes\default\next.png" />
+    <Content Include="App_Themes\default\ok.png" />
+    <Content Include="App_Themes\default\previous.png" />
+    <Content Include="App_Themes\default\trash.png" />
     <Content Include="App_Themes\default\anmelden.png" />
     <Content Include="App_Themes\default\details.jpg" />
     <Content Include="App_Themes\default\johannes-egger.jpg" />
@@ -131,6 +146,7 @@
     <Content Include="Content\FontAwesome\v4-shims.css" />
     <Content Include="Content\FontAwesome\v4-shims.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
+    <Content Include="Pages\Admin.aspx" />
     <Content Include="Pages\MyRegistrations.aspx" />
     <Content Include="Pages\MyData.aspx" />
     <Content Include="Pages\Login.aspx" />
@@ -199,6 +215,13 @@
     </Compile>
     <Compile Include="MasterPage\Login.Master.designer.cs">
       <DependentUpon>Login.Master</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin.aspx.cs">
+      <DependentUpon>Admin.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin.aspx.designer.cs">
+      <DependentUpon>Admin.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\MyRegistrations.aspx.cs">
       <DependentUpon>MyRegistrations.aspx</DependentUpon>

@@ -39,6 +39,11 @@ namespace Ferienspaß.Pages
 
         }
 
+        //private void Fill_ddlCategory()
+        //{
+        //    CsharpDB db = new CsharpDB();
+        //}
+
         private int GetNumberOfParticipants(int projectID, int capacity)
         {
             DataTable dt;
@@ -56,6 +61,21 @@ namespace Ferienspaß.Pages
         protected void gv_UserView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
 
+        }
+
+        protected void txtSuchen_TextChanged(object sender, EventArgs e)
+        {
+            DataTable dt;
+            DataView dv;
+            RemainingCapacity rc = new RemainingCapacity();
+
+            dt = db.Query($"SELECT * FROM project WHERE Name Like '%{txtSuchen.Text.ToLower()}%");
+            dt = rc.GetDataTableWithRemainingCapacities(dt);
+            dv = new DataView(dt);
+
+
+            gv_UserView.DataSource = dv;
+            gv_UserView.DataBind();
         }
     }
 }

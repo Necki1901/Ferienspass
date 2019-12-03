@@ -9,6 +9,9 @@
 <body>
     <form id="form1" runat="server">
         <div>
+            <asp:TextBox ID="txtSuchen" placeholder="Name der Veranstaltung" AutoPostBack="true" OnTextChanged="txtSuchen_TextChanged" runat="server"></asp:TextBox> <%--<asp:DropDownList ID="ddlCategory" runat="server"></asp:DropDownList>--%>
+        </div>
+        <div>
             <asp:GridView ID="gv_UserView" runat="server" 
             AutoGenerateColumns="False" 
             AllowPaging="True" 

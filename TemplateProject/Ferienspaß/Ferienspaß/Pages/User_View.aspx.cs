@@ -39,23 +39,23 @@ namespace Ferienspaß.Pages
 
         }
 
-        private int GetNumberOfParticipants(int projectID, int capacity)
-        {
-            DataTable dt;
-            string command = $"select count(CID) from participation where pid = {projectID}";
-            dt = db.Query(command);
-
-            string row = dt.Rows[0].ItemArray[0].ToString();
-            int participants = Convert.ToInt32(row);
-
-            int open_participants = capacity - participants;
-
-            return open_participants;
-        }
+       
 
         protected void gv_UserView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            GridViewRow gvr = (GridViewRow)(((ImageButton)e.CommandSource).NamingContainer);
+            //Code used -> https://stackoverflow.com/questions/6503339/get-row-index-on-asp-net-rowcommand-event/6503483
 
+            switch (e.CommandName)
+            {
+                case "details":
+
+                    string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
+                    Response.Redirect($"User_View_Details.aspx?id={projectID}");
+                    break;
+
+
+            }
         }
     }
 }

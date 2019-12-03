@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="User_View.aspx.cs" Inherits="Ferienspaß.Pages.User_View" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="User_View_Details.aspx.cs" Inherits="Ferienspaß.Pages.User_View_Details" %>
 
 <!DOCTYPE html>
 
@@ -9,11 +9,8 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            <asp:GridView ID="gv_UserView" runat="server" 
-            AutoGenerateColumns="False" 
-            AllowPaging="True" 
-            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" >
-
+        </div>
+        <asp:GridView ID="gv_User_View_Details" runat="server" AutoGenerateColumns="False">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
                     <ItemTemplate>
@@ -55,17 +52,22 @@
                     </ItemTemplate>
                 </asp:TemplateField>
 
-
-                 <%-- Details --%>
-                <asp:TemplateField HeaderText="Details">
+                 <asp:TemplateField HeaderText="Freie Plätze">
                     <ItemTemplate>
-                        <asp:ImageButton ID="btnShowDetails" runat="server" CommandName="details" ImageUrl="~/App_Themes/default/details.jpg" />
+                        <asp:Label ID="lblParticipants" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-            </Columns>
-
-            </asp:GridView>
-        </div>
+                  <%-- Details --%>
+                <asp:TemplateField HeaderText="Aktion">
+                    <ItemTemplate>
+                        <asp:ImageButton ID="btnRegister" runat="server" CommandName="details" ImageUrl="~/App_Themes/default/anmelden.png" Width="400" Height="400" />
+                        <asp:ImageButton ID="btnQueue" runat="server" CommandName="details" ImageUrl="~/App_Themes/default/johannes-egger.jpg" Visible="false" Width="400" Height="400" />
+                    </ItemTemplate>
+                </asp:TemplateField>
+               
+             </Columns>
+        </asp:GridView>
+        <asp:Label ID="lblMessage" runat="server"></asp:Label>
     </form>
 </body>
 </html>

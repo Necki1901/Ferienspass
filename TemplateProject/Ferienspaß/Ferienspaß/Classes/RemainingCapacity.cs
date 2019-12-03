@@ -12,7 +12,8 @@ namespace Ferienspaß.Classes
         public DataTable GetDataTableWithRemainingCapacities(DataTable dt)
         {
             //Add new column
-            dt.Columns.Add("participants", typeof(int));
+            dt.Columns.Add("remainingCapacity", typeof(int));
+            
 
             foreach (DataRow row in dt.Rows)
             {
@@ -20,7 +21,7 @@ namespace Ferienspaß.Classes
                 int capacity = Convert.ToInt32(row["capacity"]);
                 int remainingCapacity = GetRemainingCapacity(projectID, capacity);
 
-                row["participants"] = remainingCapacity;
+                row["remainingCapacity"] = remainingCapacity;
             }
 
             return dt;

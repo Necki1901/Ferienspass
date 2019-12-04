@@ -24,7 +24,8 @@ namespace Ferienspaß {
             if(String.IsNullOrEmpty(RegisteredUID)) {
                 div_userdata.Visible = true;
                 div_children.Visible = true;
-                btn_register.Text = "Weiter...";
+                //btn_register.Text = "Weiter...";
+                btn_register.Text = "Registration abschließen";
             } else {
                 div_userdata.Visible = false;
                 div_children.Visible = true;
@@ -157,6 +158,8 @@ namespace Ferienspaß {
                 } else {
                     lit_msg.Text = CreateMSGString("Alle Felder müssen ausgefüllt werden!","danger");
                 }
+
+                Response.Redirect("Login.aspx");
 
             } else {
                 //Children

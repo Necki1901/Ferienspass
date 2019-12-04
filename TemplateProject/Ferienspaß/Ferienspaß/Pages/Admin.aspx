@@ -1,14 +1,16 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Admin.aspx.cs" Inherits="Ferienspaß.Pages.Admin" %>
+﻿
+<%@ Page Title="AdminView" Language="C#" MasterPageFile="~/MasterPage/Admin.Master" AutoEventWireup="true" CodeBehind="Admin.aspx.cs" Inherits="Ferienspaß.Pages.Admin" %>
 
-<!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-          <div>
+<asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">
+    <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
+    <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden"  OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
+
+</asp:Content>
+
+
+<asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <div>
             <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowDataBound="gvAdminProjects_RowDataBound1" OnRowUpdating="gvAdminProjects_RowUpdating" OnRowCancelingEdit="gvAdminProjects_RowCancelingEdit" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting">
                 <Columns>
                     <asp:TemplateField HeaderText="Name">
@@ -122,12 +124,9 @@
               <asp:Button ID="btnLabelDeleteYes" runat="server" OnClick="btnLabelDeleteYes0_Click" Text="Ja" Width="268px" />
               <br />
           </asp:Panel>
-    </form>
     <p>
         DATE Format: YYYY-MM-DD</p>
     <p>
         TIME Format: HH:MM:SS</p>
     <p>
-        &nbsp;</p>
-</body>
-</html>
+</asp:Content>

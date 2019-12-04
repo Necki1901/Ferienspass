@@ -43,7 +43,7 @@ namespace Ferienspaß {
                 LoginUser = "";
             }
 
-            FormsAuthentication.RedirectFromLoginPage("1", false);
+           /// FormsAuthentication.RedirectFromLoginPage("1", false);
 
 
             if (SessionLoginAttempt+1>=MaxLoginAttempts) {
@@ -129,13 +129,13 @@ namespace Ferienspaß {
                             case 1:
                                 //MANAGEMENT
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Admin");
+                                Response.Redirect("Pages/Admin.aspx");
                                 break;
 
                             default:
                                 // NORMALER  BENUTZER
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Pages/MyRegistrations.aspx");
+                                Response.Redirect("Pages/User_View.aspx");
                                 break;
                         }
 

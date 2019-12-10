@@ -1,16 +1,12 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="User_View_Details.aspx.cs" Inherits="Ferienspaß.Pages.User_View_Details" %>
+﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage/User.Master" AutoEventWireup="true" CodeBehind="Project_View_Details.aspx.cs" Inherits="Ferienspaß.Pages.User_View_Details" %>
 
-<!DOCTYPE html>
+<asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">
+    <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
+    <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden" OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
+</asp:Content>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-        <div>
-        </div>
-        <asp:GridView ID="gv_User_View_Details" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_User_View_Details_RowCommand">
+<asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+        <asp:GridView CssClass="table table-bordered" ID="gv_User_View_Details" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_User_View_Details_RowCommand">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
                     <ItemTemplate>
@@ -60,8 +56,8 @@
                   <%-- Details --%>
                 <asp:TemplateField HeaderText="Aktion">
                     <ItemTemplate>
-                        <asp:Button ID="btnRegister" runat="server" Text="Anmelden" CommandName="register"/>
-                        <asp:Button ID="btnQueue" runat="server" Text="In die Warteschlange" CommandName="queue" Visible="false" />
+                        <asp:Button ID="btnRegister" CssClass="btn btn-primary" runat="server" Text="Anmelden" CommandName="register"/>
+                        <asp:Button ID="btnQueue" CssClass="btn btn-primary" runat="server" Text="In die Warteschlange" CommandName="queue" Visible="false" />
                     </ItemTemplate>
                 </asp:TemplateField>
                
@@ -69,7 +65,7 @@
         </asp:GridView>
         <asp:Label ID="lblMessage" runat="server"></asp:Label>
 
-        <asp:GridView ID="gv_Children" runat="server" AutoGenerateColumns="False" Visible="False">
+        <asp:GridView ID="gv_Children" CssClass="table table-bordered" runat="server" AutoGenerateColumns="False" Visible="False">
             <columns>
                  <asp:TemplateField HeaderText="ChildID" Visible="false">
                     <ItemTemplate>
@@ -101,9 +97,7 @@
             </columns>
         </asp:GridView>
 
-        <asp:Label ID="lblChildrenMessage" runat="server"></asp:Label>
+        <asp:Label ID="lblChildrenMessage" runat="server"></asp:Label><br />
 
-        <asp:Button ID="btnAddChildren" runat="server" OnClick="btnAddChildren_Click" Text="Kinder hinzufügen" Visible="False" />
-    </form>
-</body>
-</html>
+        <asp:Button ID="btnAddChildren" class="btn btn-primary" runat="server" OnClick="btnAddChildren_Click" Text="Kinder hinzufügen" Visible="False" />
+</asp:Content>

@@ -129,7 +129,7 @@ namespace Ferienspaß {
                             case 1:
                                 //MANAGEMENT
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Pages/Admin.aspx");
+                                Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
                             default:

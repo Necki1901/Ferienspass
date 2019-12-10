@@ -8,7 +8,7 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
     <div>
-         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand">
+         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating">
                 <Columns>
                     <asp:TemplateField HeaderText="Vorname">
                         <EditItemTemplate>
@@ -44,10 +44,30 @@
                     </asp:TemplateField>                   
                     <asp:TemplateField HeaderText="User_Gruppe">
                         <EditItemTemplate>
-                            <asp:DropDownList ID="ddlEditItemTemplateUserGroup" runat="server"></asp:DropDownList>
+                            <asp:DropDownList ID="ddlEditItemTemplateUserGroup" runat="server">
+                                <asp:ListItem>0</asp:ListItem>
+                                <asp:ListItem>1</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>
+                            </asp:DropDownList>
                         </EditItemTemplate>
                          <ItemTemplate>
                             <asp:Label ID="lblItemTemplateUserGroup" runat="server" Text='<%# Eval("UGID") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Zustand">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="txtEditItemTemplateUserState" runat="server" Text='<%# Bind("LOCKED") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                         <ItemTemplate>
+                            <asp:Label ID="lblItemTemplateUserState" runat="server" Text='<%# Eval("LOCKED") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Email_Zustand">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="txtEditItemTemplateUserMailState" runat="server" Text='<%# Bind("EmailConfirmed") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                         <ItemTemplate>
+                            <asp:Label ID="lblItemTemplateUserMailState" runat="server" Text='<%# Eval("EmailConfirmed") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Ändern">
@@ -71,6 +91,9 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
+
+
+         <asp:Label ID="lblInfo" runat="server"></asp:Label>
 
 
         </div>

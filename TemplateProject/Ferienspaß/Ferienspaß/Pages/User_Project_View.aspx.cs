@@ -66,7 +66,7 @@ namespace Ferienspaß.Pages
                 case "details":
 
                     string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
-                    Response.Redirect($"Project_View_Details.aspx?id={projectID}");
+                    Response.Redirect($"User_Project_View_Details.aspx?id={projectID}");
                     break;
 
 

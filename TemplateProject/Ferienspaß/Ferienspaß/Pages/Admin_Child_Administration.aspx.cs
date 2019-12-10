@@ -23,6 +23,7 @@ namespace Ferienspaß.Pages
                 //    Response.Redirect("Admin_User_View.aspx");
                 //ViewState["UID"] = Convert.ToInt32(Request.QueryString["id"]);
                 ViewState["UID"] = Convert.ToInt32(1);   //only for testing 
+                ViewState["isAdding"] = false;
                 Fill_gv_Children();
             }
             try
@@ -37,6 +38,7 @@ namespace Ferienspaß.Pages
             {
 
             }
+            lblMessage.Text = string.Empty;
         }
 
         private void Fill_gv_Children()
@@ -66,12 +68,15 @@ namespace Ferienspaß.Pages
                     DataTable dt;
                     dt = db.Query($"Select * from child where UID = {ViewState["UID"]} limit 1");
                     dt.Clear();
+                    DataRow dr = dt.NewRow();
+                    dt.Rows.Add(dr);
+                    ViewState["isAdding"] = true;
 
                     DataView dv = new DataView(dt);
                     gv_Children.DataSource = dt;
+                    gv_Children.EditIndex = 0;
                     gv_Children.DataBind();
 
-                    gv_Children.EditIndex = 0;
                     break;
             }
         }
@@ -86,24 +91,69 @@ namespace Ferienspaß.Pages
         {
             GridViewRow row = gv_Children.Rows[e.RowIndex];     //Reihe erfassen
 
-            //Werte erfassen
-            string childID = ((Label)gv_Children.Rows[e.RowIndex].FindControl("lblChildID")).Text;
             string newSurname = ((TextBox)gv_Children.Rows[e.RowIndex].FindControl("txtSurname")).Text;
             string newGivenname = ((TextBox)gv_Children.Rows[e.RowIndex].FindControl("txtGivenname")).Text;
-            DateTime newBirthday = Convert.ToDateTime(((TextBox)gv_Children.Rows[e.RowIndex].FindControl("txtBirthday")).Text);
+            string newBirthdayString = ((TextBox)gv_Children.Rows[e.RowIndex].FindControl("txtBirthday")).Text;
 
-            db.Query($"UPDATE child SET GN = '{newGivenname}', SN = '{newSurname}', BD = '{newBirthday.ToString("yyyy/MM/dd")}'" +
-                $"WHERE CID = {childID}");
+            if(ValidateInput(newSurname, newGivenname, newBirthdayString) == true)
+            {
+                DateTime newBirthday = Convert.ToDateTime(newBirthdayString);
 
+                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
+                {
+                    db.Query($"INSERT INTO child(GN, SN, BD, UID) VALUES('{newGivenname}', '{newSurname}', '{newBirthday.ToString("yyyy/MM/dd")}', {ViewState["UID"]})");
+                }
+                else
+                {
+                    //Werte erfassen
+                    string childID = ((Label)gv_Children.Rows[e.RowIndex].FindControl("lblChildID")).Text;
+
+                    db.Query($"UPDATE child SET GN = '{newGivenname}', SN = '{newSurname}', BD = '{newBirthday.ToString("yyyy/MM/dd")}'" +
+                        $"WHERE CID = {childID}");
+                }
+            }
+
+            ViewState["isAdding"] = false;
             gv_Children.EditIndex = -1;
             gv_Children.SelectedIndex = -1;
             Fill_gv_Children();
+        }
+
+        private bool ValidateInput(string newSurname, string newGivenname, string newBirthday)
+        {
+            if(string.IsNullOrEmpty(newSurname) || newSurname.Length > 50)
+            {
+                lblMessage.Text = "Eingabefehler-Vorname: (höchstens 50 Zeichen)";
+                return false;
+            }   
+            if(string.IsNullOrEmpty(newGivenname) || newGivenname.Length > 50)
+            {
+                lblMessage.Text = "Eingabefehler-Nachname: (höchstens 50 Zeichen)";
+                return false;
+            }
+
+            if (string.IsNullOrEmpty(newBirthday) || DateTime.TryParse(newBirthday, out var x) == false)
+            {
+                lblMessage.Text = "Eingabefehler-Geburtsdatum: (Format(dd/MM/yyyy))";
+                return false;
+            }
+            return true;
         }
 
         protected void gv_Children_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             gv_Children.EditIndex = -1;
             gv_Children.SelectedIndex = -1;
+            Fill_gv_Children();
+        }
+
+        protected void gv_Children_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            GridViewRow row = gv_Children.Rows[e.RowIndex];
+
+            string childrenID = ((Label)row.FindControl("lblChildID")).Text;    
+            db.Query($"delete from child where CID = {childrenID}");    
+
             Fill_gv_Children();
         }
     }

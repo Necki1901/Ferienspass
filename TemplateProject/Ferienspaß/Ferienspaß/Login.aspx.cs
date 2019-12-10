@@ -135,7 +135,7 @@ namespace Ferienspaß {
                             default:
                                 // NORMALER  BENUTZER
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Pages/User_View.aspx");
+                                Response.Redirect("Pages/Project_View.aspx");
                                 break;
                         }
 

@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\Admin_User_View.aspx" />
     <Content Include="App_Themes\default\add.png" />
     <Content Include="App_Themes\default\ascending.png" />
     <Content Include="App_Themes\default\cancel.png" />
@@ -146,7 +147,7 @@
     <Content Include="Content\FontAwesome\v4-shims.css" />
     <Content Include="Content\FontAwesome\v4-shims.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
-    <Content Include="Pages\Admin.aspx" />
+    <Content Include="Pages\Admin_Project_View.aspx" />
     <Content Include="Pages\MyRegistrations.aspx" />
     <Content Include="Pages\MyData.aspx" />
     <Content Include="Login.aspx" />
@@ -206,6 +207,13 @@
     <Content Include="Bundle.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\Admin_User_View.aspx.cs">
+      <DependentUpon>Admin_User_View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin_User_View.aspx.designer.cs">
+      <DependentUpon>Admin_User_View.aspx</DependentUpon>
+    </Compile>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="Classes\Child.cs" />
     <Compile Include="Classes\cryptography.cs" />
@@ -218,12 +226,12 @@
     <Compile Include="MasterPage\Login.Master.designer.cs">
       <DependentUpon>Login.Master</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Admin.aspx.cs">
-      <DependentUpon>Admin.aspx</DependentUpon>
+    <Compile Include="Pages\Admin_Project_View.aspx.cs">
+      <DependentUpon>Admin_Project_View.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Pages\Admin.aspx.designer.cs">
-      <DependentUpon>Admin.aspx</DependentUpon>
+    <Compile Include="Pages\Admin_Project_View.aspx.designer.cs">
+      <DependentUpon>Admin_Project_View.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\MyRegistrations.aspx.cs">
       <DependentUpon>MyRegistrations.aspx</DependentUpon>

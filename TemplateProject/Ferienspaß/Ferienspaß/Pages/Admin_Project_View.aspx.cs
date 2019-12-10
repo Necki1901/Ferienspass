@@ -100,17 +100,17 @@ namespace Ferienspaß.Pages
         }
 
         protected void gvAdminProjects_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-           
+        {          
             GridViewRow gvr = gvAdminProjects.Rows[e.RowIndex];
             DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateProjectGuide");
             string selectedname = dropDownList.SelectedValue;
+            e.NewValues["DATE"] = ChangeDateFormat(e);
             if (Convert.ToBoolean(ViewState["isAdding"])==false)
-            {
+            {                
                 bool valid = ValidateData(e);
                 if (valid == true)
-                {
-                    if (db.ExecuteNonQuery("UPDATE project SET NAME = ?, DESCRIPTION = ?, DATE = ?, START = ?, END = ?, PLACE = ?, NUMBER = ?, CAPACITY = ?, GID = ? WHERE PID = ?", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]).ToShortDateString(), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], Convert.ToInt32(e.NewValues["NUMBER"]), Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname), e.Keys[0]) > 0)
+                {                    
+                    if (db.ExecuteNonQuery("UPDATE project SET NAME = ?, DESCRIPTION = ?, DATE = ?, START = ?, END = ?, PLACE = ?, NUMBER = ?, CAPACITY = ?, GID = ? WHERE PID = ?", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"],e.NewValues["NUMBER"], Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname), e.Keys[0]) > 0)
                     {
                         lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
                     }
@@ -141,6 +141,14 @@ namespace Ferienspaß.Pages
                 }
             }
             ViewState["isAdding"] = false;
+            
+        }
+
+        private string ChangeDateFormat(GridViewUpdateEventArgs e)
+        {
+            string oldDate = e.NewValues["DATE"].ToString();
+            string newDate = oldDate.Replace(".", "-");
+            return newDate;
             
         }
 

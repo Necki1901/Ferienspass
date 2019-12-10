@@ -148,6 +148,8 @@
     <Content Include="Content\FontAwesome\v4-shims.min.css" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Pages\Admin_Project_View.aspx" />
+
+    <Content Include="Pages\Admin_Child_Administration.aspx" />
     <Content Include="Pages\MyRegistrations.aspx" />
     <Content Include="Pages\MyData.aspx" />
     <Content Include="Login.aspx" />
@@ -232,6 +234,13 @@
     </Compile>
     <Compile Include="Pages\Admin_Project_View.aspx.designer.cs">
       <DependentUpon>Admin_Project_View.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin_Child_Administration.aspx.cs">
+      <DependentUpon>Admin_Child_Administration.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin_Child_Administration.aspx.designer.cs">
+      <DependentUpon>Admin_Child_Administration.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\MyRegistrations.aspx.cs">
       <DependentUpon>MyRegistrations.aspx</DependentUpon>

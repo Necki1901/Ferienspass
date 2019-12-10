@@ -99,5 +99,12 @@ namespace Ferienspaß.Pages
             gv_Children.SelectedIndex = -1;
             Fill_gv_Children();
         }
+
+        protected void gv_Children_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gv_Children.EditIndex = -1;
+            gv_Children.SelectedIndex = -1;
+            Fill_gv_Children();
+        }
     }
 }

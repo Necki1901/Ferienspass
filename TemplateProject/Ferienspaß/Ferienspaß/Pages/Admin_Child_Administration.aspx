@@ -8,7 +8,7 @@
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-     <asp:GridView CssClass="table table-bordered" ID="gv_Children" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_Children_RowCommand" OnRowEditing="gv_Children_RowEditing" OnRowUpdating="gv_Children_RowUpdating">
+     <asp:GridView CssClass="table table-bordered" ID="gv_Children" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_Children_RowCommand" OnRowEditing="gv_Children_RowEditing" OnRowUpdating="gv_Children_RowUpdating" OnRowCancelingEdit="gv_Children_RowCancelingEdit">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="false">
                     <ItemTemplate>

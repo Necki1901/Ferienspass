@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Security;
 using System.Web.UI;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace Ferienspaß.Pages
@@ -16,15 +17,27 @@ namespace Ferienspaß.Pages
         private int projectid;
         CsharpDB db = new CsharpDB();
 
-    
-
-
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!Page.IsPostBack)
             {
+                if(Request.QueryString["id"] == null)
+                    Response.Redirect("Project_View.aspx");
                 ViewState["PID"] = Convert.ToInt32(Request.QueryString["id"]);
                 Fill_gv_UserView_Details();
+            }
+            try
+            {
+                db = new CsharpDB();
+
+                HtmlGenericControl c = (HtmlGenericControl)Master.FindControl("menu_mydata");
+                if (c != null) c.Attributes.Add("class", "active");
+
+                lbl_loggedInUser.Text = db.GetUserName(User.Identity.Name);
+            }
+            catch (Exception ex)
+            {
+
             }
 
         }
@@ -176,6 +189,12 @@ namespace Ferienspaß.Pages
         {
             gv_Children.Visible = visibility;
             btnAddChildren.Visible = visibility;
+        }
+
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            FormsAuthentication.SignOut();
+            FormsAuthentication.RedirectToLoginPage();
         }
     }
 }

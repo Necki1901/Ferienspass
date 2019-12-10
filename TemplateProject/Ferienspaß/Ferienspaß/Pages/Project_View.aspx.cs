@@ -11,7 +11,7 @@ using System.Web.UI.WebControls;
 
 namespace Ferienspaß.Pages
 {
-    public partial class User_View : System.Web.UI.Page
+    public partial class Projectview : System.Web.UI.Page
     {
 
         CsharpDB db = new CsharpDB();
@@ -22,8 +22,6 @@ namespace Ferienspaß.Pages
             {
                 Fill_gv_UserView();
             }
-
-
             try
             {
                 db = new CsharpDB();
@@ -37,7 +35,6 @@ namespace Ferienspaß.Pages
             {
 
             }
-
         }
 
 
@@ -69,7 +66,7 @@ namespace Ferienspaß.Pages
                 case "details":
 
                     string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
-                    Response.Redirect($"User_View_Details.aspx?id={projectID}");
+                    Response.Redirect($"Project_View_Details.aspx?id={projectID}");
                     break;
 
 

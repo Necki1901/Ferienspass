@@ -170,8 +170,8 @@
     <Content Include="Content\bootstrap-reboot.min.css.map" />
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap.min.css.map" />
-    <Content Include="Pages\User_View.aspx" />
-    <Content Include="Pages\User_View_Details.aspx" />
+    <Content Include="Pages\Project_View.aspx" />
+    <Content Include="Pages\Project_View_Details.aspx" />
     <Content Include="Registration.aspx" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
@@ -279,19 +279,19 @@
     <Compile Include="MasterPage\Admin.Master.designer.cs">
       <DependentUpon>Admin.Master</DependentUpon>
     </Compile>
-    <Compile Include="Pages\User_View.aspx.cs">
-      <DependentUpon>User_View.aspx</DependentUpon>
+    <Compile Include="Pages\Project_View.aspx.cs">
+      <DependentUpon>Project_View.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Pages\User_View.aspx.designer.cs">
-      <DependentUpon>User_View.aspx</DependentUpon>
+    <Compile Include="Pages\Project_View.aspx.designer.cs">
+      <DependentUpon>Project_View.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\User_View_Details.aspx.cs">
-      <DependentUpon>User_View_Details.aspx</DependentUpon>
+    <Compile Include="Pages\Project_View_Details.aspx.cs">
+      <DependentUpon>Project_View_Details.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Pages\User_View_Details.aspx.designer.cs">
-      <DependentUpon>User_View_Details.aspx</DependentUpon>
+    <Compile Include="Pages\Project_View_Details.aspx.designer.cs">
+      <DependentUpon>Project_View_Details.aspx</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MasterPage\User.Master.cs">

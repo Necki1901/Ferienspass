@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Userview" Language="C#" MasterPageFile="~/MasterPage/User.Master" AutoEventWireup="true" CodeBehind="Project_View.aspx.cs" Inherits="Ferienspaß.Pages.Projectview" %>
+﻿<%@ Page Title="Userview" Language="C#" MasterPageFile="~/MasterPage/User.Master" AutoEventWireup="true" CodeBehind="User_Project_View.aspx.cs" Inherits="Ferienspaß.Pages.Projectview" %>
 
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">
     <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>

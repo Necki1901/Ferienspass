@@ -1,5 +1,4 @@
-﻿
-<%@ Page Title="AdminView" Language="C#" MasterPageFile="~/MasterPage/Admin.Master" AutoEventWireup="true" CodeBehind="Admin_Project_View.aspx.cs" Inherits="Ferienspaß.Pages.Admin" %>
+﻿<%@ Page Title="AdminView" Language="C#" MasterPageFile="~/MasterPage/Admin.Master" AutoEventWireup="true" CodeBehind="Admin_Project_View.aspx.cs" Inherits="Ferienspaß.Pages.Admin" %>
 
 
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">

@@ -63,6 +63,9 @@
                 <li id="menu_users" class="nav-item">
                 <a class="nav-link" href="Admin_User_View.aspx">Benutzer Verwalten</a>
               </li>
+                <li id="menu_participants" class="nav-item">
+                <a class="nav-link" href="Admin_Participants_View.aspx">Anmeldungen verwalten</a>
+              </li>
               <%--<li id="menu_registrations" class="nav-item">
                 <a class="nav-link" href="MyRegistrations.aspx">Meine Anmeldungen</a>
               </li>

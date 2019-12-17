@@ -14,16 +14,16 @@ namespace Ferienspaß.Pages
     {
         CsharpDB db = new CsharpDB();
         bool isAdding;
+        
 
         protected void Page_Load(object sender, EventArgs e)
 		{
+            lblInfo.Text = "";
             Fill_gvAdminProjects();
             if(!Page.IsPostBack)
             {
                  isAdding = false;
             }
-
-
 
             try
             {
@@ -141,7 +141,10 @@ namespace Ferienspaß.Pages
                 }
             }
             ViewState["isAdding"] = false;
-            
+            GridViewRow gvr2 = gvAdminProjects.Rows[e.RowIndex];//so auch bei Add-Button
+            ImageButton ib = gvr2.FindControl("btnDelete") as ImageButton;
+            ViewState["btnDeleteActive"] = true;
+            ib.Enabled = Convert.ToBoolean(ViewState["btnDeleteActive"]);
         }
 
         private string ChangeDateFormat(GridViewUpdateEventArgs e)
@@ -231,6 +234,10 @@ namespace Ferienspaß.Pages
             gvAdminProjects.EditIndex = -1;
             Fill_gvAdminProjects();
             lblInfo.Text = "";
+            GridViewRow gvr2 = gvAdminProjects.Rows[e.RowIndex];
+            ImageButton ib = gvr2.FindControl("btnDelete") as ImageButton;
+            ViewState["btnDeleteActive"] = true;
+            ib.Enabled =Convert.ToBoolean(ViewState["btnDeleteActive"]);
         }
 
         protected void gvAdminProjects_RowDeleted(object sender, GridViewDeletedEventArgs e)
@@ -265,8 +272,13 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-            pnlMessage.Visible = true;
-            lblPanelId.Text = e.Keys[0].ToString();
+            GridViewRow row = gvAdminProjects.Rows[e.RowIndex];
+
+            string projectID = ((Label)row.FindControl("lblItemTemplateProjectID")).Text;
+            db.Query($"delete from project where PID = {projectID}");
+
+            Fill_gvAdminProjects();
+            lblInfo.Text += "Datensatz wurde gelöscht!";
         }
 
         protected void gvAdminProjects_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -280,8 +292,12 @@ namespace Ferienspaß.Pages
                 ViewState["isAdding"] = true;
                 dt.Rows.Add(dr);
                 gvAdminProjects.DataSource = dt;
-                gvAdminProjects.EditIndex = 0;
+                gvAdminProjects.EditIndex = 0;              
                 gvAdminProjects.DataBind();
+                GridViewRow gvr = gvAdminProjects.Rows[gvAdminProjects.EditIndex];
+                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
+                ib.Enabled = false;
+                ViewState ["btnDeleteActive"]=ib.Enabled;
             }
         }
 

@@ -9,6 +9,16 @@
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+
+ <script type="text/javascript">
+        function Delete() {
+            if (confirm("Datensatz wirklich löschen?")) {
+                return true;               
+            }
+            return false;
+        }
+    </script>
+
     <div>
             <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowDataBound="gvAdminProjects_RowDataBound1" OnRowUpdating="gvAdminProjects_RowUpdating" OnRowCancelingEdit="gvAdminProjects_RowCancelingEdit" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered">
                 <Columns>
@@ -105,8 +115,13 @@
                 </asp:TemplateField>
                     <asp:TemplateField HeaderText="Löschen">
                         <ItemTemplate>
-                            <asp:ImageButton ID="btnDelete" runat="server" CommandName="Delete" ImageUrl="~/App_Themes/default/trash.png" Height="50" Width="50" />
+                            <asp:ImageButton ID="btnDelete" runat="server" CommandName="Delete" ImageUrl="~/App_Themes/default/trash.png" Visible= Height="50" Width="50" OnClientClick="return Delete()"/>
                         </ItemTemplate>                   
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="PID" Visible="false">                         
+                        <ItemTemplate>
+                            <asp:Label ID="lblItemTemplateProjectID" runat="server" Text='<%# Eval("PID").ToString() %>'></asp:Label>
+                        </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>

@@ -20,10 +20,9 @@ namespace Ferienspaß.Pages
             lblMessage.Text = string.Empty;
             if (!Page.IsPostBack)
             {
-                //if (Request.QueryString["id"] == null)
-                //    Response.Redirect("Admin_User_View.aspx");
-                //ViewState["UID"] = Convert.ToInt32(Request.QueryString["id"]);
-                ViewState["UID"] = Convert.ToInt32(2);   //only for testing 
+                if (Request.QueryString["id"] == null) Response.Redirect("Admin_User_View.aspx");
+                ViewState["UID"] = Convert.ToInt32(Request.QueryString["id"]);
+                //ViewState["UID"] = Convert.ToInt32(1);   //only for testing 
                 ViewState["isAdding"] = false;
                 Fill_gv_Children();
             }

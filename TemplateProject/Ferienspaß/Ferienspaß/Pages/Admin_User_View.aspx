@@ -7,8 +7,16 @@
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+        <script type="text/javascript">
+        function Delete() {
+            if (confirm("Datensatz wirklich löschen?")) {
+                return true;               
+            }
+            return false;
+        }
+    </script>
     <div>
-         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating">
+         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating" OnRowDataBound="gvAdminUsers_RowDataBound" OnRowDeleting="gvAdminUsers_RowDeleting">
                 <Columns>
                     <asp:TemplateField HeaderText="Vorname">
                         <EditItemTemplate>
@@ -45,13 +53,13 @@
                     <asp:TemplateField HeaderText="User_Gruppe">
                         <EditItemTemplate>
                             <asp:DropDownList ID="ddlEditItemTemplateUserGroup" runat="server">
-                                <asp:ListItem>0</asp:ListItem>
+                              <%--  <asp:ListItem>0</asp:ListItem>
                                 <asp:ListItem>1</asp:ListItem>
-                                <asp:ListItem>2</asp:ListItem>
+                                <asp:ListItem>2</asp:ListItem>--%>
                             </asp:DropDownList>
                         </EditItemTemplate>
                          <ItemTemplate>
-                            <asp:Label ID="lblItemTemplateUserGroup" runat="server" Text='<%# Eval("UGID") %>'></asp:Label>
+                            <asp:Label ID="lblItemTemplateUserGroup" runat="server" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Zustand">
@@ -86,8 +94,21 @@
                 </asp:TemplateField>
                     <asp:TemplateField HeaderText="Löschen">
                         <ItemTemplate>
-                            <asp:ImageButton ID="btnDelete" runat="server" CommandName="Delete" ImageUrl="~/App_Themes/default/trash.png" Height="50" Width="50" />
+                            <asp:ImageButton ID="btnDelete" runat="server" CommandName="Delete" ImageUrl="~/App_Themes/default/trash.png" Height="50" Width="50" OnClientClick="return Delete()" />
                         </ItemTemplate>                   
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="UID" Visible="False">
+                     <ItemTemplate>
+                          <asp:Label ID="lblItemTemplateUserID" runat="server" Text='<%# Eval("UID").ToString() %>'></asp:Label>
+                        </ItemTemplate>   
+                  <%--  <EditItemTemplate>
+                            <asp:TextBox ID="txtEditItemTemplateUserID" runat="server" Text='<%# Bind("UID").ToString() %>'></asp:TextBox>
+                        </EditItemTemplate>--%>
+                        </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Kinder">
+                        <ItemTemplate>
+                            <asp:ImageButton ID="btnChildren" runat="server" ImageUrl="~/App_Themes/default/child.png" Height="50" Width="50" CommandName="Children" />
+                        </ItemTemplate>       
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>

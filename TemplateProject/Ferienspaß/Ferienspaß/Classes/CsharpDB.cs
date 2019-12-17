@@ -134,8 +134,6 @@ namespace Ferienspaß
 
         }
 
-
-
         public static bool CheckPasswordRequirements(string pwd) {
             if (pwd.Length < 8) return false;
             else if (!pwd.Any(c => char.IsDigit(c))) return false;

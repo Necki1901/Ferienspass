@@ -10,7 +10,7 @@
 namespace Ferienspaß {
 
 
-    public partial class Login {
+    public partial class PasswordReset {
 
         /// <summary>
         /// grp_user control.
@@ -40,22 +40,58 @@ namespace Ferienspaß {
         protected global::System.Web.UI.WebControls.TextBox tbx_user;
 
         /// <summary>
-        /// grp_pwd control.
+        /// grp_pwd1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl grp_pwd;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl grp_pwd1;
 
         /// <summary>
-        /// tbx_pass control.
+        /// span1 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox tbx_pass;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl span1;
+
+        /// <summary>
+        /// tbx_pwd1 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbx_pwd1;
+
+        /// <summary>
+        /// grp_pwd2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl grp_pwd2;
+
+        /// <summary>
+        /// span2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl span2;
+
+        /// <summary>
+        /// tbx_pwd2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox tbx_pwd2;
 
         /// <summary>
         /// btn_login control.

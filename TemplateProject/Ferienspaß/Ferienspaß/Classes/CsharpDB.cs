@@ -77,10 +77,15 @@ namespace Ferienspaß
 
         internal DataTable Query(string sql,params object[] parametervalues)
         {
-            DataTable dt = new DataTable();
-            OdbcDataAdapter da = new OdbcDataAdapter(CreateCommand(sql, parametervalues));
-            da.Fill(dt);
-            return dt;
+            try {
+                DataTable dt = new DataTable();
+                OdbcDataAdapter da = new OdbcDataAdapter(CreateCommand(sql, parametervalues));
+                da.Fill(dt);
+                return dt;
+            }catch(Exception ex) {
+                return new DataTable();
+            }
+            
         }
 
         public object ExecuteScalar(string sql, params object[] parametervalues)
@@ -126,6 +131,14 @@ namespace Ferienspaß
         public bool SaveLogoInDB(string userid,Byte[] logo) {
             if (ExecuteNonQuery("UPDATE portalusers SET Logo=? WHERE userid=?", logo, userid) > 0) return true;
             else return false;
+
+        }
+
+        public static bool CheckPasswordRequirements(string pwd) {
+            if (pwd.Length < 8) return false;
+            else if (!pwd.Any(c => char.IsDigit(c))) return false;
+            else if (!pwd.Any(c => char.IsUpper(c))) return false;
+            return true;
 
         }
 

@@ -58,14 +58,14 @@
             <a class="navbar-brand" href="#">Ferienspaß</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li id="menu_projects" class="nav-item">
-                <a class="nav-link" href="Projects">Projekte</a>
+                <a class="nav-link" href="User_Project_View.aspx">Projektansicht</a>
               </li>
-              <li id="menu_registrations" class="nav-item">
-                <a class="nav-link" href="MyRegistrations">Meine Anmeldungen</a>
+              <%--<li id="menu_registrations" class="nav-item">
+                <a class="nav-link" href="MyRegistrations.aspx">Meine Anmeldungen</a>
               </li>
               <li id="menu_mydata" class="nav-item">
-                <a class="nav-link" href="MyData">Meine Daten</a>
-              </li>
+                <a class="nav-link" href="MyData.aspx">Meine Daten</a>
+              </li>--%>
 
 
               <%--<li class="nav-item">

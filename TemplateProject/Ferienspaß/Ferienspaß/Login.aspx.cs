@@ -43,7 +43,10 @@ namespace Ferienspaß {
                 LoginUser = "";
             }
 
-            if(SessionLoginAttempt+1>=MaxLoginAttempts) {
+           /// FormsAuthentication.RedirectFromLoginPage("1", false);
+
+
+            if (SessionLoginAttempt+1>=MaxLoginAttempts) {
                 btn_login.Enabled = false;
                 grp_user.Visible = false;
                 btn_login.Visible = false;
@@ -82,7 +85,7 @@ namespace Ferienspaß {
             }else if (!String.IsNullOrEmpty(LoginUser) && !String.IsNullOrEmpty(tbx_pass.Text)) {
                 try {
                     db = new CsharpDB();
-                    DataTable user = db.Query("SELECT SALT,ENCODEDPASS,UID,LOCKED,UGID FROM user WHERE UID = ?;", LoginUser);
+                    DataTable user = db.Query("SELECT SALT,ENCODEDPASS,UID,LOCKED,UGID,EmailConfirmed FROM user WHERE UID = ?;", LoginUser);
 
 
                     if (user.Rows.Count == 0) {
@@ -107,6 +110,12 @@ namespace Ferienspaß {
                     string dbPass = user.Rows[0]["ENCODEDPASS"].ToString();
                     if (String.Compare(hashpw, dbPass) == 0) {
 
+                        if (Convert.ToInt32(user.Rows[0]["EmailConfirmed"]) == 0) {
+                            lit_msg.Text = CreateMSGString("<strong>E-Mail Adresse noch nicht bestätigt!</strong><br><a href=''>Bestätigunsemail nochmals anfordern</a>", -1);
+                            return;
+                        }
+
+
                         SessionLoginAttempt = 0;
 
                         switch (usertype) {
@@ -114,19 +123,19 @@ namespace Ferienspaß {
                             case 0:
                                 //MANAGEMENT
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Admin");
+                                Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
                             case 1:
                                 //MANAGEMENT
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Admin");
+                                Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
                             default:
                                 // NORMALER  BENUTZER
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("MyRegistrations");
+                                Response.Redirect("Pages/User_Project_View.aspx");
                                 break;
                         }
 

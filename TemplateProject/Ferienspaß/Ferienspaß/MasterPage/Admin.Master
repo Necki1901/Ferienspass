@@ -2,11 +2,11 @@
 
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="de">
 <head runat="server">
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><%: Page.Title %> - My ASP.NET Application</title>
+    <title><%: Page.Title %> - Ferienspaß</title>
 
     <asp:PlaceHolder runat="server">
         <%: Scripts.Render("~/bundles/modernizr") %>
@@ -14,7 +14,16 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="../Content/bootstrap.css" rel="stylesheet" />
+    <script src="../Scripts/jquery-3.3.1.slim.min.js"></script>
+    <script src="../Scripts/popper.min.js"></script>
+    <script src="../Scripts/bootstrap.min.js"></script>
+    <link href="../Content/font-awesome.css" rel="stylesheet" />
 
+    <%-- ICONS --%>
+ <%--   <link href="../Content/FontAwesome/all.css" rel="stylesheet" />
+    <link href="../Content/FontAwesome/fontawesome.css" rel="stylesheet" />
+    <link href="../Content/FontAwesome/regular.css" rel="stylesheet" />--%>
 </head>
 <body>
     <form runat="server">
@@ -34,38 +43,62 @@
                 <asp:ScriptReference Name="WebParts.js" Assembly="System.Web" Path="~/Scripts/WebForms/WebParts.js" />
                 <asp:ScriptReference Name="Focus.js" Assembly="System.Web" Path="~/Scripts/WebForms/Focus.js" />
                 <asp:ScriptReference Name="WebFormsBundle" />
+
                 <%--Site Scripts--%>
             </Scripts>
         </asp:ScriptManager>
 
-        <div class="navbar navbar-inverse navbar-fixed-top">
-            <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" runat="server" href="~/">Application name</a>
-                </div>
-                <div class="navbar-collapse collapse">
-                    <ul class="nav navbar-nav">
-                        <li><a runat="server" href="~/">Home</a></li>
-                        <li><a runat="server" href="~/About">About</a></li>
-                        <li><a runat="server" href="~/Contact">Contact</a></li>
-                    </ul>
-                </div>
+
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+            <a class="navbar-brand" href="#">Ferienspaß</a>
+            <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+              <li id="menu_projects" class="nav-item">
+                <a class="nav-link" href="Admin_Project_View.aspx">Projekte Verwalten</a>
+              </li>
+                <li id="menu_users" class="nav-item">
+                <a class="nav-link" href="Admin_User_View.aspx">Benutzer Verwalten</a>
+              </li>
+                <li id="menu_participants" class="nav-item">
+                <a class="nav-link" href="Admin_Participants_View.aspx">Anmeldungen verwalten</a>
+              </li>
+              <%--<li id="menu_registrations" class="nav-item">
+                <a class="nav-link" href="MyRegistrations.aspx">Meine Anmeldungen</a>
+              </li>
+              <li id="menu_mydata" class="nav-item">
+                <a class="nav-link" href="MyData.aspx">Meine Daten</a>
+              </li>--%>
+
+
+              <%--<li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+              </li>--%>
+            </ul>
+            <div class="form-inline my-1 my-lg-0">
+               <i class='fa fa-user' style='font-size:22px'></i>
+               <asp:ContentPlaceHolder ID="LoggedInUserContent" runat="server"></asp:ContentPlaceHolder>
             </div>
-        </div>
+          </div>
+        </nav>
+        
+
+
         <div class="container body-content">
             <asp:ContentPlaceHolder ID="MainContent" runat="server">
             </asp:ContentPlaceHolder>
+
+
             <hr />
             <footer>
                 <p>&copy; <%: DateTime.Now.Year %> - My ASP.NET Application</p>
             </footer>
         </div>
 
+             
     </form>
 </body>
 </html>

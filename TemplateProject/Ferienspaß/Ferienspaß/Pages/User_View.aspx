@@ -9,7 +9,14 @@
 <body>
     <form id="form1" runat="server">
         <div>
-            <asp:TextBox ID="txtSuchen" placeholder="Name der Veranstaltung" AutoPostBack="true" OnTextChanged="txtSuchen_TextChanged" runat="server"></asp:TextBox> <%--<asp:DropDownList ID="ddlCategory" runat="server"></asp:DropDownList>--%>
+            <asp:TextBox ID="txtSuchen" placeholder="Name der Veranstaltung" runat="server"></asp:TextBox>
+            <asp:TextBox ID="datepicker" placeholder="Datum" cssclass="datepicker-field" TextMode="Date" runat="server"></asp:TextBox>
+            <br />
+            <asp:CheckBox ID="cbNoParticipants" runat="server" Text="Keine leeren Projekte"/>
+            <asp:CheckBox ID="cbTooManyParticipants" runat="server" Text="Keine vollen Projekte"/>
+            <asp:Button ID="btnFilter" Text="Filtern" runat="server" OnClick="btnFilter_Click" />
+            
+            
         </div>
         <div>
             <asp:GridView ID="gv_UserView" runat="server" 
@@ -38,13 +45,13 @@
                         <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("Place") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="Nr.">
+                <asp:TemplateField HeaderText="Projektnummer">
                     <ItemTemplate>
                         <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("Number") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
 
-                 <asp:TemplateField HeaderText="Nr.">
+                 <asp:TemplateField HeaderText="Freie Plätze">
                     <ItemTemplate>
                         <asp:Label ID="lblFrage" runat="server" Text='<%# Eval("participants") %>'></asp:Label>
                     </ItemTemplate>
@@ -52,7 +59,7 @@
                  <%-- Details --%>
                 <asp:TemplateField HeaderText="Details">
                     <ItemTemplate>
-                        <asp:ImageButton ID="btnCancelInsert" runat="server" CommandName="Details" ImageUrl="~/App_Themes/default/details.jpg" />
+                        <asp:Button ID="btnShowDetails" runat="server" Text="Zur Anmeldung" CommandName="details" />
                     </ItemTemplate>
                 </asp:TemplateField>
             </Columns>

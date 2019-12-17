@@ -33,44 +33,91 @@ namespace Ferienspaß.Pages
             dt = rc.GetDataTableWithRemainingCapacities(dt);
             dv = new DataView(dt);
 
-           
+
             gv_UserView.DataSource = dv;
             gv_UserView.DataBind();
 
         }
 
-        //private void Fill_ddlCategory()
-        //{
-        //    CsharpDB db = new CsharpDB();
-        //}
 
-        private int GetNumberOfParticipants(int projectID, int capacity)
-        {
-            DataTable dt;
-            string command = $"select count(CID) from participation where pid = {projectID}";
-            dt = db.Query(command);
-
-            string row = dt.Rows[0].ItemArray[0].ToString();
-            int participants = Convert.ToInt32(row);
-
-            int open_participants = capacity - participants;
-
-            return open_participants;
-        }
 
         protected void gv_UserView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            GridViewRow gvr = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
+            //Code used -> https://stackoverflow.com/questions/6503339/get-row-index-on-asp-net-rowcommand-event/6503483
 
+            switch (e.CommandName)
+            {
+                case "details":
+
+                    string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
+                    Response.Redirect($"User_View_Details.aspx?id={projectID}");
+                    break;
+
+
+            }
         }
 
-        protected void txtSuchen_TextChanged(object sender, EventArgs e)
+        protected void btnFilter_Click(object sender, EventArgs e)
         {
             DataTable dt;
             DataView dv;
-            RemainingCapacity rc = new RemainingCapacity();
+            string sql;
+            bool condition = false;
 
-            dt = db.Query($"SELECT * FROM project WHERE Name Like '%{txtSuchen.Text.ToLower()}%");
-            dt = rc.GetDataTableWithRemainingCapacities(dt);
+            if (cbTooManyParticipants.Checked == true && cbNoParticipants.Checked == true)
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+            }
+            else if (cbTooManyParticipants.Checked == true)
+            {
+                condition = true;
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants>0";
+            }
+            else if (cbNoParticipants.Checked == true)
+            {
+                condition = true;
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants<project.CAPACITY";
+            }
+            else
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+            }
+            
+            
+            if(condition == true)
+            {
+                if (txtSuchen.Text != string.Empty)
+                {
+                    sql += $" AND Name Like '%{txtSuchen.Text.ToLower()}%'";
+                }
+
+                if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
+                {
+                    sql += $" AND project.date={datepicker.Text}";
+                }
+            }
+            else
+            {
+                if (txtSuchen.Text != string.Empty)
+                {
+                    sql += $" Having Name Like '%{txtSuchen.Text.ToLower()}%'";
+                    if (datepicker.Text != string.Empty)
+                    {
+                        sql += $" AND project.date='{datepicker.Text}'";
+                    }
+                }
+
+                if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
+                {
+                    sql += $" Having project.date='{datepicker.Text}'";
+                }
+            }
+
+
+
+            dt = db.Query(sql);
+
             dv = new DataView(dt);
 
 

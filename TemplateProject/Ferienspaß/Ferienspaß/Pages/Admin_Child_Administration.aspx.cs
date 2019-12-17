@@ -17,6 +17,7 @@ namespace Ferienspaß.Pages
         protected void Page_Load(object sender, EventArgs e)
         {
             db = new CsharpDB();
+            lblMessage.Text = string.Empty;
             if (!Page.IsPostBack)
             {
                 if (Request.QueryString["id"] == null) Response.Redirect("Admin_User_View.aspx");
@@ -27,7 +28,6 @@ namespace Ferienspaß.Pages
             }
             try
             {
-
                 HtmlGenericControl c = (HtmlGenericControl)Master.FindControl("menu_mydata");
                 if (c != null) c.Attributes.Add("class", "active");
 
@@ -37,7 +37,6 @@ namespace Ferienspaß.Pages
             {
 
             }
-            lblMessage.Text = string.Empty;
         }
 
         private void Fill_gv_Children()
@@ -49,8 +48,14 @@ namespace Ferienspaß.Pages
             dt = db.Query($"SELECT * FROM child where UID = {ViewState["UID"]}");
             dv = new DataView(dt);
 
+            if(dt.Rows.Count == 0)
+            {
+                lblMessage.Text = "Zu diesem Nutzer gibt es keine zugehörigen Kinder";
+            }
+
             gv_Children.DataSource = dv;
             gv_Children.DataBind();
+
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -76,6 +81,7 @@ namespace Ferienspaß.Pages
                     gv_Children.EditIndex = 0;
                     gv_Children.DataBind();
 
+                    ((Button)gv_Children.HeaderRow.FindControl("btnAddChild")).Enabled = false;
                     break;
             }
         }
@@ -94,13 +100,15 @@ namespace Ferienspaß.Pages
             string newGivenname = ((TextBox)gv_Children.Rows[e.RowIndex].FindControl("txtGivenname")).Text;
             string newBirthdayString = ((TextBox)gv_Children.Rows[e.RowIndex].FindControl("txtBirthday")).Text;
 
-            if(ValidateInput(newSurname, newGivenname, newBirthdayString) == true)
+            if (ValidateInput(newSurname, newGivenname, newBirthdayString) == true)
             {
                 DateTime newBirthday = Convert.ToDateTime(newBirthdayString);
 
                 if (Convert.ToBoolean(ViewState["isAdding"]) == true)
                 {
+
                     db.Query($"INSERT INTO child(GN, SN, BD, UID) VALUES('{newGivenname}', '{newSurname}', '{newBirthday.ToString("yyyy/MM/dd")}', {ViewState["UID"]})");
+                    lblMessage.Text = "Datensatz wurde erfolgreich angelegt";
                 }
                 else
                 {
@@ -109,32 +117,51 @@ namespace Ferienspaß.Pages
 
                     db.Query($"UPDATE child SET GN = '{newGivenname}', SN = '{newSurname}', BD = '{newBirthday.ToString("yyyy/MM/dd")}'" +
                         $"WHERE CID = {childID}");
-                }
-            }
+                    lblMessage.Text = "Datensatz wurde erfolgreich bearbeitet";
 
-            ViewState["isAdding"] = false;
-            gv_Children.EditIndex = -1;
-            gv_Children.SelectedIndex = -1;
-            Fill_gv_Children();
+                }
+
+                ((Button)gv_Children.HeaderRow.FindControl("btnAddChild")).Enabled = true;
+                ViewState["isAdding"] = false;
+                gv_Children.EditIndex = -1;
+                gv_Children.SelectedIndex = -1;
+                Fill_gv_Children();
+            }
         }
 
-        private bool ValidateInput(string newSurname, string newGivenname, string newBirthday)
+        private bool ValidateInput(string newSurname, string newGivenname, string newBirthdayString)
         {
+            //Surname validation
             if(string.IsNullOrEmpty(newSurname) || newSurname.Length > 50)
             {
                 lblMessage.Text = "Eingabefehler-Vorname: (höchstens 50 Zeichen)";
                 return false;
             }   
+            //Givenname validation
             if(string.IsNullOrEmpty(newGivenname) || newGivenname.Length > 50)
             {
                 lblMessage.Text = "Eingabefehler-Nachname: (höchstens 50 Zeichen)";
                 return false;
             }
-
-            if (string.IsNullOrEmpty(newBirthday) || DateTime.TryParse(newBirthday, out var x) == false)
-            {
+            //Birthday validation
+            if (string.IsNullOrEmpty(newBirthdayString) || DateTime.TryParse(newBirthdayString, out var x) == false)
+            { 
                 lblMessage.Text = "Eingabefehler-Geburtsdatum: (Format(dd/MM/yyyy))";
                 return false;
+            }
+            else
+            {
+                DateTime newBirthday = Convert.ToDateTime(newBirthdayString);
+                if(newBirthday > DateTime.Today)
+                {
+                    lblMessage.Text = "Fehler: Geburtsdatum ungültig";
+                    return false;
+                }
+                if(newBirthday <= DateTime.Today.AddYears(-18))
+                {
+                    lblMessage.Text = "Fehler: Es dürfen nur Kinder angelegt werden";
+                    return false;
+                }
             }
             return true;
         }
@@ -151,8 +178,9 @@ namespace Ferienspaß.Pages
             GridViewRow row = gv_Children.Rows[e.RowIndex];
 
             string childrenID = ((Label)row.FindControl("lblChildID")).Text;    
-            db.Query($"delete from child where CID = {childrenID}");    
+            db.Query($"delete from child where CID = {childrenID}");
 
+            lblMessage.Text = "Datensatz gelöscht";
             Fill_gv_Children();
         }
     }

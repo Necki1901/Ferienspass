@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\Admin_Participants_View.aspx" />
     <Content Include="App_Themes\default\child.png" />
     <Content Include="Pages\Admin_User_View.aspx" />
     <Content Include="App_Themes\default\add.png" />
@@ -209,6 +210,13 @@
     <Content Include="Bundle.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\Admin_Participants_View.aspx.cs">
+      <DependentUpon>Admin_Participants_View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin_Participants_View.aspx.designer.cs">
+      <DependentUpon>Admin_Participants_View.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Admin_User_View.aspx.cs">
       <DependentUpon>Admin_User_View.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

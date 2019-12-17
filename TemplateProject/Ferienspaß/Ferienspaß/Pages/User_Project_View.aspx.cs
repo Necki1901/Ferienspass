@@ -31,10 +31,7 @@ namespace Ferienspaß.Pages
 
                 lbl_loggedInUser.Text = db.GetUserName(User.Identity.Name);
             }
-            catch(Exception ex)
-            {
-
-            }
+            catch (Exception) { }
         }
 
 
@@ -77,6 +74,73 @@ namespace Ferienspaß.Pages
         {
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
+        }
+
+        protected void btnFilter_Click(object sender, EventArgs e)
+        {
+            DataTable dt;
+            DataView dv;
+            string sql;
+            bool condition = false;
+
+            if (cbTooManyParticipants.Checked == true && cbNoParticipants.Checked == true)
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+            }
+            else if (cbTooManyParticipants.Checked == true)
+            {
+                condition = true;
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants>0";
+            }
+            else if (cbNoParticipants.Checked == true)
+            {
+                condition = true;
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants<project.CAPACITY";
+            }
+            else
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+            }
+
+
+            if (condition == true)
+            {
+                if (txtSuchen.Text != string.Empty)
+                {
+                    sql += $" AND Name Like '%{txtSuchen.Text.ToLower()}%'";
+                }
+
+                if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
+                {
+                    sql += $" AND project.date={datepicker.Text}";
+                }
+            }
+            else
+            {
+                if (txtSuchen.Text != string.Empty)
+                {
+                    sql += $" Having Name Like '%{txtSuchen.Text.ToLower()}%'";
+                    if (datepicker.Text != string.Empty)
+                    {
+                        sql += $" AND project.date='{datepicker.Text}'";
+                    }
+                }
+
+                if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
+                {
+                    sql += $" Having project.date='{datepicker.Text}'";
+                }
+            }
+
+
+
+            dt = db.Query(sql);
+
+            dv = new DataView(dt);
+
+
+            gv_UserView.DataSource = dv;
+            gv_UserView.DataBind();
         }
     }
 }

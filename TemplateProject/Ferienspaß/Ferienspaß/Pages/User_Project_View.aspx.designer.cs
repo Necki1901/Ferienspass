@@ -42,15 +42,6 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.TextBox txtSuchen;
 
         /// <summary>
-        /// datepicker control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox datepicker;
-
-        /// <summary>
         /// cbNoParticipants control.
         /// </summary>
         /// <remarks>
@@ -58,6 +49,15 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.CheckBox cbNoParticipants;
+
+        /// <summary>
+        /// datepicker control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox datepicker;
 
         /// <summary>
         /// cbTooManyParticipants control.

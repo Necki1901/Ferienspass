@@ -21,6 +21,8 @@ namespace Ferienspaß {
            
             if (!Page.IsPostBack) {
 
+            } else {
+                if(Request.QueryString["fromRegistration"]=="1") lit_msg.Text = CreateMSGString("Registration erfolgreich! Sie können nun Ihre Kinder anlegen.", "danger");
             }
 
 

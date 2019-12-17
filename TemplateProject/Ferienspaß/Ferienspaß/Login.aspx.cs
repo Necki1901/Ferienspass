@@ -43,7 +43,7 @@ namespace Ferienspaß {
                 LoginUser = "";
             }
 
-           /// FormsAuthentication.RedirectFromLoginPage("1", false);
+            //FormsAuthentication.RedirectFromLoginPage("1", false);
 
 
             if (SessionLoginAttempt+1>=MaxLoginAttempts) {
@@ -112,6 +112,13 @@ namespace Ferienspaß {
 
                         if (Convert.ToInt32(user.Rows[0]["EmailConfirmed"]) == 0) {
                             lit_msg.Text = CreateMSGString("<strong>E-Mail Adresse noch nicht bestätigt!</strong><br><a href=''>Bestätigunsemail nochmals anfordern</a>", -1);
+                            return;
+                        }
+
+
+                        if(!CsharpDB.IsUserAllowedToLogin()) {
+                            DateTime[] dates = CsharpDB.GetPortalLoginDates();
+                            lit_msg.Text = CreateMSGString("<strong>Ferienspaß nicht verfügbar!</strong><br>Ferienspaß ist wieder verfügbar von:<br> "+dates[0].ToLocalTime()+" bis "+dates[1].ToLocalTime(),-1);
                             return;
                         }
 

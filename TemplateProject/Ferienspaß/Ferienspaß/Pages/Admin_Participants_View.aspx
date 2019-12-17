@@ -9,8 +9,10 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <asp:DropDownList CssClass="table-bordered" ID="ddl_Projects" runat="server" OnSelectedIndexChanged="ddl_Projects_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
-    <asp:Label runat="server" ID="lbl_Project_Info"></asp:Label>
+    Projekte:<asp:DropDownList CssClass="table-bordered" ID="ddl_Projects" runat="server" OnSelectedIndexChanged="ddl_Projects_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+
+    Jahr: <asp:DropDownList ID="ddl_Years" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_Years_SelectedIndexChanged">
+    </asp:DropDownList><br />
 
     <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False">
         <Columns>
@@ -43,4 +45,5 @@
         </Columns>
     </asp:GridView>
 
+    <asp:Label runat="server" ID="lbl_Message"></asp:Label>
 </asp:Content>

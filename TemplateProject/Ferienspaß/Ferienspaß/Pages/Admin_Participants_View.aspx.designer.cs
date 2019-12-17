@@ -42,13 +42,13 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.DropDownList ddl_Projects;
 
         /// <summary>
-        /// lbl_Project_Info control.
+        /// ddl_Years control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_Project_Info;
+        protected global::System.Web.UI.WebControls.DropDownList ddl_Years;
 
         /// <summary>
         /// gv_Participants control.
@@ -58,5 +58,14 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gv_Participants;
+
+        /// <summary>
+        /// lbl_Message control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lbl_Message;
     }
 }

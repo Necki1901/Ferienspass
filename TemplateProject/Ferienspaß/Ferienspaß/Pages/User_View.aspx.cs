@@ -4,14 +4,12 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Web;
-using System.Web.Security;
 using System.Web.UI;
-using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace Ferienspaß.Pages
 {
-    public partial class Projectview : System.Web.UI.Page
+    public partial class User_View : System.Web.UI.Page
     {
 
         CsharpDB db = new CsharpDB();
@@ -22,16 +20,6 @@ namespace Ferienspaß.Pages
             {
                 Fill_gv_UserView();
             }
-            try
-            {
-                db = new CsharpDB();
-
-                HtmlGenericControl c = (HtmlGenericControl)Master.FindControl("menu_mydata");
-                if (c != null) c.Attributes.Add("class", "active");
-
-                lbl_loggedInUser.Text = db.GetUserName(User.Identity.Name);
-            }
-            catch (Exception) { }
         }
 
 
@@ -45,13 +33,13 @@ namespace Ferienspaß.Pages
             dt = rc.GetDataTableWithRemainingCapacities(dt);
             dv = new DataView(dt);
 
-           
+
             gv_UserView.DataSource = dv;
             gv_UserView.DataBind();
 
         }
 
-       
+
 
         protected void gv_UserView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -63,17 +51,11 @@ namespace Ferienspaß.Pages
                 case "details":
 
                     string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
-                    Response.Redirect($"User_Project_View_Details.aspx?id={projectID}");
+                    Response.Redirect($"User_View_Details.aspx?id={projectID}");
                     break;
 
 
             }
-        }
-
-        protected void btnLogout_Click(object sender, EventArgs e)
-        {
-            FormsAuthentication.SignOut();
-            FormsAuthentication.RedirectToLoginPage();
         }
 
         protected void btnFilter_Click(object sender, EventArgs e)
@@ -101,9 +83,9 @@ namespace Ferienspaß.Pages
             {
                 sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
             }
-
-
-            if (condition == true)
+            
+            
+            if(condition == true)
             {
                 if (txtSuchen.Text != string.Empty)
                 {

@@ -127,16 +127,6 @@
             </asp:GridView>
               <asp:Label ID="lblInfo" runat="server"></asp:Label>
         </div>
-          <asp:Panel ID="pnlMessage" runat="server" Visible="False">
-              <asp:Label ID="lblPanelDelete" runat="server" Text="Datensatz wirklich Löschen?"></asp:Label>
-              <br />
-              Datensatz Nr:
-              <asp:Label ID="lblPanelId" runat="server"></asp:Label>
-              <br />
-              <asp:Button ID="btnLabelDeleteNo" runat="server" OnClick="btnLabelDeleteNo_Click" Text="Nein" Width="285px" />
-              <asp:Button ID="btnLabelDeleteYes" runat="server" OnClick="btnLabelDeleteYes0_Click" Text="Ja" Width="268px" />
-              <br />
-          </asp:Panel>
     <p>
         DATE Format: YYYY.MM.DD</p>
     <p>

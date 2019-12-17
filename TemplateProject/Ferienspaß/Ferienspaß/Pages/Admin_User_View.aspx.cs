@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Odbc;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -14,13 +15,14 @@ namespace Ferienspaß
     {
         CsharpDB db = new CsharpDB();
         bool isAdding;
+     
         protected void Page_Load(object sender, EventArgs e)
         {
             lblInfo.Text = "";
             Fill_gvAdminUsers();
             if (!Page.IsPostBack)
             {
-                isAdding = false;
+                isAdding = false;               
             }
             try
             {
@@ -53,14 +55,12 @@ namespace Ferienspaß
         }
 
         protected void gvAdminUsers_RowCommand(object sender, GridViewCommandEventArgs e)
-        {
-            GridViewRow gvr1 = (GridViewRow)((ImageButton)e.CommandSource).NamingContainer;
+        {          
             if (e.CommandName == "Add")
             {
                 DataTable dt = db.Query("SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID ");
                 dt.Clear();
-                DataRow dr = dt.NewRow();
-                //dr["PID"] = -1;
+                DataRow dr = dt.NewRow();               
                 ViewState["isAdding"] = true;
                 dt.Rows.Add(dr);
                 gvAdminUsers.DataSource = dt;
@@ -68,21 +68,26 @@ namespace Ferienspaß
                 gvAdminUsers.DataBind();
                 GridViewRow gvr = gvAdminUsers.Rows[gvAdminUsers.EditIndex];
                 ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
-                ib.Enabled = false;
-                ViewState["btnDeleteActive"] = ib.Enabled;
+                ib.Visible = false;             
+                ImageButton ib2 = gvr.FindControl("btnChildren") as ImageButton;
+                ib2.Visible = false;
             }
+           
             if (e.CommandName == "Children")
             {
+                GridViewRow gvr1 = (GridViewRow)((ImageButton)e.CommandSource).NamingContainer;
                 string userID = ((Label)gvr1.FindControl("lblItemTemplateUserID")).Text;
                 Response.Redirect(String.Format("Admin_Child_Administration.aspx?id={0}", userID));
             }
         }
 
         protected void gvAdminUsers_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-            GridViewRow gvr = gvAdminUsers.Rows[e.NewEditIndex];          
+        {                              
             gvAdminUsers.EditIndex = e.NewEditIndex;            
-            Fill_gvAdminUsers();           
+            Fill_gvAdminUsers();
+            GridViewRow gvr2 = gvAdminUsers.Rows[e.NewEditIndex];//so auch bei Add-Button
+            ImageButton ib = gvr2.FindControl("btnChildren") as ImageButton;
+            ib.Visible = false;
         }
 
         protected void gvAdminUsers_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -125,15 +130,10 @@ namespace Ferienspaß
                     DataTable u = db.Query("SELECT UID,GN,EMAIL,SN FROM user WHERE EMAIL LIKE ? LIMIT 1", e.NewValues["EMAIL"]);
                     string resetHash = PwdResetHash(u.Rows[0]["GN"].ToString(), u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["UID"].ToString());
                     bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort zurücksetzen", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/PasswordReset.aspx?hash=" + resetHash);
-
+                    ViewState["isAdding"] = false;
                 }
             }
-            ViewState["isAdding"] = false;
-            GridViewRow gvr2 = gvAdminUsers.Rows[e.RowIndex];//so auch bei Add-Button
-            ImageButton ib = gvr2.FindControl("btnDelete") as ImageButton;
-            ViewState["btnDeleteActive"] = true;
-            ib.Enabled = Convert.ToBoolean(ViewState["btnDeleteActive"]);
-
+                     
         }
 
         public string PwdResetHash(string firstname, string email, string uId)
@@ -160,7 +160,17 @@ namespace Ferienspaß
 
                 if (!(e.NewValues["EMAIL"].ToString().Contains("@"))){ valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
-                       
+                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
+                {
+                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{e.NewValues["EMAIL"]}'";
+                    db.Connection.Open();
+                    OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
+                    int amount = Convert.ToInt32(cmd.ExecuteScalar());
+                    db.Connection.Close();
+
+                    if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
+                }
+
             }
             lblInfo.Text = errorDescription;
             return valid;
@@ -170,11 +180,7 @@ namespace Ferienspaß
         {
             gvAdminUsers.EditIndex = -1;
             Fill_gvAdminUsers();
-            lblInfo.Text = "";
-            GridViewRow gvr2 = gvAdminUsers.Rows[e.RowIndex];
-            ImageButton ib = gvr2.FindControl("btnDelete") as ImageButton;
-            ViewState["btnDeleteActive"] = true;
-            ib.Enabled = Convert.ToBoolean(ViewState["btnDeleteActive"]);
+            lblInfo.Text = "";                  
         }
 
         protected void gvAdminUsers_RowDataBound(object sender, GridViewRowEventArgs e)

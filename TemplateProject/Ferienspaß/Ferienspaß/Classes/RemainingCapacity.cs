@@ -15,7 +15,7 @@ namespace Ferienspaß.Classes
             dt.Columns.Add("remainingCapacity", typeof(int));
             
 
-            foreach (DataRow row in dt.Rows)
+            foreach (DataRow row in dt.Rows)    
             {
                 int projectID = Convert.ToInt32(row["PID"]);
                 int capacity = Convert.ToInt32(row["capacity"]);

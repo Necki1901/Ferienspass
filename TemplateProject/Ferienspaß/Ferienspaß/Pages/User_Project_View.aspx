@@ -12,7 +12,7 @@
             <div class="form-row">
                 <div class="form-group col-md-6">
                     <asp:Label Text="Name der Veranstaltung" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtSuchen" CssClass="" runat="server"></asp:TextBox>
+                    <asp:TextBox ID="txtSuchen" runat="server"></asp:TextBox>
                 </div>
                 <div>
                     <asp:CheckBox ID="cbNoParticipants" runat="server" Text="Keine leeren Projekte"/>
@@ -27,7 +27,7 @@
                     <asp:CheckBox ID="cbTooManyParticipants" runat="server" Text="Keine vollen Projekte"/>
                 </div>
             </div>
-            <asp:Button ID="btnFilter" Text="Filtern" class="btn btn-primary" runat="server" OnClick="btnFilter_Click" />
+            <asp:Button ID="btnFilter" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnFilter_Click" />
         </div>
           <br />
             <asp:GridView ID="gv_UserView" runat="server" 

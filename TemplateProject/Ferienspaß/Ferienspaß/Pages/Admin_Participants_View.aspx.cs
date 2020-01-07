@@ -17,6 +17,7 @@ namespace Ferienspaß.Pages
         protected void Page_Load(object sender, EventArgs e)
         {
             db = new CsharpDB();
+            lbl_Message.Text = string.Empty;
             if (!Page.IsPostBack)
             {
                 Fill_ddl_Years();
@@ -86,7 +87,7 @@ namespace Ferienspaß.Pages
 
         private void Fill_Gv_Participants()
         {
-            DataTable dt = db.Query($"SELECT child.GN, child.SN, child.BD, participation.CID, user.PHONE " +
+            DataTable dt = db.Query($"SELECT child.GN, child.SN, child.BD, participation.paid, participation.CID, user.PHONE " +
                 $"FROM child " +
                 $"INNER JOIN participation " +
                 $"ON child.CID = participation.CID " +
@@ -108,5 +109,91 @@ namespace Ferienspaß.Pages
             Fill_ddl_Projects();
             Fill_Gv_Participants();
         }
+
+        protected void gv_Participants_RowDeleting(object sender, GridViewDeleteEventArgs e)
+        {
+            GridViewRow row = gv_Participants.Rows[e.RowIndex];
+
+            string childID = ((Label)row.FindControl("lblChildID")).Text;
+            db.Query($"delete from participation where CID = {childID}");
+
+            lbl_Message.Text = "Datensatz gelöscht";
+            Fill_Gv_Participants();
+        }
+
+        protected void gv_Participants_RowEditing(object sender, GridViewEditEventArgs e)
+        {
+            gv_Participants.EditIndex = e.NewEditIndex;
+            Fill_Gv_Participants();
+        }
+
+        protected void gv_Participants_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        {
+            GridViewRow row = gv_Participants.Rows[e.RowIndex];     //Reihe erfassen
+
+            string paid = ((DropDownList)row.FindControl("ddl_Paid")).SelectedValue;
+            string id = ((Label)(row.FindControl("lblChildID"))).Text;
+
+            db.Query($"UPDATE participation SET paid = {paid} WHERE CID = {id}");
+
+            ((Button)gv_Participants.HeaderRow.FindControl("btn_add_participation")).Enabled = true;
+            gv_Participants.EditIndex = -1;
+            gv_Participants.SelectedIndex = -1;
+            Fill_Gv_Participants();
+        }
+
+        public static string ChangePaidType(int paid)
+        {
+            if (paid == 1)
+                return "Ja";
+            return "Nein";
+        }
+
+        protected void gv_Participants_RowDataBound(object sender, GridViewRowEventArgs e)
+        {
+            if(e.Row.RowType == DataControlRowType.DataRow && gv_Participants.EditIndex == e.Row.RowIndex)
+            {
+                Control ctrl = e.Row.FindControl("ddl_Paid");
+                string id = ((Label)e.Row.FindControl("lblChildID")).Text;
+
+                DropDownList ddl = ctrl as DropDownList;
+                DataTable dt = db.Query($"SELECT paid FROM participation WHERE CID = {id}");
+
+                int paid = (int)dt.Rows[0]["paid"];
+
+                ListItem item_no = new ListItem("Nein", "0");
+                ListItem item_yes = new ListItem("Ja", "1");
+
+                if (paid == 0)
+                    item_no.Selected = true;
+                else
+                    item_yes.Selected = true;
+
+                ddl.Items.Add(item_no);
+                ddl.Items.Add(item_yes);
+
+                DataRowView dr = e.Row.DataItem as DataRowView;
+            }
+        }
+
+        protected void gv_Participants_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            switch (e.CommandName)
+            {
+                case "add":
+                    Response.Redirect("Admin_Project_View_Add");
+                    break;
+            }
+        }
+
+        protected void gv_Participants_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gv_Participants.EditIndex = -1;
+            gv_Participants.SelectedIndex = -1;
+            Fill_Gv_Participants();
+        }
     }
+    
+
+   
 }

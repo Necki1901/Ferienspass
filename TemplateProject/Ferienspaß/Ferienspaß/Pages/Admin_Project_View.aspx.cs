@@ -13,14 +13,14 @@ namespace Ferienspaß.Pages
     public partial class Admin : System.Web.UI.Page
     {
         CsharpDB db = new CsharpDB();
-        bool isAdding;        
+        bool isAdding;
         protected void Page_Load(object sender, EventArgs e)
-		{
+        {
             lblInfo.Text = "";
             Fill_gvAdminProjects();
-            if(!Page.IsPostBack)
+            if (!Page.IsPostBack)
             {
-                 isAdding = false;
+                isAdding = false;
             }
 
             try
@@ -52,14 +52,14 @@ namespace Ferienspaß.Pages
         }
 
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
-        {            
-            gvAdminProjects.EditIndex = e.NewEditIndex;          
-            Fill_gvAdminProjects();          
+        {
+            gvAdminProjects.EditIndex = e.NewEditIndex;
+            Fill_gvAdminProjects();
         }
 
         //protected void gvAdminProjects_RowDataBound(object sender, GridViewRowEventArgs e)
         //{
-            
+
         //}
 
         private DataTable GetAllGuides()
@@ -69,36 +69,36 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_RowDataBound1(object sender, GridViewRowEventArgs e)
         {
-            if (e.Row.RowType == DataControlRowType.DataRow && gvAdminProjects.EditIndex == e.Row.RowIndex ) 
+            if (e.Row.RowType == DataControlRowType.DataRow && gvAdminProjects.EditIndex == e.Row.RowIndex)
             {
                 Control ctrl = e.Row.FindControl("ddlEditItemTemplateProjectGuide");
-                      
+
                 DropDownList ddl = ctrl as DropDownList;
                 DataTable dt = GetAllGuides();
-                for (int i = 0; i < dt.Rows.Count; i++) 
+                for (int i = 0; i < dt.Rows.Count; i++)
                 {
-                   //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
+                    //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
                     ddl.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString()));
                 }
                 DataRowView dr = e.Row.DataItem as DataRowView;
-                
+
                 ddl.SelectedValue = dr["GID"].ToString();
                 ddl.SelectedItem.Text = dr["SN"].ToString();
-            }           
+            }
         }
 
         protected void gvAdminProjects_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {          
+        {
             GridViewRow gvr = gvAdminProjects.Rows[e.RowIndex];
             DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateProjectGuide");
             string selectedname = dropDownList.SelectedValue;
-            
-            if (Convert.ToBoolean(ViewState["isAdding"])==false)
-            {                
+
+            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
+            {
                 bool valid = ValidateData(e);
                 if (valid == true)
-                {                    
-                    if (db.ExecuteNonQuery("UPDATE project SET NAME = ?, DESCRIPTION = ?, DATE = ?, START = ?, END = ?, PLACE = ?, NUMBER = ?, CAPACITY = ?, GID = ? WHERE PID = ?", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"],e.NewValues["NUMBER"], Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname), e.Keys[0]) > 0)
+                {
+                    if (db.ExecuteNonQuery("UPDATE project SET NAME = ?, DESCRIPTION = ?, DATE = ?, START = ?, END = ?, PLACE = ?, NUMBER = ?, CAPACITY = ?, GID = ? WHERE PID = ?", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], e.NewValues["NUMBER"], Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname), e.Keys[0]) > 0)
                     {
                         lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
                     }
@@ -109,7 +109,7 @@ namespace Ferienspaß.Pages
                     gvAdminProjects.EditIndex = -1;
                     Fill_gvAdminProjects();
                 }
-                
+
             }
             else
             {
@@ -128,7 +128,7 @@ namespace Ferienspaß.Pages
                     Fill_gvAdminProjects();
                     ViewState["isAdding"] = false;
                 }
-            }           
+            }
         }
 
         private string ChangeDateFormat(GridViewUpdateEventArgs e)
@@ -136,12 +136,12 @@ namespace Ferienspaß.Pages
             string oldDate = e.NewValues["DATE"].ToString();
             string newDate = oldDate.Replace(".", "-");
             return newDate;
-            
+
         }
 
         private bool ValidateData(GridViewUpdateEventArgs e)
         {
-            string errorDescription="";
+            string errorDescription = "";
             bool valid = true;
             bool checkifinteger = true;
 
@@ -172,7 +172,7 @@ namespace Ferienspaß.Pages
                     //Proof Time
                     bool checkifintegerStartTime = true;
                     bool checkifintegerEndTime = true;
-                    
+
                     for (int i = 0; i < e.NewValues["START"].ToString().Length; i++)
                     {
                         if (i != 2 && i != 5)
@@ -208,7 +208,7 @@ namespace Ferienspaß.Pages
                     if (!(e.NewValues["DESCRIPTION"].ToString().Length <= 140)) { valid = false; errorDescription += "BESCHREIBUNG ist zu lang!!  "; }
                     if (!(e.NewValues["PLACE"].ToString().Length <= 50)) { valid = false; errorDescription += "ORT ist zu lang!  "; }
                     if (!(e.NewValues["NUMBER"].ToString().Length <= 5)) { valid = false; errorDescription += "HAUSNUMMER ist zu lang!  "; }
-                   
+
                 }
             }
             lblInfo.Text = errorDescription;
@@ -219,14 +219,14 @@ namespace Ferienspaß.Pages
         {
             gvAdminProjects.EditIndex = -1;
             Fill_gvAdminProjects();
-            lblInfo.Text = "";            
+            lblInfo.Text = "";
         }
 
         protected void gvAdminProjects_RowDeleted(object sender, GridViewDeletedEventArgs e)
         {
 
         }
-       
+
         protected void gvAdminProjects_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvAdminProjects.Rows[e.RowIndex];
@@ -251,9 +251,9 @@ namespace Ferienspaß.Pages
                 gvAdminProjects.DataBind();
                 GridViewRow gvr = gvAdminProjects.Rows[gvAdminProjects.EditIndex];
                 DropDownList ddl = gvr.FindControl("ddlEditItemTemplateProjectGuide") as DropDownList;
-                ddl.SelectedItem.Text = GetTextForDdl(Convert.ToInt32(ddl.SelectedValue)); 
-                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;              
-                ib.Visible = false; 
+                ddl.SelectedItem.Text = GetTextForDdl(Convert.ToInt32(ddl.SelectedValue));
+                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
+                ib.Visible = false;
             }
         }
 
@@ -274,10 +274,47 @@ namespace Ferienspaß.Pages
             FormsAuthentication.RedirectToLoginPage();
         }
 
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            DataTable dt;
+            DataView dv;
+            string sql;
+            bool changed = false;
+
+
+            if (txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty)
+            {
+                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
+
+                if (txtEventName.Text != string.Empty)
+                {
+                    sql += $"project.Name LIKE '%{txtEventName.Text}%'";
+                    changed = true;
+                }
+                if (datepicker.Text != string.Empty)
+                {
+                    if (changed) sql += " AND ";
+                    sql += $"project.DATE='{datepicker.Text}'";
+                }
+                if (txtOrganizerName.Text != string.Empty)
+                {
+                    if (changed) sql += " AND ";
+                    sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
+                }
+
+                dt = db.Query(sql);
+                dv = new DataView(dt);
+
+                gvAdminProjects.DataSource = dv;
+                gvAdminProjects.DataBind();
+            }
+        }
+
+
         protected void gvAdminProjects_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvAdminProjects.PageIndex = e.NewPageIndex;
             Fill_gvAdminProjects();
         }
     }
-}   
+}

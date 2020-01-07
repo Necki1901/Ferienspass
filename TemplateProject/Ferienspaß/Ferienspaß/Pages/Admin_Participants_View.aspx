@@ -9,16 +9,25 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
+    <script type="text/javascript">
+        function Delete() {
+            if (confirm("Datensatz löschen?")) {
+                return true;
+            }
+            return false;
+        }
+    </script>
+
     Projekte:<asp:DropDownList CssClass="table-bordered" ID="ddl_Projects" runat="server" OnSelectedIndexChanged="ddl_Projects_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
 
     Jahr: <asp:DropDownList ID="ddl_Years" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_Years_SelectedIndexChanged">
     </asp:DropDownList><br />
 
-    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False">
+    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand">
         <Columns>
-            <asp:TemplateField HeaderText="ID" Visible = "false">
+            <asp:TemplateField HeaderText="ID">
                 <ItemTemplate>
-                    <asp:Label ID="lblSurname" runat="server" Text='<%# Eval("SN") %>'></asp:Label>
+                    <asp:Label ID="lblChildID" runat="server" Text='<%# Eval("CID") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Vorname">
@@ -41,9 +50,32 @@
                     <asp:Label ID="lblPhone" runat="server" Text='<%# Eval("phone") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-
+            <asp:TemplateField HeaderText="Bezahlt">
+                <ItemTemplate>
+                    <asp:Label ID="lblPaid" runat="server" Text='<%# ChangePaidType(Convert.ToInt32(Eval("paid"))) %>'></asp:Label>
+                </ItemTemplate>
+                <EditItemTemplate>
+                    <asp:DropDownList ID="ddl_Paid" runat="server" EnableViewState="true"></asp:DropDownList>
+                </EditItemTemplate>
+            </asp:TemplateField>
+             <%-- Buttons --%>
+                <asp:TemplateField HeaderText="Aktion">
+                     <HeaderTemplate>
+                            <asp:Button ID="btn_add_participation" CssClass="btn btn-primary" runat="server" Text="Anmeldung Hinzufügen" CommandName="add" EnableViewState="false"/>
+                        </HeaderTemplate>
+                    <ItemTemplate>
+                        <asp:ImageButton ID="btnEditParticipant" runat="server" CommandName="edit" ImageUrl="~/App_Themes/default/edit.png" EnableViewState="false" />
+                        <asp:ImageButton ID="btnDeleteParticipant" runat="server" CommandName="delete" ImageUrl="~/App_Themes/default/trash.png" EnableViewState="false" OnClientClick="return Delete()" />
+                    </ItemTemplate>
+                     <EditItemTemplate>
+                        <asp:ImageButton ID="btnUpdate" runat="server" CommandName="Update" ImageUrl="~/App_Themes/default/ok.png"  />
+                        <asp:ImageButton ID="btnCancel"  runat="server" CommandName="Cancel" ImageUrl="~/App_Themes/default/Cancel.png" />
+                    </EditItemTemplate>
+                </asp:TemplateField>
         </Columns>
     </asp:GridView>
+
+
 
     <asp:Label runat="server" ID="lbl_Message"></asp:Label>
 </asp:Content>

@@ -11,7 +11,7 @@ namespace Ferienspaß.Pages
 {
 
 
-    public partial class Admin_Participants_View
+    public partial class Admin_Project_View_Add
     {
 
         /// <summary>
@@ -33,31 +33,13 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// ddl_Projects control.
+        /// gv_add_child control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Projects;
-
-        /// <summary>
-        /// ddl_Years control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Years;
-
-        /// <summary>
-        /// gv_Participants control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gv_Participants;
+        protected global::System.Web.UI.WebControls.GridView gv_add_child;
 
         /// <summary>
         /// lbl_Message control.

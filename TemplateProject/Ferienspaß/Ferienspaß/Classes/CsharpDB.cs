@@ -134,10 +134,33 @@ namespace Ferienspaß
 
         }
 
+        /// <summary>
+        /// Checks if current Date is inbetween Settings From and Till login
+        /// </summary>
+        /// <returns>bool</returns>
+        public static bool IsUserAllowedToLogin() {
+            DateTime[] dates = GetPortalLoginDates();
+            return (DateTime.Now <= dates[1] && DateTime.Now >= dates[0]);
+        }
+
+
+        public static DateTime[] GetPortalLoginDates() {
+            try {
+                CsharpDB db = new CsharpDB();
+                string from = db.GetPortalOption("USER_LOGIN_FROM");
+                string till = db.GetPortalOption("USER_LOGIN_TILL");
+                DateTime fromDT = DateTime.Parse(from);
+                DateTime tillDT = DateTime.Parse(till);
+
+                return new DateTime[2] {fromDT,tillDT };
+
+            } catch (Exception ex) { return new DateTime[2] { DateTime.MinValue, DateTime.MaxValue }; }
+        }
+
         public static bool CheckPasswordRequirements(string pwd) {
-            if (pwd.Length < 8) return false;
-            else if (!pwd.Any(c => char.IsDigit(c))) return false;
-            else if (!pwd.Any(c => char.IsUpper(c))) return false;
+            if (pwd.Length < 1) return false;
+            //else if (!pwd.Any(c => char.IsDigit(c))) return false;
+            //else if (!pwd.Any(c => char.IsUpper(c))) return false;
             return true;
 
         }

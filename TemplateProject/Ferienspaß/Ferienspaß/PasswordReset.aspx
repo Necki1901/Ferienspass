@@ -37,7 +37,7 @@
                             <div class="input-group-prepend ">
                                 <span id="span1" runat="server" class="input-group-text"><i class="fa fa-user"></i></span>
                             </div>
-                            <asp:TextBox ID="tbx_pwd1" CssClass="form-control col-12" runat="server" Text=""></asp:TextBox>
+                            <asp:TextBox ID="tbx_pwd1" TextMode="Password" CssClass="form-control col-12" runat="server" Text=""></asp:TextBox>
 
                         </div>
                         
@@ -49,7 +49,7 @@
                             <div class="input-group-prepend ">
                                 <span id="span2" runat="server" class="input-group-text"><i class="fa fa-user"></i></span>
                             </div>
-                            <asp:TextBox ID="tbx_pwd2" CssClass="form-control col-12" runat="server" Text=""></asp:TextBox>
+                            <asp:TextBox ID="tbx_pwd2" TextMode="Password" CssClass="form-control col-12" runat="server" Text=""></asp:TextBox>
                         </div>
                     </div>
 

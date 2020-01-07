@@ -23,7 +23,7 @@
     Jahr: <asp:DropDownList ID="ddl_Years" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_Years_SelectedIndexChanged">
     </asp:DropDownList><br />
 
-    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound">
+    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand">
         <Columns>
             <asp:TemplateField HeaderText="ID">
                 <ItemTemplate>
@@ -55,13 +55,13 @@
                     <asp:Label ID="lblPaid" runat="server" Text='<%# ChangePaidType(Convert.ToInt32(Eval("paid"))) %>'></asp:Label>
                 </ItemTemplate>
                 <EditItemTemplate>
-                    <asp:DropDownList ID="ddl_Paid" runat="server"></asp:DropDownList>
+                    <asp:DropDownList ID="ddl_Paid" runat="server" EnableViewState="true"></asp:DropDownList>
                 </EditItemTemplate>
             </asp:TemplateField>
              <%-- Buttons --%>
                 <asp:TemplateField HeaderText="Aktion">
                      <HeaderTemplate>
-                            <asp:Button ID="btnAddParticipant" CssClass="btn btn-primary" runat="server" Text="Kind Hinzufügen" CommandName="add" EnableViewState="false"/>
+                            <asp:Button ID="btn_add_participation" CssClass="btn btn-primary" runat="server" Text="Anmeldung Hinzufügen" CommandName="add" EnableViewState="false"/>
                         </HeaderTemplate>
                     <ItemTemplate>
                         <asp:ImageButton ID="btnEditParticipant" runat="server" CommandName="edit" ImageUrl="~/App_Themes/default/edit.png" EnableViewState="false" />

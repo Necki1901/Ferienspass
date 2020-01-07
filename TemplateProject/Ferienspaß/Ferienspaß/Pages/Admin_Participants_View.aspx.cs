@@ -132,10 +132,11 @@ namespace Ferienspaß.Pages
             GridViewRow row = gv_Participants.Rows[e.RowIndex];     //Reihe erfassen
 
             string paid = ((DropDownList)row.FindControl("ddl_Paid")).SelectedValue;
-            string id = Convert.ToString(row.FindControl("lblChildID"));
+            string id = ((Label)(row.FindControl("lblChildID"))).Text;
 
             db.Query($"UPDATE participation SET paid = {paid} WHERE CID = {id}");
 
+            ((Button)gv_Participants.HeaderRow.FindControl("btn_add_participation")).Enabled = true;
             gv_Participants.EditIndex = -1;
             gv_Participants.SelectedIndex = -1;
             Fill_Gv_Participants();
@@ -160,8 +161,8 @@ namespace Ferienspaß.Pages
 
                 int paid = (int)dt.Rows[0]["paid"];
 
-                ListItem item_no = new ListItem("Nein", "1");
-                ListItem item_yes = new ListItem("Ja", "0");
+                ListItem item_no = new ListItem("Nein", "0");
+                ListItem item_yes = new ListItem("Ja", "1");
 
                 if (paid == 0)
                     item_no.Selected = true;
@@ -173,6 +174,23 @@ namespace Ferienspaß.Pages
 
                 DataRowView dr = e.Row.DataItem as DataRowView;
             }
+        }
+
+        protected void gv_Participants_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            switch (e.CommandName)
+            {
+                case "add":
+                    Response.Redirect("Admin_Project_View_Add");
+                    break;
+            }
+        }
+
+        protected void gv_Participants_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        {
+            gv_Participants.EditIndex = -1;
+            gv_Participants.SelectedIndex = -1;
+            Fill_Gv_Participants();
         }
     }
     

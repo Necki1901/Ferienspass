@@ -92,7 +92,7 @@ namespace Ferienspaß.Pages
             GridViewRow gvr = gvAdminProjects.Rows[e.RowIndex];
             DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateProjectGuide");
             string selectedname = dropDownList.SelectedValue;
-            e.NewValues["DATE"] = ChangeDateFormat(e);
+            
             if (Convert.ToBoolean(ViewState["isAdding"])==false)
             {                
                 bool valid = ValidateData(e);
@@ -149,6 +149,8 @@ namespace Ferienspaß.Pages
             if (e.NewValues["DATE"] == null || e.NewValues["START"] == null || e.NewValues["END"] == null || e.NewValues["CAPACITY"] == null || e.NewValues["NAME"] == null || e.NewValues["DESCRIPTION"] == null || e.NewValues["PLACE"] == null || e.NewValues["NUMBER"] == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind null!  "; }
             else
             {
+                e.NewValues["DATE"] = ChangeDateFormat(e);
+
                 if (!(e.NewValues["DATE"].ToString().Length == 10) || !(e.NewValues["START"].ToString().Length == 8) || !(e.NewValues["END"].ToString().Length == 8)) { valid = false; errorDescription += "DATUM-Format oder ZEIT-Format (START oder END) ist ungültig!  "; }
                 else
                 {
@@ -228,10 +230,8 @@ namespace Ferienspaß.Pages
         protected void gvAdminProjects_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvAdminProjects.Rows[e.RowIndex];
-
             string projectID = ((Label)row.FindControl("lblItemTemplateProjectID")).Text;
             db.Query($"delete from project where PID = {projectID}");
-
             Fill_gvAdminProjects();
             lblInfo.Text += "Datensatz wurde gelöscht!";
         }
@@ -240,18 +240,27 @@ namespace Ferienspaß.Pages
         {
             if (e.CommandName == "Add")
             {
+
                 DataTable dt = db.Query("SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID ");
                 dt.Clear();
-                DataRow dr = dt.NewRow();              
+                DataRow dr = dt.NewRow();
                 ViewState["isAdding"] = true;
                 dt.Rows.Add(dr);
                 gvAdminProjects.DataSource = dt;
-                gvAdminProjects.EditIndex = 0;              
+                gvAdminProjects.EditIndex = 0;
                 gvAdminProjects.DataBind();
                 GridViewRow gvr = gvAdminProjects.Rows[gvAdminProjects.EditIndex];
+                DropDownList ddl = gvr.FindControl("ddlEditItemTemplateProjectGuide") as DropDownList;
+                ddl.SelectedItem.Text = GetTextForDdl(Convert.ToInt32(ddl.SelectedValue)); 
                 ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;              
                 ib.Visible = false; 
             }
+        }
+
+        private string GetTextForDdl(int svalue)
+        {
+            DataTable dt = db.Query("SELECT SN FROM projectguide WHERE GID = ?", svalue);
+            return dt.Rows[0]["SN"].ToString();
         }
 
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -264,5 +273,11 @@ namespace Ferienspaß.Pages
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
         }
+
+        protected void gvAdminProjects_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvAdminProjects.PageIndex = e.NewPageIndex;
+            Fill_gvAdminProjects();
+        }
     }
-}
+}   

@@ -311,5 +311,41 @@ namespace Ferienspaß.Pages
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
         }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            DataTable dt;
+            DataView dv;
+            string sql;
+            bool changed = false;
+
+
+            if(txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty)
+            {
+                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
+
+                if(txtEventName.Text != string.Empty)
+                {
+                    sql += $"project.Name LIKE '%{txtEventName.Text}%'";
+                    changed = true;
+                }
+                if(datepicker.Text != string.Empty)
+                {
+                    if (changed) sql += " AND ";
+                    sql += $"project.DATE='{datepicker.Text}'";
+                }
+                if (txtOrganizerName.Text != string.Empty)
+                {
+                    if (changed) sql += " AND ";
+                    sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
+                }
+
+                dt = db.Query(sql);
+                dv = new DataView(dt);
+
+                gvAdminProjects.DataSource = dv;
+                gvAdminProjects.DataBind();
+            }
+        }
     }
 }

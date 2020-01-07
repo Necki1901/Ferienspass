@@ -18,7 +18,24 @@
             return false;
         }
     </script>
-
+    <div class="form-group">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <asp:Label Text="Name der Veranstaltung" runat="server"></asp:Label>
+                    <asp:TextBox ID="txtEventName" runat="server"></asp:TextBox>
+                </div>
+                <div class="form-group col-md-6">
+                    <asp:Label Text="Verantwortlicher" runat="server"></asp:Label>
+                    <asp:TextBox ID="txtOrganizerName" runat="server"></asp:TextBox>
+                </div>
+                <div class="form-group col-md-6">
+                    <asp:Label Text="Datum der Veranstaltung" runat="server"></asp:Label>
+                    <asp:TextBox ID="datepicker" placeholder="Datum" cssclass="datepicker-field" TextMode="Date" runat="server"></asp:TextBox>
+                </div>
+            </div>
+            <asp:Button ID="btnSearch" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnSearch_Click"/>
+        </div>
+    <br />
     <div>
             <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowDataBound="gvAdminProjects_RowDataBound1" OnRowUpdating="gvAdminProjects_RowUpdating" OnRowCancelingEdit="gvAdminProjects_RowCancelingEdit" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered">
                 <Columns>

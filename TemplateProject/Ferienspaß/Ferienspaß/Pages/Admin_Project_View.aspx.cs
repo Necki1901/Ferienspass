@@ -311,5 +311,11 @@ namespace Ferienspaß.Pages
             isFiltered = true;
             Fill_gvAdminProjects(isFiltered);
         }
+
+        protected void gvAdminProjects_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvAdminProjects.PageIndex = e.NewPageIndex;
+            Fill_gvAdminProjects(isFiltered);
+        }
     }
 }

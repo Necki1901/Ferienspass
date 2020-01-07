@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Security;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 
 namespace Ferienspaß.Pages
@@ -13,11 +14,12 @@ namespace Ferienspaß.Pages
     public partial class Admin : System.Web.UI.Page
     {
         CsharpDB db = new CsharpDB();
-        bool isAdding;        
+        bool isAdding;
+        static bool isFiltered = false;
         protected void Page_Load(object sender, EventArgs e)
 		{
             lblInfo.Text = "";
-            Fill_gvAdminProjects();
+            Fill_gvAdminProjects(isFiltered);
             if(!Page.IsPostBack)
             {
                  isAdding = false;
@@ -38,10 +40,39 @@ namespace Ferienspaß.Pages
             }
         }
 
-        private void Fill_gvAdminProjects()
+        private void Fill_gvAdminProjects(bool filter)
         {
-            DataTable dt = db.Query("SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID");
-            DataView dv = new DataView(dt);
+            DataTable dt;
+            DataView dv;
+            string sql;
+            bool changed = false;
+            if ((txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty) && filter == true)
+            {
+                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
+
+                if (txtEventName.Text != string.Empty)
+                {
+                    sql += $"project.Name LIKE '%{txtEventName.Text}%'";
+                    changed = true;
+                }
+                if (datepicker.Text != string.Empty)
+                {
+                    if (changed) sql += " AND ";
+                    sql += $"project.DATE='{datepicker.Text}'";
+                }
+                if (txtOrganizerName.Text != string.Empty)
+                {
+                    if (changed) sql += " AND ";
+                    sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
+                }
+            }
+            else
+            {
+                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            }
+            dt = db.Query(sql);
+            dv = new DataView(dt);
+
             gvAdminProjects.DataSource = dv;
             gvAdminProjects.DataBind();
         }
@@ -54,7 +85,7 @@ namespace Ferienspaß.Pages
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
         {            
             gvAdminProjects.EditIndex = e.NewEditIndex;          
-            Fill_gvAdminProjects();          
+            Fill_gvAdminProjects(isFiltered);          
         }
 
         //protected void gvAdminProjects_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -107,7 +138,7 @@ namespace Ferienspaß.Pages
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
                     gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects();
+                    Fill_gvAdminProjects(isFiltered);
                 }
                 
             }
@@ -125,7 +156,7 @@ namespace Ferienspaß.Pages
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
                     gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects();
+                    Fill_gvAdminProjects(isFiltered);
                     ViewState["isAdding"] = false;
                 }
             }           
@@ -216,7 +247,7 @@ namespace Ferienspaß.Pages
         protected void gvAdminProjects_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             gvAdminProjects.EditIndex = -1;
-            Fill_gvAdminProjects();
+            Fill_gvAdminProjects(isFiltered);
             lblInfo.Text = "";            
         }
 
@@ -232,7 +263,7 @@ namespace Ferienspaß.Pages
             string projectID = ((Label)row.FindControl("lblItemTemplateProjectID")).Text;
             db.Query($"delete from project where PID = {projectID}");
 
-            Fill_gvAdminProjects();
+            Fill_gvAdminProjects(isFiltered);
             lblInfo.Text += "Datensatz wurde gelöscht!";
         }
 
@@ -267,38 +298,8 @@ namespace Ferienspaß.Pages
 
         protected void btnSearch_Click(object sender, EventArgs e)
         {
-            DataTable dt;
-            DataView dv;
-            string sql;
-            bool changed = false;
-
-
-            if(txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty)
-            {
-                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
-
-                if(txtEventName.Text != string.Empty)
-                {
-                    sql += $"project.Name LIKE '%{txtEventName.Text}%'";
-                    changed = true;
-                }
-                if(datepicker.Text != string.Empty)
-                {
-                    if (changed) sql += " AND ";
-                    sql += $"project.DATE='{datepicker.Text}'";
-                }
-                if (txtOrganizerName.Text != string.Empty)
-                {
-                    if (changed) sql += " AND ";
-                    sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
-                }
-
-                dt = db.Query(sql);
-                dv = new DataView(dt);
-
-                gvAdminProjects.DataSource = dv;
-                gvAdminProjects.DataBind();
-            }
+            isFiltered = true;
+            Fill_gvAdminProjects(isFiltered);
         }
     }
 }

@@ -16,7 +16,7 @@
         }
     </script>
     <div>
-         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating" OnRowDataBound="gvAdminUsers_RowDataBound" OnRowDeleting="gvAdminUsers_RowDeleting">
+         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating" OnRowDataBound="gvAdminUsers_RowDataBound" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7">
                 <Columns>
                     <asp:TemplateField HeaderText="Vorname">
                         <EditItemTemplate>
@@ -115,6 +115,12 @@
 
 
          <asp:Label ID="lblInfo" runat="server"></asp:Label>
+
+
+         <br />
+         Zustand: 0 = nicht gesperrt, 1 = gesperrt<br />
+         Email_Zustand: 0 = nicht bestätigt, 1 = bestätigt<br />
+         <br />
 
 
         </div>

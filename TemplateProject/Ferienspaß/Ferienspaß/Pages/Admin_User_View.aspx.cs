@@ -66,7 +66,9 @@ namespace Ferienspaß
                 gvAdminUsers.DataSource = dt;
                 gvAdminUsers.EditIndex = 0;
                 gvAdminUsers.DataBind();
-                GridViewRow gvr = gvAdminUsers.Rows[gvAdminUsers.EditIndex];
+                GridViewRow gvr = gvAdminUsers.Rows[gvAdminUsers.EditIndex];              
+                DropDownList ddl = gvr.FindControl("ddlEditItemTemplateUserGroup") as DropDownList;
+                ddl.SelectedItem.Text = GetTextForDdl(Convert.ToInt32(ddl.SelectedValue));
                 ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
                 ib.Visible = false;             
                 ImageButton ib2 = gvr.FindControl("btnChildren") as ImageButton;
@@ -79,6 +81,12 @@ namespace Ferienspaß
                 string userID = ((Label)gvr1.FindControl("lblItemTemplateUserID")).Text;
                 Response.Redirect(String.Format("Admin_Child_Administration.aspx?id={0}", userID));
             }
+        }
+
+        private string GetTextForDdl(int svalue)//Verhindert Leeres Feld in DDL, wenn neuer DS hinzugefügt wird.
+        {
+            DataTable dt = db.Query("SELECT DESCRIPTION FROM usergroup WHERE UGID = ?", svalue);
+            return dt.Rows[0]["DESCRIPTION"].ToString();
         }
 
         protected void gvAdminUsers_RowEditing(object sender, GridViewEditEventArgs e)
@@ -221,6 +229,12 @@ namespace Ferienspaß
         protected void btnChildren_Click(object sender, ImageClickEventArgs e)
         {
             //Response.Redirect("asfd.aspx?id=sd")
+        }
+
+        protected void gvAdminUsers_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvAdminUsers.PageIndex = e.NewPageIndex;
+            Fill_gvAdminUsers();
         }
     }
 }

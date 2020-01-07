@@ -181,7 +181,9 @@ namespace Ferienspaß.Pages
             switch (e.CommandName)
             {
                 case "add":
-                    Response.Redirect("Admin_Project_View_Add");
+                    string project = ddl_Projects.SelectedValue;
+
+                    Response.Redirect($"Admin_Participants_Add.aspx?project={project}");
                     break;
             }
         }

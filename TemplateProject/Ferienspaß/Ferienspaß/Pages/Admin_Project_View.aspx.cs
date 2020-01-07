@@ -13,9 +13,7 @@ namespace Ferienspaß.Pages
     public partial class Admin : System.Web.UI.Page
     {
         CsharpDB db = new CsharpDB();
-        bool isAdding;
-        
-
+        bool isAdding;        
         protected void Page_Load(object sender, EventArgs e)
 		{
             lblInfo.Text = "";
@@ -38,8 +36,6 @@ namespace Ferienspaß.Pages
             {
 
             }
-
-
         }
 
         private void Fill_gvAdminProjects()
@@ -56,15 +52,9 @@ namespace Ferienspaß.Pages
         }
 
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-            GridViewRow gvr = gvAdminProjects.Rows[e.NewEditIndex];
-            ImageButton img = gvr.FindControl("btnDelete") as ImageButton;
-            //img.Visible = false;
-
-            gvAdminProjects.EditIndex = e.NewEditIndex;
-            //gvAdminProjects.SelectedIndex = e.NewEditIndex;
-            Fill_gvAdminProjects();
-            //img.Visible = true;
+        {            
+            gvAdminProjects.EditIndex = e.NewEditIndex;          
+            Fill_gvAdminProjects();          
         }
 
         //protected void gvAdminProjects_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -81,7 +71,6 @@ namespace Ferienspaß.Pages
         {
             if (e.Row.RowType == DataControlRowType.DataRow && gvAdminProjects.EditIndex == e.Row.RowIndex ) 
             {
-
                 Control ctrl = e.Row.FindControl("ddlEditItemTemplateProjectGuide");
                       
                 DropDownList ddl = ctrl as DropDownList;
@@ -95,8 +84,7 @@ namespace Ferienspaß.Pages
                 
                 ddl.SelectedValue = dr["GID"].ToString();
                 ddl.SelectedItem.Text = dr["SN"].ToString();
-            }
-           
+            }           
         }
 
         protected void gvAdminProjects_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -121,6 +109,7 @@ namespace Ferienspaß.Pages
                     gvAdminProjects.EditIndex = -1;
                     Fill_gvAdminProjects();
                 }
+                
             }
             else
             {
@@ -137,14 +126,9 @@ namespace Ferienspaß.Pages
                     }
                     gvAdminProjects.EditIndex = -1;
                     Fill_gvAdminProjects();
-                   
+                    ViewState["isAdding"] = false;
                 }
-            }
-            ViewState["isAdding"] = false;
-            GridViewRow gvr2 = gvAdminProjects.Rows[e.RowIndex];//so auch bei Add-Button
-            ImageButton ib = gvr2.FindControl("btnDelete") as ImageButton;
-            ViewState["btnDeleteActive"] = true;
-            ib.Enabled = Convert.ToBoolean(ViewState["btnDeleteActive"]);
+            }           
         }
 
         private string ChangeDateFormat(GridViewUpdateEventArgs e)
@@ -233,43 +217,14 @@ namespace Ferienspaß.Pages
         {
             gvAdminProjects.EditIndex = -1;
             Fill_gvAdminProjects();
-            lblInfo.Text = "";
-            GridViewRow gvr2 = gvAdminProjects.Rows[e.RowIndex];
-            ImageButton ib = gvr2.FindControl("btnDelete") as ImageButton;
-            ViewState["btnDeleteActive"] = true;
-            ib.Enabled =Convert.ToBoolean(ViewState["btnDeleteActive"]);
+            lblInfo.Text = "";            
         }
 
         protected void gvAdminProjects_RowDeleted(object sender, GridViewDeletedEventArgs e)
         {
 
         }
-
-        protected void btnLabelDeleteYes0_Click(object sender, EventArgs e)
-        {
-            if (db.ExecuteNonQuery("Delete From project Where PID=?", Convert.ToInt32(lblPanelId.Text)) > 0)
-            {
-                lblInfo.Text = "Löschen war erfolgreich!";
-            }
-            else
-            {
-                lblInfo.Text = "Löschen war nicht erfolgreich!";
-            }
-
-            pnlMessage.Visible = false;
-            Fill_gvAdminProjects();
-            gvAdminProjects.DataBind();
-        }
-
-        protected void btnLabelDeleteNo_Click(object sender, EventArgs e)
-        {
-            gvAdminProjects.EditIndex = -1;
-            Fill_gvAdminProjects();
-            gvAdminProjects.DataBind();
-            pnlMessage.Visible = false;
-            lblInfo.Text = "";
-        }
-
+       
         protected void gvAdminProjects_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvAdminProjects.Rows[e.RowIndex];
@@ -287,17 +242,15 @@ namespace Ferienspaß.Pages
             {
                 DataTable dt = db.Query("SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID ");
                 dt.Clear();
-                DataRow dr = dt.NewRow();
-                //dr["PID"] = -1;
+                DataRow dr = dt.NewRow();              
                 ViewState["isAdding"] = true;
                 dt.Rows.Add(dr);
                 gvAdminProjects.DataSource = dt;
                 gvAdminProjects.EditIndex = 0;              
                 gvAdminProjects.DataBind();
                 GridViewRow gvr = gvAdminProjects.Rows[gvAdminProjects.EditIndex];
-                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
-                ib.Enabled = false;
-                ViewState ["btnDeleteActive"]=ib.Enabled;
+                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;              
+                ib.Visible = false; 
             }
         }
 

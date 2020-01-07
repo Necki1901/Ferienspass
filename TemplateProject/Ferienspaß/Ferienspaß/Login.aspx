@@ -27,13 +27,17 @@
 
 
                     <div id="grp_pwd" visible="false"  runat="server" >
-                        <div class="text-center"><asp:Label runat="server" CssClass="text-center text-dark" Text="Passwort"></asp:Label></div>
+                        <div class="text-center"><asp:Label runat="server" TextMode="Password" CssClass="text-center text-dark" Text="Passwort"></asp:Label></div>
                     
                         <div class="input-group form-group">
                             <div class="input-group-prepend">
                             <span class="input-group-text"><i class="fa fa-key"></i></span>
                         </div>
-                        <asp:TextBox ID="tbx_pass" CssClass="form-control" runat="server" Text=""></asp:TextBox>    
+                        <asp:TextBox ID="tbx_pass" TextMode="Password" CssClass="form-control" runat="server" Text=""></asp:TextBox>    
+                        </div>
+
+                        <div class="d-flex justify-content-center mb-3 mt-1">
+                            <a href="Login.aspx">Mit anderer E-Mail anmelden</a>
                         </div>
                     </div>
 

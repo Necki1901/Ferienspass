@@ -7,8 +7,31 @@
 
 
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
-    <asp:GridView ID="gv_participations" CssClass="table table-bordered" runat="server" AutoGenerateColumns="False">
+
+    <script>
+        function confirm_cancel() {
+            if (confirm("Wollen Sie die Anmeldung wirklich stornieren?")) {
+                return true;
+            }
+            return false;
+        }
+    </script>
+
+    <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
+
+
+    <asp:GridView ID="gv_participations" CssClass="table table-bordered" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_participations_RowCommand">
         <Columns>
+            <asp:TemplateField HeaderText="CID" Visible="false">
+                <ItemTemplate>
+                    <asp:Label ID="lbl_cid" runat="server" Text='<%# Eval("cid") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
+             <asp:TemplateField HeaderText="PID" Visible="false">
+                <ItemTemplate>
+                    <asp:Label ID="lbl_pid" runat="server" Text='<%# Eval("pid") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
              <asp:TemplateField HeaderText="Vorname">
                 <ItemTemplate>
                     <asp:Label ID="lbl_givenname" runat="server" Text='<%# Eval("gn") %>'></asp:Label>
@@ -34,7 +57,17 @@
                     <asp:Label ID="lbl_project_date" runat="server" Text='<%# Convert.ToDateTime(Eval("date")).ToString("dd/MM/yyyy") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+            <%-- AKTION --%>
+             <asp:TemplateField HeaderText="Aktion">
+                <HeaderTemplate>
+                     <asp:Label ID="lbl_cancel_participation" runat="server" Text="Aktion"></asp:Label>
+                </HeaderTemplate>
+                <ItemTemplate>
+                    <asp:Button runat="server" Text="Stornieren" CommandName="cancel_participation" CssClass="btn btn-primary" OnClientClick="return confirm_cancel()"/>
+                </ItemTemplate>
+            </asp:TemplateField>
         </Columns>
+
     </asp:GridView>
     
     <asp:Label runat="server" ID="lbl_Message"></asp:Label>

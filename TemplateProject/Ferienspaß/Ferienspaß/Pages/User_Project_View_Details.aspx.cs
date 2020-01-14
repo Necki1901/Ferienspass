@@ -115,7 +115,6 @@ namespace Ferienspaß.Pages
                 case "queue":
                     try
                     {
-
                         DataTable dt = db.Query($"SELECT * FROM queue WHERE UID = {User.Identity.Name}");
                         if(dt.Rows.Count == 0)
                         {
@@ -183,6 +182,40 @@ namespace Ferienspaß.Pages
 
             SetVisibility_Children(false);
             lblChildrenMessage.Text = "Kinder wurden hinzugefügt";
+
+            string body = Get_body_for_mail(childrenIDs);
+            Send_mail(body);
+        }
+
+        private string Get_body_for_mail(List<int> childrenIDs)
+        {
+            DataTable dt = db.Query($"SELECT * FROM project WHERE pid = {ViewState["PID"]}");
+            string body = string.Empty;
+
+            //project name and description
+            body += $"Anmeldungen zum Projekt {dt.Rows[0]["name"].ToString()}\n";
+            body += $"Beschreibung: {dt.Rows[0]["description"].ToString()}\n\n";
+
+            int cnt = 1;
+            //print children (1. xxx xxx)
+            foreach(int cid in childrenIDs)
+            {
+                DataTable dt_children = db.Query($"SELECT sn, gn FROM child WHERE cid = {cid}");
+                body += $"{cnt}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]}\n";
+                cnt++;
+            }
+
+            return body;
+        }
+
+        private void Send_mail(string body)
+        {
+            //get data from the user
+            DataTable dt_user = db.Query($"SELECT email, sn, gn FROM user WHERE uid = {User.Identity.Name}");
+            string fullname = dt_user.Rows[0]["gn"].ToString() + dt_user.Rows[0]["sn"].ToString();
+
+            db.SendMail(dt_user.Rows[0]["email"].ToString(), fullname, "Projekt-Anmeldung", body);
+
         }
 
         private void SetVisibility_Children(bool visibility)

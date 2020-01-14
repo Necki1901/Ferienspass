@@ -172,12 +172,13 @@ namespace Ferienspaß
                 var credentials = new NetworkCredential(sendemail, GetPortalOption("MAIL_SEND_PASSWORD"));
                 
                 var mail = new MailMessage() {
+
                     From = new MailAddress(sendemail),
                     Subject = subject,
                     Body = body
                 };
 
-                mail.To.Add(new MailAddress(to_mail));
+                mail.To.Add(new MailAddress(to_mail, to_name));
 
                 var client = new SmtpClient() {
                     Port = Convert.ToInt32(GetPortalOption("MAIL_PORT")),

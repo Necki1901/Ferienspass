@@ -41,3 +41,10 @@ textarea {
     background-color:black;
 
 }
+
+@media print{
+
+    .btn{
+        visibility:hidden;
+    }
+}

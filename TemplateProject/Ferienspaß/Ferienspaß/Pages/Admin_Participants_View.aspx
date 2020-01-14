@@ -16,12 +16,22 @@
             }
             return false;
         }
+    
     </script>
 
-    Projekte:<asp:DropDownList CssClass="table-bordered" ID="ddl_Projects" runat="server" OnSelectedIndexChanged="ddl_Projects_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+    <h1><asp:Label runat="server" ID="lbl_projectname"></asp:Label></></h1>
 
-    Jahr: <asp:DropDownList ID="ddl_Years" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_Years_SelectedIndexChanged">
-    </asp:DropDownList><br />
+    <div class="settings">
+        Projekte:<asp:DropDownList CssClass="table-bordered" ID="ddl_Projects" runat="server" OnSelectedIndexChanged="ddl_Projects_SelectedIndexChanged" AutoPostBack="true"></asp:DropDownList>
+
+        Jahr: <asp:DropDownList ID="ddl_Years" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddl_Years_SelectedIndexChanged">
+        </asp:DropDownList>
+        <br />
+        <br />
+        <asp:Button runat="server" ID="print" CssClass="btn btn-primary" OnClick="print_Click" Text="Druckansicht"/>
+        <br />
+
+    </div>
 
     <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand">
         <Columns>
@@ -74,6 +84,7 @@
                 </asp:TemplateField>
         </Columns>
     </asp:GridView>
+
 
 
 

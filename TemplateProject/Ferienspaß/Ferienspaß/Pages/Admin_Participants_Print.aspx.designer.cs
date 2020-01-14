@@ -11,7 +11,7 @@ namespace Ferienspaß.Pages
 {
 
 
-    public partial class Admin_Participants_View
+    public partial class Admin_Participants_Print
     {
 
         /// <summary>
@@ -33,31 +33,31 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// lbl_projectname control.
+        /// lbl_project control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_projectname;
+        protected global::System.Web.UI.WebControls.Label lbl_project;
 
         /// <summary>
-        /// ddl_Projects control.
+        /// lbl_description control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Projects;
+        protected global::System.Web.UI.WebControls.Label lbl_description;
 
         /// <summary>
-        /// ddl_Years control.
+        /// gv_participants control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Years;
+        protected global::System.Web.UI.WebControls.GridView gv_participants;
 
         /// <summary>
         /// print control.
@@ -67,15 +67,6 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Button print;
-
-        /// <summary>
-        /// gv_Participants control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gv_Participants;
 
         /// <summary>
         /// lbl_Message control.

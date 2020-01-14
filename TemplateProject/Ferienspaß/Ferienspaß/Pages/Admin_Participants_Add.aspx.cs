@@ -97,18 +97,29 @@ namespace Ferienspaß.Pages
             {
                 case "save":
                     GridViewRow gvr = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
-                    int RowIndex = gvr.RowIndex;
+                    int rowIndex = gvr.RowIndex;
 
                     string project_id = Convert.ToString(ViewState["project"]);
-                    string user_id = ((Label)gv_add_child.Rows[RowIndex].FindControl("lbl_user_id")).Text;
+                    string user_id = ((Label)gv_add_child.Rows[rowIndex].FindControl("lbl_user_id")).Text;
                  
-                    DropDownList ddl_child = ((DropDownList)gv_add_child.Rows[RowIndex].FindControl("ddl_children"));
-                    string child_id = ddl_child.SelectedItem.Value;
+                    DropDownList ddl_child = ((DropDownList)gv_add_child.Rows[rowIndex].FindControl("ddl_children"));
 
-                    DropDownList ddl_paid = ((DropDownList)gv_add_child.Rows[RowIndex].FindControl("ddl_paid"));
+                    string child_id = string.Empty;
+                    if(ddl_child.SelectedItem == null)
+                    {
+                        lbl_Message.Text = "Einstellungen konnten nicht übernommen werden";
+                        break;
+
+                    }
+                    else
+                        child_id = ddl_child.SelectedItem.Value;
+
+
+                    DropDownList ddl_paid = ((DropDownList)gv_add_child.Rows[rowIndex].FindControl("ddl_paid"));
                     string paid = ddl_paid.SelectedItem.Value;
 
                     db.Query($"INSERT INTO participation (CID, PID, DATE, paid) VALUES({child_id}, '{project_id}', '{DateTime.Now.ToString("yyyy/MM/dd")}', {paid})");
+                    lbl_Message.Text = $"Kind erfolgreich für das Projekt angemeldet";
                     break;
             }
         }

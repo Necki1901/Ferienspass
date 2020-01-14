@@ -72,6 +72,8 @@ namespace Ferienspaß.Pages
                 ListItem item = new ListItem(name, id.ToString());
                 ddl_Projects.Items.Add(item);
             }
+            lbl_projectname.Text = ddl_Projects.SelectedItem.Text;
+
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -83,6 +85,7 @@ namespace Ferienspaß.Pages
         protected void ddl_Projects_SelectedIndexChanged(object sender, EventArgs e)
         {
             Fill_Gv_Participants();
+            lbl_projectname.Text = ddl_Projects.SelectedItem.Text;
         }
 
         private void Fill_Gv_Participants()
@@ -136,6 +139,8 @@ namespace Ferienspaß.Pages
 
             db.Query($"UPDATE participation SET paid = {paid} WHERE CID = {id}");
 
+
+            lbl_Message.Text = "Bearbeitung abgeschlossen";
             ((Button)gv_Participants.HeaderRow.FindControl("btn_add_participation")).Enabled = true;
             gv_Participants.EditIndex = -1;
             gv_Participants.SelectedIndex = -1;
@@ -193,6 +198,11 @@ namespace Ferienspaß.Pages
             gv_Participants.EditIndex = -1;
             gv_Participants.SelectedIndex = -1;
             Fill_Gv_Participants();
+        }
+
+        protected void print_Click(object sender, EventArgs e)
+        {
+            Response.Redirect($"Admin_Participants_Print.aspx?project={ddl_Projects.SelectedItem.Value}");
         }
     }
     

@@ -55,13 +55,12 @@ namespace Ferienspaß.Pages
 
         protected void gv_UserView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            GridViewRow gvr = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
-            //Code used -> https://stackoverflow.com/questions/6503339/get-row-index-on-asp-net-rowcommand-event/6503483
 
             switch (e.CommandName)
             {
                 case "details":
 
+                    GridViewRow gvr = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
                     string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
                     Response.Redirect($"User_Project_View_Details.aspx?id={projectID}");
                     break;

@@ -105,6 +105,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Pages\Admin_Participants_Print.aspx" />
     <Content Include="Pages\Admin_Participants_View.aspx" />
     <Content Include="App_Themes\default\child.png" />
     <Content Include="Pages\Admin_Participants_Add.aspx" />
@@ -156,6 +157,7 @@
     <Content Include="Pages\MyData.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Content\Site.css" />
+    <Content Include="Pages\User_Participations.aspx" />
     <Content Include="PasswordReset.aspx" />
     <Content Include="Pages\Projects.aspx">
       <BrowseToURL>~/Pages/Default.aspx</BrowseToURL>
@@ -212,6 +214,13 @@
     <Content Include="Bundle.config" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pages\Admin_Participants_Print.aspx.cs">
+      <DependentUpon>Admin_Participants_Print.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin_Participants_Print.aspx.designer.cs">
+      <DependentUpon>Admin_Participants_Print.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Admin_Participants_View.aspx.cs">
       <DependentUpon>Admin_Participants_View.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -281,6 +290,13 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Pages\User_Participations.aspx.cs">
+      <DependentUpon>User_Participations.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\User_Participations.aspx.designer.cs">
+      <DependentUpon>User_Participations.aspx</DependentUpon>
+    </Compile>
     <Compile Include="PasswordReset.aspx.cs">
       <DependentUpon>PasswordReset.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

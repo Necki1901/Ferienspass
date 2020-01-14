@@ -107,7 +107,7 @@
   <ItemGroup>
     <Content Include="Pages\Admin_Participants_View.aspx" />
     <Content Include="App_Themes\default\child.png" />
-    <Content Include="Pages\Admin_Project_View_Add.aspx" />
+    <Content Include="Pages\Admin_Participants_Add.aspx" />
     <Content Include="Pages\Admin_User_View.aspx" />
     <Content Include="App_Themes\default\add.png" />
     <Content Include="App_Themes\default\ascending.png" />
@@ -219,12 +219,12 @@
     <Compile Include="Pages\Admin_Participants_View.aspx.designer.cs">
       <DependentUpon>Admin_Participants_View.aspx</DependentUpon>
     </Compile>
-    <Compile Include="Pages\Admin_Project_View_Add.aspx.cs">
-      <DependentUpon>Admin_Project_View_Add.aspx</DependentUpon>
+    <Compile Include="Pages\Admin_Participants_Add.aspx.cs">
+      <DependentUpon>Admin_Participants_Add.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
-    <Compile Include="Pages\Admin_Project_View_Add.aspx.designer.cs">
-      <DependentUpon>Admin_Project_View_Add.aspx</DependentUpon>
+    <Compile Include="Pages\Admin_Participants_Add.aspx.designer.cs">
+      <DependentUpon>Admin_Participants_Add.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Admin_User_View.aspx.cs">
       <DependentUpon>Admin_User_View.aspx</DependentUpon>

@@ -1,4 +1,4 @@
-﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="Ferienspaß.AdminMaster" %>
+﻿<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Admin.Master.cs" Inherits="Ferienspaß.AdminMaster"%>
 
 <!DOCTYPE html>
 
@@ -14,7 +14,7 @@
 
     <webopt:bundlereference runat="server" path="~/Content/css" />
     <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
-    <link href="../Content/bootstrap.css" rel="stylesheet" />
+    <link href="../Content/default.css" rel="stylesheet" />
     <script src="../Scripts/jquery-3.3.1.slim.min.js"></script>
     <script src="../Scripts/popper.min.js"></script>
     <script src="../Scripts/bootstrap.min.js"></script>

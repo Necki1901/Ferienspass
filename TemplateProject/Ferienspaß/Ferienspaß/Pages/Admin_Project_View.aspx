@@ -5,6 +5,8 @@
     <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
     <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden"  OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
 
+    
+
 </asp:Content>
 
 
@@ -141,7 +143,11 @@
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
-            </asp:GridView>
+            </asp:GridView>       
+        <asp:Panel ID="pnlBlockBg" runat="server" Visible="true" Width="100%" Height="100%" ForeColor="Black" ></asp:Panel><%--Panel um den Hintergrund während Add oder Update Vorgängen zu Blockieren--%>            
+   
+        <asp:panel ID="pnlUpdateInsert" runat="server" Visible="false"></asp:Panel>
+    
               <asp:Label ID="lblInfo" runat="server"></asp:Label>
         </div>
     <p>

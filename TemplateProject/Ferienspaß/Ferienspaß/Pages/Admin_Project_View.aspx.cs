@@ -116,7 +116,7 @@ namespace Ferienspaß.Pages
                 bool valid = ValidateData(e);
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]).ToShortDateString(), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], Convert.ToInt32(e.NewValues["NUMBER"]), Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname)) > 0)
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]).ToShortDateString(), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], Convert.ToInt32(e.NewValues["NUMBER"]), Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }

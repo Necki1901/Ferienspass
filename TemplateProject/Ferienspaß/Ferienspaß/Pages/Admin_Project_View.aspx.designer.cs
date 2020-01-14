@@ -78,6 +78,24 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.GridView gvAdminProjects;
 
         /// <summary>
+        /// pnlBlockBg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlBlockBg;
+
+        /// <summary>
+        /// pnlUpdateInsert control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Panel pnlUpdateInsert;
+
+        /// <summary>
         /// lblInfo control.
         /// </summary>
         /// <remarks>

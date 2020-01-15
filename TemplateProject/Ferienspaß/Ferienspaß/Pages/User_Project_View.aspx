@@ -33,7 +33,7 @@
             <asp:GridView ID="gv_UserView" runat="server" 
             AutoGenerateColumns="False" 
             AllowPaging="True" 
-            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" CssClass="table table-bordered" >
+            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" CssClass="table table-bordered" OnPageIndexChanging="gv_UserView_PageIndexChanging" >
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
                     <ItemTemplate>

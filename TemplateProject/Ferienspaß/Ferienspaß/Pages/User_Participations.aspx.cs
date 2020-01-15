@@ -84,18 +84,26 @@ namespace Ferienspaß.Pages
                         int cid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_cid")).Text);
 
                         Cancel_participation(pid, cid);
-
+                        Write_cancellation__in_db(pid, cid);
                         Send_cancel_mail(pid, cid);
+
                         lit_msg.Text = CreateMSGString("Ihre Anmeldung wurde storniert", "info");
                         break;
                     }
             }
 
         }
+
+
         private void Cancel_participation(int pid, int cid)
         {
             db.Query($"DELETE FROM participation WHERE pid = {pid} AND cid = {cid}");
             Fill_gv_participations();
+        }
+
+        private void Write_cancellation__in_db(int pid, int cid)
+        {
+            db.Query($"INSERT INTO cancellations (cid, pid, date) VALUES ({cid}, {pid}, '{DateTime.Now.ToString("dd/MM/yyyy")}')");
         }
 
         private void Send_cancel_mail(int pid, int cid)

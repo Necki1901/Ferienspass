@@ -80,8 +80,8 @@ namespace Ferienspaß.Pages
                     else
                     {
                         Cancel_participation(rowIndex);
-
-                        lit_msg.Text = CreateMSGString("Anmeldung erfolgreich storniert", "info");
+                        Fill_gv_participations();
+                        lit_msg.Text = CreateMSGString("Ihre Anmeldung wurde storniert", "info");
                         break;
                     }
             }

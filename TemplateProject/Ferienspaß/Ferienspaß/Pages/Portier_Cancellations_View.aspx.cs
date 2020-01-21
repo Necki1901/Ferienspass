@@ -41,7 +41,7 @@ namespace Ferienspaß.Pages
 
         private void FillGvCancellations()
         {
-            DataTable dt = db.Query($"select project.pid, project.NAME, child.cid, child.GN, child.SN, cancellations.date, project.price, user.phone, user.gn as 'gnUser', user.sn as 'snUser' " +
+            DataTable dt = db.Query($"select cancellations.cancel_id, project.NAME, child.GN, child.SN, cancellations.date, project.price, user.phone, user.gn as 'gnUser', user.sn as 'snUser' " +
                 $"from(((cancellations inner join project on cancellations.pid = project.pid) " +
                 $"inner join child on cancellations.cid = child.cid)" +
                 $"inner join user on child.UID = user.uid)");
@@ -60,7 +60,17 @@ namespace Ferienspaß.Pages
 
         protected void gv_cancellations_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            switch (e.CommandName)
+            {
+                case "completed":
+                    GridViewRow gvr = (GridViewRow)(((Button)e.CommandSource).NamingContainer);
+                    int rowIndex = gvr.RowIndex;
 
+                    string id = ((Label)gv_cancellations.Rows[rowIndex].FindControl("lblID")).Text;
+                    db.Query($"DELETE FROM cancellations WHERE cancel_id={id}");
+                    FillGvCancellations();
+                    break;
+            }
         }
     }
 }

@@ -11,17 +11,12 @@
 
      <asp:GridView CssClass="table table-bordered" ID="gv_cancellations" Autopost ="true" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_cancellations_RowCommand">
          <Columns>
-             <asp:TemplateField HeaderText="PID" Visible="false">
+             <asp:TemplateField HeaderText="ID" Visible="false">
                 <ItemTemplate>
-                    <asp:Label ID="lblPID" runat="server" Text='<%# Eval("PID") %>'></asp:Label>
+                    <asp:Label ID="lblID" runat="server" Text='<%# Eval("cancel_id") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-             <asp:TemplateField HeaderText="CID" Visible="false">
-                <ItemTemplate>
-                    <asp:Label ID="lblCID" runat="server" Text='<%# Eval("CID") %>'></asp:Label>
-                </ItemTemplate>
-            </asp:TemplateField>
-              <asp:TemplateField HeaderText="Projektname" Visible="false">
+              <asp:TemplateField HeaderText="Projektname">
                 <ItemTemplate>
                     <asp:Label ID="lblProject" runat="server" Text='<%# Eval("name") %>'></asp:Label>
                 </ItemTemplate>
@@ -53,7 +48,7 @@
             </asp:TemplateField>
               <asp:TemplateField HeaderText="Aktion">
                 <ItemTemplate>
-                    <asp:Button runat="server" CssClass="btn btn-primary" CommandName="completed" Text="Stornierung abgeschlossen"/>
+                    <asp:Button runat="server" CssClass="btn btn-primary" CommandName="completed" Text="Stornierung abschließen"/>
                 </ItemTemplate>
             </asp:TemplateField>
          </Columns>

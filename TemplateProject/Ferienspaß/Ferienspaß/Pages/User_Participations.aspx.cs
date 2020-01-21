@@ -94,7 +94,6 @@ namespace Ferienspaß.Pages
 
         }
 
-
         private void Cancel_participation(int pid, int cid)
         {
             db.Query($"DELETE FROM participation WHERE pid = {pid} AND cid = {cid}");
@@ -121,9 +120,18 @@ namespace Ferienspaß.Pages
 
                 string fullname_child = $"{dt_child.Rows[0]["gn"]} {dt_child.Rows[0]["sn"]}";
 
-                return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
-                    $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt";
-               
+                //if (db.ExecuteNonQuery($"SELECT * FROM participation WHERE pid = {pid} AND cid = {cid} AND paid = 1") > 0)
+                if (Convert.ToInt32(db.Query($"SELECT paid FROM participation WHERE pid = {pid} AND cid = {cid}").Rows[0]) == 1) 
+                {
+                    return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
+                    $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt.\n\n" +
+                    "Den bereits überwiesenen Betrag können Sie sich im Gemeindegebäude vom Portier zurückerstatten lassen.";
+                }
+                else
+                {
+                    return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
+                        $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt";
+                }
             }
         }
 

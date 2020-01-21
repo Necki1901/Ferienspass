@@ -8,7 +8,27 @@
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <div>
+        <div class="form-group">
+            <div class="form-line">
+                <asp:Label Text="Projektname" runat="server"></asp:Label>
+                <asp:TextBox ID="txtProjectName" runat="server"></asp:TextBox>
 
+
+                <asp:Label Text="Name der Eltern" runat="server"></asp:Label>
+                <asp:TextBox ID="txtParentName" runat="server"></asp:TextBox>
+            </div>
+
+            <div class="form-line">
+                <asp:Label Text="Stornierdatum" runat="server"></asp:Label>
+                <asp:TextBox ID="txtStornoDate" TextMode="Date" runat="server"></asp:TextBox>
+
+                <asp:Label Text="Name des Kindes" runat="server"></asp:Label>
+                <asp:TextBox ID="txtChildName" runat="server"></asp:TextBox>
+            </div>
+            <asp:Button ID="btnSearch" runat="server" Text="Suchen" CssClass="btn btn-primary" OnClick="btnSearch_Click" />
+        </div>
+    </div>
      <asp:GridView CssClass="table table-bordered" ID="gv_cancellations" Autopost ="true" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_cancellations_RowCommand">
          <Columns>
              <asp:TemplateField HeaderText="ID" Visible="false">
@@ -23,12 +43,12 @@
             </asp:TemplateField>
                <asp:TemplateField HeaderText="Kindname">
                 <ItemTemplate>
-                    <asp:Label ID="lblChild" runat="server" Text='<%#  $"{Eval("gn")} {Eval("sn")}" %>'></asp:Label>
+                     <asp:Label ID="lblChild" runat="server" Text='<%#  $"{Eval("childName")}" %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
               <asp:TemplateField HeaderText="Elternname">
                 <ItemTemplate>
-                    <asp:Label ID="lblParent" runat="server" Text='<%# $"{Eval("gnUser")} {Eval("snUser")}" %>'></asp:Label>
+                    <asp:Label ID="lblParent" runat="server" Text='<%# $"{Eval("userName")}" %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
               <asp:TemplateField HeaderText="Telefonnummer">

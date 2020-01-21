@@ -11,9 +11,8 @@ using System.Web.UI.WebControls;
 
 namespace Ferienspaß.Pages
 {
-    public partial class User_View_Details : System.Web.UI.Page
+    public partial class Portier_Project_View_Details : System.Web.UI.Page
     {
-
         private int projectid;
         CsharpDB db = new CsharpDB();
 
@@ -21,8 +20,8 @@ namespace Ferienspaß.Pages
         {
             if (!Page.IsPostBack)
             {
-                if(Request.QueryString["id"] == null)
-                    Response.Redirect("Project_View.aspx");
+                if (Request.QueryString["id"] == null)
+                    Response.Redirect("Portier_Project_View.aspx");
                 ViewState["PID"] = Convert.ToInt32(Request.QueryString["id"]);
                 Fill_gv_UserView_Details();
             }
@@ -58,53 +57,8 @@ namespace Ferienspaß.Pages
 
             int remaining_capacity = (int)dt.Rows[0]["remainingCapacity"];
             ViewState["rc"] = remaining_capacity;
-
-            SetRegisterOptions(remaining_capacity);
-            SetQueueOptions(remaining_capacity, dt.Rows[0]);
         }
 
-                     
-        public void SetRegisterOptions(int remaining_capacity)
-        {
-            Button btnRegister = (Button)gv_User_View_Details.Rows[0].FindControl("btnRegister");
-            Button btnQueue = (Button)gv_User_View_Details.Rows[0].FindControl("btnQueue");
-
-
-            if (remaining_capacity == 0)
-            {
-                btnQueue.Visible = true;
-                btnRegister.Visible = false;
-                lblMessage.Text = "Das Projekt ist leider ausgebucht." +
-                    "Um über eventuelle Verfügbarkeit informiert zu werden, können sie sich in die Warteschlange eintragen";
-            }
-        }
-
-        public void SetQueueOptions(int remaining_capacity, DataRow datarow)
-        {
-            Button btnRegister = (Button)gv_User_View_Details.Rows[0].FindControl("btnRegister");
-            Button btnQueue = (Button)gv_User_View_Details.Rows[0].FindControl("btnQueue");
-
-
-            DateTime time = (DateTime)datarow["Date"];
-            TimeSpan time_left = time - DateTime.Today;
-
-            if (time_left < new TimeSpan(8, 0, 0, 0))
-            {
-               
-                btnRegister.Visible = false;
-                btnQueue.Visible = false;
-                switch (remaining_capacity)
-                {
-                    case 0:
-                        lblMessage.Text = "Für dieses Projekt kann man sich nicht mehr anmelden";
-                        break;
-                    default:
-                        lblMessage.Text = "Für dieses Projekt kann man sich nur noch persönlich im Gemeindeamt anmelden";
-                        break;
-
-                }
-            }
-        }
 
         protected void gv_User_View_Details_RowCommand(object sender, GridViewCommandEventArgs e)
         {
@@ -118,7 +72,7 @@ namespace Ferienspaß.Pages
                     try
                     {
                         DataTable dt = db.Query($"SELECT * FROM queue WHERE UID = {User.Identity.Name}");
-                        if(dt.Rows.Count == 0)
+                        if (dt.Rows.Count == 0)
                         {
                             db.Query($"INSERT INTO queue (UID, PID) VALUES({User.Identity.Name}, {ViewState["PID"]})");
                             lblMessage.Text = "Sie wurden zur Warteschlange hinzugefügt";
@@ -128,19 +82,18 @@ namespace Ferienspaß.Pages
                             lblMessage.Text = "Sie haben sich bereits in die Warteschlange eingetragen";
                         }
                     }
-                    catch(Exception ex)
+                    catch (Exception ex)
                     {
                         lblMessage.Text = ex.Message;
                     }
                     break;
-                
+
             }
         }
         private void Fill_gv_Children()
         {
             DataTable dt;
             DataView dv;
-            RemainingCapacity rc = new RemainingCapacity();
 
             dt = db.Query($"select * from child where child.cid not in(select participation.cid from participation where participation.PID = {ViewState["PID"]}) AND  child.UID = {User.Identity.Name}");
             if (dt.Rows.Count == 0)
@@ -154,7 +107,7 @@ namespace Ferienspaß.Pages
                 gv_Children.DataSource = dv;
                 gv_Children.DataBind();
             }
-            
+
 
         }
 
@@ -171,13 +124,13 @@ namespace Ferienspaß.Pages
                 }
             }
 
-            if(childrenIDs.Count > Convert.ToInt32(ViewState["rc"]))
+            if (childrenIDs.Count > Convert.ToInt32(ViewState["rc"]))
             {
                 lblChildrenMessage.Text = $"Es können nicht {childrenIDs.Count} Kinder hinzugefügt werden,\n da das Projekt voll ist";
             }
             else
             {
-                foreach(int id in childrenIDs)
+                foreach (int id in childrenIDs)
                 {
                     db.Query($"INSERT INTO participation (CID, PID, Date) VALUES({id}, {ViewState["PID"]}, '{DateTime.Now.ToString("dd/MM/yyyy")}')");
                 }
@@ -193,6 +146,7 @@ namespace Ferienspaß.Pages
 
                 string body = Get_body_for_mail(childrenIDs);
                 Send_mail(body);
+                Fill_gv_Children();
             }
 
         }
@@ -208,7 +162,7 @@ namespace Ferienspaß.Pages
 
             int cnt = 1;
             //print children (1. xxx xxx)
-            foreach(int cid in childrenIDs)
+            foreach (int cid in childrenIDs)
             {
                 DataTable dt_children = db.Query($"SELECT sn, gn FROM child WHERE cid = {cid}");
                 body += $"{cnt}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]}\n";

@@ -40,7 +40,8 @@ namespace Ferienspaß.Pages
             DataView dv;
             RemainingCapacity rc = new RemainingCapacity();
 
-            dt = db.Query($"SELECT * FROM project");
+            dt = db.Query($"SELECT * FROM project " +
+                $"WHERE date < CURDATE()");
             dt = rc.GetDataTableWithRemainingCapacities(dt);
             dv = new DataView(dt);
 

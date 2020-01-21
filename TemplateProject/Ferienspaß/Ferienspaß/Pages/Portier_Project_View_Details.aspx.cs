@@ -23,7 +23,7 @@ namespace Ferienspaß.Pages
                 if (Request.QueryString["id"] == null)
                     Response.Redirect("Portier_Project_View.aspx");
                 ViewState["PID"] = Convert.ToInt32(Request.QueryString["id"]);
-                Fill_gv_UserView_Details();
+                Fill_gv_UserView_Details(); 
             }
             try
             {
@@ -39,6 +39,7 @@ namespace Ferienspaß.Pages
 
             }
 
+
         }
 
         private void Fill_gv_UserView_Details()
@@ -51,12 +52,12 @@ namespace Ferienspaß.Pages
             dt = rc.GetDataTableWithRemainingCapacities(dt);
             dv = new DataView(dt);
 
+            int remaining_capacity = (int)dt.Rows[0]["remainingCapacity"];
+            ViewState["rc"] = remaining_capacity;
+
             gv_User_View_Details.DataSource = dv;
             gv_User_View_Details.DataBind();
 
-
-            int remaining_capacity = (int)dt.Rows[0]["remainingCapacity"];
-            ViewState["rc"] = remaining_capacity;
         }
 
 
@@ -68,26 +69,6 @@ namespace Ferienspaß.Pages
                     SetVisibility_Children(true);
                     Fill_gv_Children();
                     break;
-                case "queue":
-                    try
-                    {
-                        DataTable dt = db.Query($"SELECT * FROM queue WHERE UID = {User.Identity.Name}");
-                        if (dt.Rows.Count == 0)
-                        {
-                            db.Query($"INSERT INTO queue (UID, PID) VALUES({User.Identity.Name}, {ViewState["PID"]})");
-                            lblMessage.Text = "Sie wurden zur Warteschlange hinzugefügt";
-                        }
-                        else
-                        {
-                            lblMessage.Text = "Sie haben sich bereits in die Warteschlange eingetragen";
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        lblMessage.Text = ex.Message;
-                    }
-                    break;
-
             }
         }
         private void Fill_gv_Children()
@@ -146,8 +127,8 @@ namespace Ferienspaß.Pages
 
                 string body = Get_body_for_mail(childrenIDs);
                 Send_mail(body);
-                Fill_gv_Children();
             }
+            Fill_gv_UserView_Details();
 
         }
 

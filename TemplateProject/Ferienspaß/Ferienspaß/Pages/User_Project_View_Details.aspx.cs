@@ -22,7 +22,7 @@ namespace Ferienspaß.Pages
             if (!Page.IsPostBack)
             {
                 if(Request.QueryString["id"] == null)
-                    Response.Redirect("Project_View.aspx");
+                    Response.Redirect("User_Project_View.aspx");
                 ViewState["PID"] = Convert.ToInt32(Request.QueryString["id"]);
                 Fill_gv_UserView_Details();
             }
@@ -194,6 +194,7 @@ namespace Ferienspaß.Pages
                 string body = Get_body_for_mail(childrenIDs);
                 Send_mail(body);
             }
+            Fill_gv_UserView_Details();
 
         }
 

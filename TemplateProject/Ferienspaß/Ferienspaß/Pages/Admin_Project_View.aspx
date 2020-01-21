@@ -5,36 +5,63 @@
     <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
     <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden"  OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
 
+    
+
 </asp:Content>
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+<asp:Panel ID="pnlBlockBg" CssClass="pnlBlockBg" runat="server" Visible="false"></asp:Panel><%--Panel um den Hintergrund während Add oder Update Vorgängen zu Blockieren--%>            
+    <div class="form-group">                          
+                    <asp:Panel ID="pnlInsert" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Inserten und Updaten eines Eintrages eingefügt werden.--%>                       
+                        <div class="form-row"><asp:Label ID="lblDate" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtDate" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblStart" Text="Start:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtStart" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblEnd" Text="Ende:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtEnd" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+                        <div class="form-row"> <asp:Label ID="lblName" Text="Projektname:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtName" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblDesc" Text="Beschreibung:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtDesc" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblPlace" Text="Ort/Straße:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPlace" runat="server" CssClass="txtPanel"></asp:TextBox> </div>
+                        <div class="form-row"><asp:Label ID="lblNumber" Text="Hausnummer:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtNumber" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblCapacity" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtCapacity" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
+                        <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
+                         <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
+                    </asp:Panel>                   
+                </div>   
+    
 
  <script type="text/javascript">
         function Delete() {
             if (confirm("Datensatz wirklich löschen?")) {
-                return true;               
             }
             return false;
         }
     </script>
-    <div class="form-group">
-            <div class="form-row">
-                <div class="form-group col-md-6">
+
+    <div class="container">        
+                <div class="eventname">
                     <asp:Label Text="Name der Veranstaltung" runat="server"></asp:Label>
                     <asp:TextBox ID="txtEventName" runat="server"></asp:TextBox>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="guidename">
                     <asp:Label Text="Verantwortlicher" runat="server"></asp:Label>
                     <asp:TextBox ID="txtOrganizerName" runat="server"></asp:TextBox>
                 </div>
-                <div class="form-group col-md-6">
+                <div class="date">
                     <asp:Label Text="Datum der Veranstaltung" runat="server"></asp:Label>
                     <asp:TextBox ID="datepicker" placeholder="Datum" cssclass="datepicker-field" TextMode="Date" runat="server"></asp:TextBox>
                 </div>
             </div>
-            <asp:Button ID="btnSearch" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnSearch_Click"/>
-        </div>
+            <asp:Button ID="btnSearch" Text="Suchen" CssClass="btn btn-primary fa-amazon" runat="server" OnClick="btnSearch_Click"/>
+        
     <br />
     <div>
             <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowDataBound="gvAdminProjects_RowDataBound1" OnRowUpdating="gvAdminProjects_RowUpdating" OnRowCancelingEdit="gvAdminProjects_RowCancelingEdit" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7">
@@ -141,12 +168,14 @@
                         </ItemTemplate>
                     </asp:TemplateField>
                 </Columns>
-            </asp:GridView>
-              <asp:Label ID="lblInfo" runat="server"></asp:Label>
+            </asp:GridView>       
+       &nbsp;<asp:Label ID="lblInfo" runat="server"></asp:Label>
         </div>
     <p>
         DATE Format: YYYY.MM.DD</p>
     <p>
         TIME Format: HH:MM:SS</p>
-    <p>
+    
+        
+       <%-- <asp:Panel ID="pnlUpdateInsert" CssClass="pnlUpdateInsert" runat="server" Visible="true"></asp:Panel>--%>
 </asp:Content>

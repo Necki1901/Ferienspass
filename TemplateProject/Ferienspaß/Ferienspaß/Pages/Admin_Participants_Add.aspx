@@ -10,8 +10,8 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
     <script type="text/javascript">
-        function Delete() {
-            if (confirm("Datensatz löschen?")) {
+        function Add() {
+            if (confirm("Anmeldung hinzufügen?")) {
                 return true;
             }
             return false;
@@ -47,7 +47,7 @@
             </asp:TemplateField>  
             <asp:TemplateField HeaderText="Aktion">
                 <ItemTemplate>
-                    <asp:Button runat="server" ID="btn_save" Text="Kind hinzufügen" CommandName="save" />
+                    <asp:Button runat="server" ID="btn_save" Text="Kind hinzufügen" CommandName="save"   OnClientClick="return Add()"/>
                 </ItemTemplate>
             </asp:TemplateField> 
 

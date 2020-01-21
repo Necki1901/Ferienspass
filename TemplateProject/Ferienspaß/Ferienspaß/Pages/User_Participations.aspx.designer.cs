@@ -11,7 +11,7 @@ namespace Ferienspaß.Pages
 {
 
 
-    public partial class Admin_Participants_View
+    public partial class User_Participations
     {
 
         /// <summary>
@@ -33,49 +33,22 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// lbl_projectname control.
+        /// lit_msg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lbl_projectname;
+        protected global::System.Web.UI.WebControls.Literal lit_msg;
 
         /// <summary>
-        /// ddl_Projects control.
+        /// gv_participations control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Projects;
-
-        /// <summary>
-        /// ddl_Years control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddl_Years;
-
-        /// <summary>
-        /// print control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button print;
-
-        /// <summary>
-        /// gv_Participants control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gv_Participants;
+        protected global::System.Web.UI.WebControls.GridView gv_participations;
 
         /// <summary>
         /// lbl_Message control.

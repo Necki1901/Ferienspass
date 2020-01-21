@@ -17,7 +17,7 @@ namespace Ferienspaß.Pages
         bool isAdding;
         static bool isFiltered = false;
         protected void Page_Load(object sender, EventArgs e)
-        {
+        {            
             lblInfo.Text = "";
             Fill_gvAdminProjects(isFiltered);
             if(!Page.IsPostBack)
@@ -39,7 +39,6 @@ namespace Ferienspaß.Pages
 
             }
         }
-
         private void Fill_gvAdminProjects(bool filter)
         {
             DataTable dt;
@@ -126,7 +125,7 @@ namespace Ferienspaß.Pages
 
             if (Convert.ToBoolean(ViewState["isAdding"]) == false)
             {
-                bool valid = ValidateData(e);
+                bool valid = ValidateData();
                 if (valid == true)
                 {
                     if (db.ExecuteNonQuery("UPDATE project SET NAME = ?, DESCRIPTION = ?, DATE = ?, START = ?, END = ?, PLACE = ?, NUMBER = ?, CAPACITY = ?, GID = ? WHERE PID = ?", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], e.NewValues["NUMBER"], Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname), e.Keys[0]) > 0)
@@ -144,10 +143,10 @@ namespace Ferienspaß.Pages
             }
             else
             {
-                bool valid = ValidateData(e);
+                bool valid = ValidateData();
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]).ToShortDateString(), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], Convert.ToInt32(e.NewValues["NUMBER"]), Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname)) > 0)
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]).ToShortDateString(), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], Convert.ToInt32(e.NewValues["NUMBER"]), Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }
@@ -162,35 +161,35 @@ namespace Ferienspaß.Pages
             }
         }
 
-        private string ChangeDateFormat(GridViewUpdateEventArgs e)
+        private string ChangeDateFormat()
         {
-            string oldDate = e.NewValues["DATE"].ToString();
+            string oldDate = txtDate.Text;
             string newDate = oldDate.Replace(".", "-");
             return newDate;
 
         }
 
-        private bool ValidateData(GridViewUpdateEventArgs e)
+        private bool ValidateData()
         {
             string errorDescription = "";
             bool valid = true;
             bool checkifinteger = true;
 
             //Proof null-values
-            if (e.NewValues["DATE"] == null || e.NewValues["START"] == null || e.NewValues["END"] == null || e.NewValues["CAPACITY"] == null || e.NewValues["NAME"] == null || e.NewValues["DESCRIPTION"] == null || e.NewValues["PLACE"] == null || e.NewValues["NUMBER"] == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind null!  "; }
+            if (txtDate.Text == null || txtStart.Text == null || txtEnd.Text == null || txtCapacity.Text == null || txtName.Text == null || txtDesc.Text == null || txtPlace.Text == null || txtNumber.Text == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind null!  "; }
             else
             {
-                e.NewValues["DATE"] = ChangeDateFormat(e);
+                txtDate.Text = ChangeDateFormat();
 
-                if (!(e.NewValues["DATE"].ToString().Length == 10) || !(e.NewValues["START"].ToString().Length == 8) || !(e.NewValues["END"].ToString().Length == 8)) { valid = false; errorDescription += "DATUM-Format oder ZEIT-Format (START oder END) ist ungültig!  "; }
+                if (!(txtDate.Text.Length == 10) || !(txtStart.Text.Length == 8) || !(txtEnd.Text.Length == 8)) { valid = false; errorDescription += "DATUM-Format oder ZEIT-Format (START oder END) ist ungültig!  "; }
                 else
                 {
                     //Proof Date
-                    for (int i = 0; i < e.NewValues["DATE"].ToString().Length; i++)
+                    for (int i = 0; i < txtDate.Text.Length; i++)
                     {
                         if (i != 4 && i != 7)
                         {
-                            if (!(int.TryParse(e.NewValues["DATE"].ToString()[i].ToString(), out int n)))
+                            if (!(int.TryParse(txtDate.Text[i].ToString(), out int n)))
                             {
                                 checkifinteger = false;
                             }
@@ -198,51 +197,51 @@ namespace Ferienspaß.Pages
                     }
 
 
-                    if (!(e.NewValues["DATE"].ToString()[4] == '-' && e.NewValues["DATE"].ToString()[7] == '-' && checkifinteger == true)) { valid = false; errorDescription += "DATE-Format ist ungültig!  "; }
+                    if (!(txtDate.Text[4] == '-' && txtDate.Text[7] == '-' && checkifinteger == true)) { valid = false; errorDescription += "DATE-Format ist ungültig!  "; }
 
                     //Proof Time
                     bool checkifintegerStartTime = true;
                     bool checkifintegerEndTime = true;
 
-                    for (int i = 0; i < e.NewValues["START"].ToString().Length; i++)
+                    for (int i = 0; i < txtStart.Text.Length; i++)
                     {
                         if (i != 2 && i != 5)
                         {
-                            if (!(int.TryParse(e.NewValues["START"].ToString()[i].ToString(), out int n)))
+                            if (!(int.TryParse(txtStart.Text[i].ToString(), out int n)))
                             {
                                 checkifintegerStartTime = false;
                             }
                         }
                     }
 
-                    for (int i = 0; i < e.NewValues["END"].ToString().Length; i++)
+                    for (int i = 0; i < txtEnd.Text.Length; i++)
                     {
                         if (i != 2 && i != 5)
                         {
-                            if (!(int.TryParse(e.NewValues["END"].ToString()[i].ToString(), out int n)))
+                            if (!(int.TryParse(txtEnd.Text[i].ToString(), out int n)))
                             {
                                 checkifintegerEndTime = false;
                             }
                         }
                     }
 
-                    if (!(e.NewValues["START"].ToString()[2] == ':' && e.NewValues["START"].ToString()[5] == ':' && checkifintegerStartTime == true)) { valid = false; errorDescription += "START-Zeit-Format ist ungültig!  "; }
-                    if (!(e.NewValues["END"].ToString()[2] == ':' && e.NewValues["END"].ToString()[5] == ':' && checkifintegerEndTime == true)) { valid = false; errorDescription += "END-Zeit-Format ist ungültig!  "; }
+                    if (!(txtStart.Text[2] == ':' && txtStart.Text[5] == ':' && checkifintegerStartTime == true)) { valid = false; errorDescription += "START-Zeit-Format ist ungültig!  "; }
+                    if (!(txtEnd.Text.ToString()[2] == ':' && txtEnd.Text[5] == ':' && checkifintegerEndTime == true)) { valid = false; errorDescription += "END-Zeit-Format ist ungültig!  "; }
 
                     //Proof Capacity
 
-                    if (!int.TryParse((e.NewValues["CAPACITY"].ToString()), out int a)) { valid = false; errorDescription += "KAPAZITÄT-Format ist ungültig!  "; }
+                    if (!int.TryParse((txtCapacity.Text), out int a)) { valid = false; errorDescription += "KAPAZITÄT-Format ist ungültig!  "; }
 
                     //Proof lengths of other VARCHAR attributes
 
-                    if (!(e.NewValues["NAME"].ToString().Length <= 50)) { valid = false; errorDescription += "NAME ist zu lang!  "; }
-                    if (!(e.NewValues["DESCRIPTION"].ToString().Length <= 140)) { valid = false; errorDescription += "BESCHREIBUNG ist zu lang!!  "; }
-                    if (!(e.NewValues["PLACE"].ToString().Length <= 50)) { valid = false; errorDescription += "ORT ist zu lang!  "; }
-                    if (!(e.NewValues["NUMBER"].ToString().Length <= 5)) { valid = false; errorDescription += "HAUSNUMMER ist zu lang!  "; }
+                    if (!(txtName.Text.Length <= 50)) { valid = false; errorDescription += "NAME ist zu lang!  "; }
+                    if (!(txtDesc.Text.Length <= 140)) { valid = false; errorDescription += "BESCHREIBUNG ist zu lang!!  "; }
+                    if (!(txtPlace.Text.Length <= 50)) { valid = false; errorDescription += "ORT ist zu lang!  "; }
+                    if (!(txtNumber.Text.Length <= 5)) { valid = false; errorDescription += "HAUSNUMMER ist zu lang!  "; }
 
                 }
             }
-            lblInfo.Text = errorDescription;
+            lblInfo.Text = errorDescription;//auf Label in Panel ändern!
             return valid;
         }
 
@@ -272,20 +271,18 @@ namespace Ferienspaß.Pages
         {
             if (e.CommandName == "Add")
             {
-
-                DataTable dt = db.Query("SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID ");
-                dt.Clear();
-                DataRow dr = dt.NewRow();
                 ViewState["isAdding"] = true;
-                dt.Rows.Add(dr);
-                gvAdminProjects.DataSource = dt;
-                gvAdminProjects.EditIndex = 0;
-                gvAdminProjects.DataBind();
-                GridViewRow gvr = gvAdminProjects.Rows[gvAdminProjects.EditIndex];
-                DropDownList ddl = gvr.FindControl("ddlEditItemTemplateProjectGuide") as DropDownList;
-                ddl.SelectedItem.Text = GetTextForDdl(Convert.ToInt32(ddl.SelectedValue));
-                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
-                ib.Visible = false;
+                pnlBlockBg.Visible = true;
+                pnlInsert.Visible = true;
+                DataTable dt =  GetAllGuides();
+                for(int i=0; i<dt.Rows.Count;i++)
+                {
+                    ListItem li = new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString());
+                    ddlGuide.Items.Add(li);
+                }
+
+                ddlGuide.DataValueField = "GID";
+                ddlGuide.DataTextField = "SN";              
             }
         }
 
@@ -316,6 +313,37 @@ namespace Ferienspaß.Pages
         {
             gvAdminProjects.PageIndex = e.NewPageIndex;
             Fill_gvAdminProjects(isFiltered);
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)
+        {
+            pnlBlockBg.Visible = false;
+            pnlInsert.Visible = false;
+        }
+
+        protected void btnAdd_Click1(object sender, EventArgs e)//Insert from popup panel
+        {
+            if (Convert.ToBoolean(ViewState["isAdding"]) == true)
+            {
+                string selectedname = ddlGuide.SelectedValue;
+                bool valid = ValidateData();
+                if (valid == true)
+                {
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text).ToShortDateString(), Convert.ToDateTime(txtStart.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd.Text).ToString("HH:mm:ss"), txtPlace.Text, Convert.ToInt32(txtNumber.Text), Convert.ToInt32(txtCapacity.Text), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    {
+                        lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
+                    }
+                    else
+                    {
+                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+                    }
+                    Fill_gvAdminProjects(isFiltered);
+                    ViewState["isAdding"] = false;
+                    pnlBlockBg.Visible = false;
+                    pnlInsert.Visible = false;
+                }
+            }
+            
         }
     }
 }

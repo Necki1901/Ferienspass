@@ -58,8 +58,9 @@ namespace Ferienspaß {
                                 RegisteredUID = dt1.Rows[0]["UID"].ToString();
 
                                 FormsAuthentication.RedirectFromLoginPage(RegisteredUID,false);
-                                Response.Redirect("RegistrationChildren.aspx?fromRegistration=1");
+                                db.SendMail(tbx_email.Text, $"{tbx_firstname.Text} {tbx_lastname.Text}", "Registrierung Ferienspaß", "Vielen Dank für Ihre Registrierung bei Ferienspaß");
 
+                                Response.Redirect("RegistrationChildren.aspx?fromRegistration=1");
                                 lit_msg.Text = CreateMSGString("Sie können zu Ihrem Konto jetzt Ihre Kinder anlegen!", "info");
                             } else {
                                 lit_msg.Text = CreateMSGString("Der Vorgang ist gescheitert!", "warning");

@@ -60,6 +60,9 @@
               <li id="menu_projects" class="nav-item">
                 <a class="nav-link" href="User_Project_View.aspx">Projektansicht</a>
               </li>
+                <li id="menu_participations" class="nav-item">
+                <a class="nav-link" href="User_Participations.aspx">Meine Anmeldungen</a>
+              </li>
               <%--<li id="menu_registrations" class="nav-item">
                 <a class="nav-link" href="MyRegistrations.aspx">Meine Anmeldungen</a>
               </li>

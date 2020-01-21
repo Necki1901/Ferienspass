@@ -16,6 +16,10 @@ namespace Ferienspaß
         CsharpDB db = new CsharpDB();
         bool isAdding;
         static bool isFiltered = false;
+        static int idForUpdating;
+
+
+        static bool isFiltered = false;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,8 +28,8 @@ namespace Ferienspaß
             
             if (!Page.IsPostBack)
             {
-                Fill_ddlUserGroup();
-                isAdding = false;               
+                isAdding = false;
+                FillDdl();
             }
             try
             {
@@ -40,6 +44,30 @@ namespace Ferienspaß
             {
 
             }
+
+        }
+
+        private void FillDdl()
+        {
+            DataTable dt2 = GetAllUserGroups();
+            for (int i = 0; i < dt2.Rows.Count; i++)
+            {
+                ListItem li = new ListItem(dt2.Rows[i]["DESCRIPTION"].ToString(), dt2.Rows[i]["UGID"].ToString());
+                ddlUserGroup.Items.Add(li);
+                ddlUserGroup2.Items.Add(li);
+            }
+            ddlUserGroup2.DataValueField = "UGID";
+            ddlUserGroup2.DataTextField = "DESCRIPTION";
+            ddlUserGroup.DataValueField = "UGID";
+            ddlUserGroup.DataTextField = "DESCRIPTION";
+            ddlLocked.Items.Add("1");
+            ddlLocked.Items.Add("0");
+            ddlLocked2.Items.Add("1");
+            ddlLocked2.Items.Add("0");
+            ddlEmailConfirmed.Items.Add("1");
+            ddlEmailConfirmed.Items.Add("0");
+            ddlEmailConfirmed2.Items.Add("1");
+            ddlEmailConfirmed2.Items.Add("0");
 
         }
 
@@ -106,21 +134,12 @@ namespace Ferienspaß
         {          
             if (e.CommandName == "Add")
             {
-                DataTable dt = db.Query("SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID ");
-                dt.Clear();
-                DataRow dr = dt.NewRow();               
-                ViewState["isAdding"] = true;
-                dt.Rows.Add(dr);
-                gvAdminUsers.DataSource = dt;
-                gvAdminUsers.EditIndex = 0;
-                gvAdminUsers.DataBind();
-                GridViewRow gvr = gvAdminUsers.Rows[gvAdminUsers.EditIndex];              
-                DropDownList ddl = gvr.FindControl("ddlEditItemTemplateUserGroup") as DropDownList;
-                ddl.SelectedItem.Text = GetTextForDdl(Convert.ToInt32(ddl.SelectedValue));
-                ImageButton ib = gvr.FindControl("btnDelete") as ImageButton;
-                ib.Visible = false;             
-                ImageButton ib2 = gvr.FindControl("btnChildren") as ImageButton;
-                ib2.Visible = false;
+                if (e.CommandName == "Add")
+                {
+                    ViewState["isAdding"] = true;
+                    pnlBlockBg.Visible = true;
+                    pnlInsert.Visible = true;                   
+                }
             }
            
             if (e.CommandName == "Children")
@@ -138,87 +157,101 @@ namespace Ferienspaß
         }
 
         protected void gvAdminUsers_RowEditing(object sender, GridViewEditEventArgs e)
-        {                              
-            gvAdminUsers.EditIndex = e.NewEditIndex;            
-            Fill_gvAdminUsers();
-            GridViewRow gvr2 = gvAdminUsers.Rows[e.NewEditIndex];//so auch bei Add-Button
-            ImageButton ib = gvr2.FindControl("btnChildren") as ImageButton;
-            ib.Visible = false;
+        {
+            pnlBlockBg.Visible = true;
+            pnlUpdate.Visible = true;
+            gvAdminUsers.EditIndex = e.NewEditIndex;
+            idForUpdating = e.NewEditIndex;
+            FillControlsWithValues();
         }
 
-        protected void gvAdminUsers_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        private void FillControlsWithValues()
         {
-            GridViewRow gvr = gvAdminUsers.Rows[e.RowIndex];
-            DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateUserGroup");
-            string selectedGroup = dropDownList.SelectedValue;           
-            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
-            {
-                bool valid = ValidateData(e);
-                if (valid == true)
-                {
-                    if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", e.NewValues["GN"], e.NewValues["SN"], e.NewValues["PHONE"], e.NewValues["EMAIL"], Convert.ToInt32(selectedGroup), e.NewValues["LOCKED"], e.NewValues["EmailConfirmed"], e.Keys[0]) > 0)
-                    {
-                        lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
-                    }
-                    else
-                    {
-                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }
-                    gvAdminUsers.EditIndex = -1;
-                    Fill_gvAdminUsers();
-                }
-            }
-            else
-            {
-                bool valid = ValidateData(e);
-                if (valid == true)
-                {
-                    if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", e.NewValues["GN"], e.NewValues["SN"], e.NewValues["PHONE"], e.NewValues["EMAIL"], e.NewValues["LOCKED"], e.NewValues["EmailConfirmed"],Convert.ToInt32(selectedGroup)) > 0)
-                    {
-                        lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
-                    }
-                    else
-                    {
-                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }
-                    gvAdminUsers.EditIndex = -1;
-                    Fill_gvAdminUsers();
-                    DataTable u = db.Query("SELECT UID,GN,EMAIL,SN FROM user WHERE EMAIL LIKE ? LIMIT 1", e.NewValues["EMAIL"]);
-                    string resetHash = PwdResetHash(u.Rows[0]["GN"].ToString(), u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["UID"].ToString());
-                    bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort zurücksetzen", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/PasswordReset.aspx?hash=" + resetHash);
-                    ViewState["isAdding"] = false;
-                }
-            }
-                     
+            int id;
+            id = Convert.ToInt32(((Label)gvAdminUsers.Rows[idForUpdating].FindControl("lblItemTemplateUserID")).Text);
+            DataTable dt = db.Query("SELECT * FROM user WHERE UID=?", id);
+            txtGivenName2.Text = dt.Rows[0]["GN"].ToString();
+            txtSurName2.Text = dt.Rows[0]["SN"].ToString();
+            txtPhone2.Text = dt.Rows[0]["PHONE"].ToString();
+            txtEMail2.Text = dt.Rows[0]["EMAIL"].ToString();
+            ddlUserGroup2.SelectedValue = dt.Rows[0]["UGID"].ToString();
+            ddlLocked2.SelectedValue = dt.Rows[0]["LOCKED"].ToString();
+            ddlEmailConfirmed2.SelectedValue = dt.Rows[0]["EmailConfirmed"].ToString();
         }
+
+        //protected void gvAdminUsers_RowUpdating(object sender, GridViewUpdateEventArgs e)
+        //{
+        //    GridViewRow gvr = gvAdminUsers.Rows[e.RowIndex];
+        //    DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateUserGroup");
+        //    string selectedGroup = dropDownList.SelectedValue;           
+        //    if (Convert.ToBoolean(ViewState["isAdding"]) == false)
+        //    {
+        //        bool valid = ValidateData(e);
+        //        if (valid == true)
+        //        {
+        //            if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", e.NewValues["GN"], e.NewValues["SN"], e.NewValues["PHONE"], e.NewValues["EMAIL"], Convert.ToInt32(selectedGroup), e.NewValues["LOCKED"], e.NewValues["EmailConfirmed"], e.Keys[0]) > 0)
+        //            {
+        //                lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
+        //            }
+        //            else
+        //            {
+        //                lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+        //            }
+        //            gvAdminUsers.EditIndex = -1;
+        //            Fill_gvAdminUsers();
+        //        }
+        //    }
+        //    else
+        //    {
+        //        bool valid = ValidateData(e);
+        //        if (valid == true)
+        //        {
+        //            if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", e.NewValues["GN"], e.NewValues["SN"], e.NewValues["PHONE"], e.NewValues["EMAIL"], e.NewValues["LOCKED"], e.NewValues["EmailConfirmed"],Convert.ToInt32(selectedGroup)) > 0)
+        //            {
+        //                lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
+        //            }
+        //            else
+        //            {
+        //                lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+        //            }
+        //            gvAdminUsers.EditIndex = -1;
+        //            Fill_gvAdminUsers();
+        //            DataTable u = db.Query("SELECT UID,GN,EMAIL,SN FROM user WHERE EMAIL LIKE ? LIMIT 1", e.NewValues["EMAIL"]);
+        //            string resetHash = PwdResetHash(u.Rows[0]["GN"].ToString(), u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["UID"].ToString());
+        //            bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort zurücksetzen", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/PasswordReset.aspx?hash=" + resetHash);
+        //            ViewState["isAdding"] = false;
+        //        }
+        //    }
+                     
+        //}
 
         public string PwdResetHash(string firstname, string email, string uId)
         {
             string toEncode = firstname + email + uId + DateTime.Now;
             return Crypt.GenerateSHA256String(toEncode);
         }
-        private bool ValidateData(GridViewUpdateEventArgs e)
+        private bool ValidateData()
         {
             string errorDescription = "";
             bool valid = true;
            
-            if (e.NewValues["GN"] == null || e.NewValues["SN"] == null || e.NewValues["PHONE"] == null || e.NewValues["EMAIL"] == null || e.NewValues["LOCKED"] == null || e.NewValues["EmailConfirmed"] == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind null!  "; }
+            if (txtGivenName.Text == "" || txtSurName.Text == "" || txtPhone.Text == "" ||txtEMail.Text == "" || ddlLocked.SelectedValue == null || ddlEmailConfirmed.SelectedValue == null || ddlUserGroup.SelectedValue==null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
-                //proof integer values
-                if ((!int.TryParse((e.NewValues["LOCKED"].ToString()), out int a)) || (e.NewValues["LOCKED"].ToString()!="1" && e.NewValues["LOCKED"].ToString() != "0" )) { valid = false; errorDescription += "ZUSTAND-Format ist ungültig!  "; }
-                if ((!int.TryParse((e.NewValues["EmailConfirmed"].ToString()), out int b))|| (e.NewValues["EmailConfirmed"].ToString() != "1" && e.NewValues["EmailConfirmed"].ToString() != "0")) { valid = false; errorDescription += "MAIL-ZUSTAND-Format ist ungültig!  "; }
+                ////proof integer values
+                //if ((!int.TryParse((e.NewValues["LOCKED"].ToString()), out int a)) || (e.NewValues["LOCKED"].ToString()!="1" && e.NewValues["LOCKED"].ToString() != "0" )) { valid = false; errorDescription += "ZUSTAND-Format ist ungültig!  "; }
+                //if ((!int.TryParse((e.NewValues["EmailConfirmed"].ToString()), out int b))|| (e.NewValues["EmailConfirmed"].ToString() != "1" && e.NewValues["EmailConfirmed"].ToString() != "0")) { valid = false; errorDescription += "MAIL-ZUSTAND-Format ist ungültig!  "; }
 
                 //proof string values
-                if(e.NewValues["GN"].ToString().Length>50 || e.NewValues["SN"].ToString().Length > 50 || e.NewValues["PHONE"].ToString().Length > 20 || e.NewValues["EMAIL"].ToString().Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
+                if(txtGivenName.Text.Length>50 || txtSurName.Text.Length > 50 || txtPhone.Text.Length > 20 || txtEMail.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
 
                 //proof email
 
-                if (!(e.NewValues["EMAIL"].ToString().Contains("@"))){ valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
+                if (!(txtEMail.Text.Contains("@"))){ valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
                 if (Convert.ToBoolean(ViewState["isAdding"]) == true)
                 {
-                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{e.NewValues["EMAIL"]}'";
+                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail.Text}'";
                     db.Connection.Open();
                     OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
                     int amount = Convert.ToInt32(cmd.ExecuteScalar());
@@ -232,31 +265,66 @@ namespace Ferienspaß
             return valid;
         }
 
-        protected void gvAdminUsers_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private bool ValidateData2()
         {
-            gvAdminUsers.EditIndex = -1;
-            Fill_gvAdminUsers();
-            lblInfo.Text = "";                  
-        }
+            string errorDescription = "";
+            bool valid = true;
 
-        protected void gvAdminUsers_RowDataBound(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow && gvAdminUsers.EditIndex == e.Row.RowIndex)
+            if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtPhone2.Text == ""|| txtEMail2.Text == ""|| ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            else
             {
+                ////proof integer values
+                //if ((!int.TryParse((e.NewValues["LOCKED"].ToString()), out int a)) || (e.NewValues["LOCKED"].ToString()!="1" && e.NewValues["LOCKED"].ToString() != "0" )) { valid = false; errorDescription += "ZUSTAND-Format ist ungültig!  "; }
+                //if ((!int.TryParse((e.NewValues["EmailConfirmed"].ToString()), out int b))|| (e.NewValues["EmailConfirmed"].ToString() != "1" && e.NewValues["EmailConfirmed"].ToString() != "0")) { valid = false; errorDescription += "MAIL-ZUSTAND-Format ist ungültig!  "; }
 
-                Control ctrl = e.Row.FindControl("ddlEditItemTemplateUserGroup");
-                DropDownList ddl = ctrl as DropDownList;
-                DataTable dt = GetAllUserGroups();
-                for (int i = 0; i < dt.Rows.Count; i++)
+                //proof string values
+                if (txtGivenName2.Text.Length > 50 || txtSurName2.Text.Length > 50 || txtPhone2.Text.Length > 20 || txtEMail2.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
+
+                //proof email
+
+                if (!(txtEMail2.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
+
+                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
                 {
-                    //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
-                    ddl.Items.Add(new ListItem(dt.Rows[i]["DESCRIPTION"].ToString(), dt.Rows[i]["UGID"].ToString()));
+                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail2.Text}'";
+                    db.Connection.Open();
+                    OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
+                    int amount = Convert.ToInt32(cmd.ExecuteScalar());
+                    db.Connection.Close();
+
+                    if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
                 }
-                DataRowView dr = e.Row.DataItem as DataRowView;
-                ddl.SelectedValue = dr["UGID"].ToString();
-                ddl.SelectedItem.Text = dr["DESCRIPTION"].ToString();
+
             }
+            lblInfo.Text = errorDescription;
+            return valid;
         }
+
+        //protected void gvAdminUsers_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        //{
+        //    gvAdminUsers.EditIndex = -1;
+        //    Fill_gvAdminUsers();
+        //    lblInfo.Text = "";                  
+        //}
+
+        //protected void gvAdminUsers_RowDataBound(object sender, GridViewRowEventArgs e)
+        //{
+        //    if (e.Row.RowType == DataControlRowType.DataRow && gvAdminUsers.EditIndex == e.Row.RowIndex)
+        //    {
+
+        //        Control ctrl = e.Row.FindControl("ddlEditItemTemplateUserGroup");
+        //        DropDownList ddl = ctrl as DropDownList;
+        //        DataTable dt = GetAllUserGroups();
+        //        for (int i = 0; i < dt.Rows.Count; i++)
+        //        {
+        //            //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
+        //            ddl.Items.Add(new ListItem(dt.Rows[i]["DESCRIPTION"].ToString(), dt.Rows[i]["UGID"].ToString()));
+        //        }
+        //        DataRowView dr = e.Row.DataItem as DataRowView;
+        //        ddl.SelectedValue = dr["UGID"].ToString();
+        //        ddl.SelectedItem.Text = dr["DESCRIPTION"].ToString();
+        //    }
+        //}
 
         private DataTable GetAllUserGroups()
         {
@@ -283,6 +351,70 @@ namespace Ferienspaß
         {
             gvAdminUsers.PageIndex = e.NewPageIndex;
             Fill_gvAdminUsers();
+        }
+
+        protected void btnBack_Click(object sender, EventArgs e)//Klicken Des Zurück Buttons am Insert Panel
+        {
+            pnlBlockBg.Visible = false;
+            pnlInsert.Visible = false;
+        }
+
+        protected void btnAdd_Click1(object sender, EventArgs e)//Klicken des Add buttons am Insert panel
+        {
+            if (Convert.ToBoolean(ViewState["isAdding"]) == true)
+            {               
+                bool valid = ValidateData();
+                if (valid == true)
+                {
+                    if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", txtGivenName.Text, txtSurName.Text, txtSurName.Text, txtEMail.Text, ddlLocked.SelectedValue, ddlEmailConfirmed.SelectedValue, ddlUserGroup.SelectedValue) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    {
+                        lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
+                    }
+                    else
+                    {
+                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+                    }
+                    Fill_gvAdminUsers();
+                    ViewState["isAdding"] = false;
+                    pnlBlockBg.Visible = false;
+                    pnlInsert.Visible = false;
+                }
+            }
+        }
+
+        protected void btnUpdate_Click(object sender, EventArgs e)//Klicken des Update Buttons am update panel
+        {
+            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
+            {
+                int id;
+
+                id = Convert.ToInt32(((Label)gvAdminUsers.Rows[idForUpdating].FindControl("lblItemTemplateUserID")).Text);
+                bool valid = ValidateData2();
+                if (valid == true)
+                {
+                    if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", txtGivenName2.Text, txtSurName2.Text, txtPhone2.Text, txtEMail2.Text, ddlUserGroup2.SelectedValue, ddlLocked2.SelectedValue, ddlEmailConfirmed2.SelectedValue, id) > 0)
+                    {
+                        lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
+                    }
+                    else
+                    {
+                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+                    }                    
+                    pnlBlockBg.Visible = false;
+                    pnlInsert.Visible = false;
+                    gvAdminUsers.EditIndex = -1;
+                    Fill_gvAdminUsers();
+                }
+            }
+        }
+
+        protected void btnBack2_Click(object sender, EventArgs e)//Klicken Des Zurück Buttons am Update Panel
+        {
+            pnlBlockBg.Visible = false;
+            pnlUpdate.Visible = false;
+            gvAdminUsers.EditIndex = -1;
+            Fill_gvAdminUsers();
+            gvAdminUsers.DataBind();
         }
 
         private void Fill_ddlUserGroup()

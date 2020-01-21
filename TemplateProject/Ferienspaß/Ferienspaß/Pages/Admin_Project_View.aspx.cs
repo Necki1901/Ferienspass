@@ -19,7 +19,7 @@ namespace Ferienspaß.Pages
         protected void Page_Load(object sender, EventArgs e)
         {            
             lblInfo.Text = "";
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
             if(!Page.IsPostBack)
             {
                 isAdding = false;
@@ -39,27 +39,27 @@ namespace Ferienspaß.Pages
 
             }
         }
-        private void Fill_gvAdminProjects(bool filter)
+        private void Fill_gvAdminProjects()
         {
             DataTable dt;
             DataView dv;
             string sql;
             bool changed = false;
-            if ((txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty) && filter == true)
+            if ((txtEventName.Text != "" || datepicker.Text != "" || txtOrganizerName.Text != "" || txtOrganizerName.Text != "") && isFiltered == true)
             {
-                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
+                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID HAVING ";
 
-                if (txtEventName.Text != string.Empty)
+                if (txtEventName.Text != "")
                 {
                     sql += $"project.Name LIKE '%{txtEventName.Text}%'";
                     changed = true;
                 }
-                if (datepicker.Text != string.Empty)
+                if (datepicker.Text != "")
                 {
-                    if (changed) sql += " AND ";
+                    if (changed) sql += " AND "; else changed = true;
                     sql += $"project.DATE='{datepicker.Text}'";
                 }
-                if (txtOrganizerName.Text != string.Empty)
+                if (txtOrganizerName.Text != "")
                 {
                     if (changed) sql += " AND ";
                     sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
@@ -84,7 +84,7 @@ namespace Ferienspaß.Pages
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
         {            
             gvAdminProjects.EditIndex = e.NewEditIndex;          
-            Fill_gvAdminProjects(isFiltered);          
+            Fill_gvAdminProjects();          
         }
 
         //protected void gvAdminProjects_RowDataBound(object sender, GridViewRowEventArgs e)
@@ -137,7 +137,7 @@ namespace Ferienspaß.Pages
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
                     gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects(isFiltered);
+                    Fill_gvAdminProjects();
                 }
 
             }
@@ -155,7 +155,7 @@ namespace Ferienspaß.Pages
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
                     gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects(isFiltered);
+                    Fill_gvAdminProjects();
                     ViewState["isAdding"] = false;
                 }
             }
@@ -248,7 +248,7 @@ namespace Ferienspaß.Pages
         protected void gvAdminProjects_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
             gvAdminProjects.EditIndex = -1;
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
             lblInfo.Text = "";            
         }
 
@@ -263,7 +263,7 @@ namespace Ferienspaß.Pages
             string projectID = ((Label)row.FindControl("lblItemTemplateProjectID")).Text;
             db.Query($"delete from project where PID = {projectID}");
 
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
             lblInfo.Text += "Datensatz wurde gelöscht!";
         }
 
@@ -306,13 +306,13 @@ namespace Ferienspaß.Pages
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             isFiltered = true;
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
         }
 
         protected void gvAdminProjects_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvAdminProjects.PageIndex = e.NewPageIndex;
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
@@ -337,7 +337,7 @@ namespace Ferienspaß.Pages
                     {
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
-                    Fill_gvAdminProjects(isFiltered);
+                    Fill_gvAdminProjects();
                     ViewState["isAdding"] = false;
                     pnlBlockBg.Visible = false;
                     pnlInsert.Visible = false;

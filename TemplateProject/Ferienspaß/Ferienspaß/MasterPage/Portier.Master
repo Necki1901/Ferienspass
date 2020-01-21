@@ -63,6 +63,9 @@
                   <li id="menu_child" class="nav-item">
                 <a class="nav-link" href="Portier_Add_Child.aspx">Kinder verwalten</a>
               </li>
+               <li id="menu_project" class="nav-item">
+                <a class="nav-link" href="Portier_Project_View.aspx">Kinder anmelden</a>
+              </li>
                 
             </ul>
             <div class="form-inline my-1 my-lg-0">

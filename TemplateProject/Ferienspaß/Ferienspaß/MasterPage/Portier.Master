@@ -60,6 +60,9 @@
               <li id="menu_cancellation" class="nav-item">
                 <a class="nav-link" href="Portier_Cancellations_View.aspx">Stornoansicht</a>
               </li>
+                  <li id="menu_child" class="nav-item">
+                <a class="nav-link" href="Portier_Add_Child.aspx">Kinder verwalten</a>
+              </li>
                 
             </ul>
             <div class="form-inline my-1 my-lg-0">

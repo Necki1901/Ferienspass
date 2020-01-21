@@ -9,18 +9,6 @@
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 
-    <script>
-        function complete() {
-            if (confirm("Sind Sie sicher, dass Sie die Stornierung abschließen möchten?")) {
-                return true;
-            }
-            return false;
-        }
-
-    </script>
-
-
-
      <asp:GridView CssClass="table table-bordered" ID="gv_cancellations" Autopost ="true" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_cancellations_RowCommand">
          <Columns>
              <asp:TemplateField HeaderText="ID" Visible="false">
@@ -60,12 +48,10 @@
             </asp:TemplateField>
               <asp:TemplateField HeaderText="Aktion">
                 <ItemTemplate>
-                    <asp:Button runat="server" CssClass="btn btn-primary" CommandName="completed" Text="Stornierung abschließen" OnClientClick="return complete()"/>
+                    <asp:Button runat="server" CssClass="btn btn-primary" CommandName="completed" Text="Stornierung abschließen"/>
                 </ItemTemplate>
             </asp:TemplateField>
          </Columns>
      </asp:GridView>
-
-    <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
 
 </asp:Content>

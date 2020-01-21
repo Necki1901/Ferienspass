@@ -46,9 +46,6 @@ namespace Ferienspaß.Pages
                 $"inner join child on cancellations.cid = child.cid)" +
                 $"inner join user on child.UID = user.uid)");
 
-            if (dt.Rows.Count == 0)
-                lit_msg.Text = CreateMSGString("Keine Stornierungen vorhanden", "danger");
-
             DataView dv = new DataView(dt);
 
             gv_cancellations.DataSource = dv;
@@ -72,13 +69,8 @@ namespace Ferienspaß.Pages
                     string id = ((Label)gv_cancellations.Rows[rowIndex].FindControl("lblID")).Text;
                     db.Query($"DELETE FROM cancellations WHERE cancel_id={id}");
                     FillGvCancellations();
-                    lit_msg.Text = CreateMSGString("Stornierung abgeschlossen", "info");
                     break;
             }
-        }
-
-          private string CreateMSGString(string msg,string type) {
-           return "<div class=\"alert alert-"+type+" mt-3 mb-1\" role=\"alert\">" + msg + "</div>";
         }
     }
 }

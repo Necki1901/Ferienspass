@@ -11,7 +11,7 @@ namespace Ferienspaß.Pages
 {
 
 
-    public partial class Admin_Cancellations_View
+    public partial class User_Add_Child
     {
 
         /// <summary>
@@ -33,58 +33,22 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
-        /// txtProjectName control.
+        /// gvChildren control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtProjectName;
+        protected global::System.Web.UI.WebControls.GridView gvChildren;
 
         /// <summary>
-        /// txtParentName control.
+        /// btn_addChild control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtParentName;
-
-        /// <summary>
-        /// txtStornoDate control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtStornoDate;
-
-        /// <summary>
-        /// txtChildName control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtChildName;
-
-        /// <summary>
-        /// btnSearch control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnSearch;
-
-        /// <summary>
-        /// gv_cancellations control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gv_cancellations;
+        protected global::System.Web.UI.WebControls.Button btn_addChild;
 
         /// <summary>
         /// lit_msg control.

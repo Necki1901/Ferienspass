@@ -159,6 +159,8 @@
     <Content Include="Pages\MyData.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Content\Site.css" />
+    <Content Include="Pages\Portier_Project_View.aspx" />
+    <Content Include="Pages\Portier_Project_View_Details.aspx" />
     <Content Include="Pages\User_Add_Child.aspx" />
     <Content Include="Pages\User_Participations.aspx" />
     <Content Include="PasswordReset.aspx" />
@@ -314,6 +316,20 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Pages\Portier_Project_View.aspx.cs">
+      <DependentUpon>Portier_Project_View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Portier_Project_View.aspx.designer.cs">
+      <DependentUpon>Portier_Project_View.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Portier_Project_View_Details.aspx.cs">
+      <DependentUpon>Portier_Project_View_Details.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Portier_Project_View_Details.aspx.designer.cs">
+      <DependentUpon>Portier_Project_View_Details.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\User_Add_Child.aspx.cs">
       <DependentUpon>User_Add_Child.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

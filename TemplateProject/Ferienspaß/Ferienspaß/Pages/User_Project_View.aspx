@@ -33,7 +33,7 @@
             <asp:GridView ID="gv_UserView" runat="server" 
             AutoGenerateColumns="False" 
             AllowPaging="True" 
-            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" CssClass="table table-bordered" OnPageIndexChanging="gv_UserView_PageIndexChanging" EnableViewState="false" >
+            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" CssClass="table table-bordered" OnPageIndexChanging="gv_UserView_PageIndexChanging">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
                     <ItemTemplate>
@@ -72,6 +72,11 @@
                 </asp:TemplateField><asp:TemplateField HeaderText="Ende">
                     <ItemTemplate>
                         <asp:Label ID="lblEnd" runat="server" Text='<%# Eval("end") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                   <asp:TemplateField HeaderText="Kapazität">
+                    <ItemTemplate>
+                        <asp:Label ID="lblRemaining" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
 

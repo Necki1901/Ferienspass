@@ -13,7 +13,7 @@
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
 <asp:Panel ID="pnlBlockBg" CssClass="pnlBlockBg" runat="server" Visible="false"></asp:Panel><%--Panel um den Hintergrund während Add oder Update Vorgängen zu Blockieren--%>            
     <div class="form-group">                          
-                    <asp:Panel ID="pnlInsert" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Inserten und Updaten eines Eintrages eingefügt werden.--%>                       
+                    <asp:Panel ID="pnlInsert" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Inserten eines Eintrages eingefügt werden.--%>                       
                         <div class="form-row"><asp:Label ID="lblDate" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtDate" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblStart" Text="Start:" runat="server" CssClass="lblPanel"></asp:Label>
@@ -34,7 +34,29 @@
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
                          <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
-                    </asp:Panel>                   
+                    </asp:Panel>
+                    <asp:Panel ID="pnlUpdate" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Updaten eines Eintrages eingefügt werden.--%>                       
+                        <div class="form-row"><asp:Label ID="Label1" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtDate2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblStart2" Text="Start:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtStart2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblEnd2" Text="Ende:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtEnd2" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+                        <div class="form-row"> <asp:Label ID="lblName2" Text="Projektname:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtName2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblDesc2" Text="Beschreibung:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtDesc2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblPlace2" Text="Ort/Straße:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPlace2" runat="server" CssClass="txtPanel"></asp:TextBox> </div>
+                        <div class="form-row"><asp:Label ID="lblNumber2" Text="Hausnummer:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtNumber2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblCapacity2" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtCapacity2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblGuide2" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>
+                        <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
+                        <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>
+                    </asp:Panel>         
                 </div>   
     
 
@@ -65,7 +87,7 @@
         
     <br />
     <div>
-            <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowDataBound="gvAdminProjects_RowDataBound1" OnRowUpdating="gvAdminProjects_RowUpdating" OnRowCancelingEdit="gvAdminProjects_RowCancelingEdit" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7">
+            <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7" OnSorting="gvAdminProjects_Sorting">
                 <Columns>
                     <asp:TemplateField HeaderText="Name">
                         <EditItemTemplate>
@@ -150,13 +172,7 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                             <asp:ImageButton ID="btnEdit" runat="server" CommandName="Edit" ImageUrl="~/App_Themes/default/edit.png" Height="50" Width="50"  />
-                        </ItemTemplate>
-                    <EditItemTemplate>
-                            <asp:ImageButton ID="btnUpdate" runat="server" CommandName="Update" ImageUrl="~/App_Themes/default/ok.png" Height="50" Width="50"/>                          
-                            <br />
-                            <br />
-                             <asp:ImageButton ID="btnCancel" runat="server" CommandName="Cancel" ImageUrl="~/App_Themes/default/cancel.png" Height="50" Width="50"/>
-                        </EditItemTemplate>
+                        </ItemTemplate>                   
                 </asp:TemplateField>
                     <asp:TemplateField HeaderText="Löschen">
                         <ItemTemplate>

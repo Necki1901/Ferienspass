@@ -12,17 +12,20 @@ using System.Web.UI.WebControls;
 namespace Ferienspaß.Pages
 {
     public partial class Admin : System.Web.UI.Page
-    {
+    {       
         CsharpDB db = new CsharpDB();
         bool isAdding;
         static bool isFiltered = false;
+        static int idForUpdating;
         protected void Page_Load(object sender, EventArgs e)
-        {            
+        {
+            gvAdminProjects.Sort("DATE", SortDirection.Ascending);
             lblInfo.Text = "";
             Fill_gvAdminProjects(isFiltered);
             if(!Page.IsPostBack)
             {
                 isAdding = false;
+                Fillddl();
             }
 
             try
@@ -71,7 +74,6 @@ namespace Ferienspaß.Pages
             }
             dt = db.Query(sql);
             dv = new DataView(dt);
-
             gvAdminProjects.DataSource = dv;
             gvAdminProjects.DataBind();
         }
@@ -82,88 +84,65 @@ namespace Ferienspaß.Pages
         }
 
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
-        {            
-            gvAdminProjects.EditIndex = e.NewEditIndex;          
-            Fill_gvAdminProjects(isFiltered);          
+        {
+            pnlBlockBg.Visible = true;
+            pnlUpdate.Visible = true;
+            gvAdminProjects.EditIndex = e.NewEditIndex;
+            idForUpdating = e.NewEditIndex;
+            FillControlsWithValues();
+            
         }
 
-        //protected void gvAdminProjects_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
+        private void FillControlsWithValues()
+        {
+            int id;
+            id = Convert.ToInt32(((Label)gvAdminProjects.Rows[idForUpdating].FindControl("lblItemTemplateProjectID")).Text);
+            DataTable dt = db.Query("SELECT * FROM project WHERE PID=?", id);
+            txtCapacity2.Text = dt.Rows[0]["CAPACITY"].ToString();
+            txtName2.Text = dt.Rows[0]["NAME"].ToString();
+            txtStart2.Text = dt.Rows[0]["START"].ToString();
+            txtEnd2.Text = dt.Rows[0]["END"].ToString();
+            txtDesc2.Text = dt.Rows[0]["DESCRIPTION"].ToString();
+            txtPlace2.Text = dt.Rows[0]["PLACE"].ToString();
+            txtNumber2.Text = dt.Rows[0]["NUMBER"].ToString();
+            txtDate2.Text = Convert.ToDateTime(dt.Rows[0]["DATE"]).ToString("yyyy/MM/dd");                       
+            ddlGuide2.SelectedValue = dt.Rows[0]["GID"].ToString();//Garantiert, dass der richtige wert ausgewählt ist, aus den werten die zu beginn in die DDl geschrieben wurden (FillDDL)
 
-        //}
+        }
 
+        private void Fillddl()
+        {
+            DataTable dt2 = GetAllGuides();
+            for (int i = 0; i < dt2.Rows.Count; i++)
+            {
+                ListItem li = new ListItem(dt2.Rows[i]["SN"].ToString(), dt2.Rows[i]["GID"].ToString());
+                ddlGuide2.Items.Add(li);
+                ddlGuide.Items.Add(li);
+            }
+
+            ddlGuide2.DataValueField = "GID";
+            ddlGuide2.DataTextField = "SN";
+            ddlGuide.DataValueField = "GID";
+            ddlGuide.DataTextField = "SN";
+
+        }
+      
         private DataTable GetAllGuides()
         {
             return db.Query("SELECT SN, GID FROM projectguide");
         }
-
-        protected void gvAdminProjects_RowDataBound1(object sender, GridViewRowEventArgs e)
-        {
-            if (e.Row.RowType == DataControlRowType.DataRow && gvAdminProjects.EditIndex == e.Row.RowIndex)
-            {
-                Control ctrl = e.Row.FindControl("ddlEditItemTemplateProjectGuide");
-
-                DropDownList ddl = ctrl as DropDownList;
-                DataTable dt = GetAllGuides();
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
-                    ddl.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString()));
-                }
-                DataRowView dr = e.Row.DataItem as DataRowView;
-
-                ddl.SelectedValue = dr["GID"].ToString();
-                ddl.SelectedItem.Text = dr["SN"].ToString();
-            }
-        }
-
-        protected void gvAdminProjects_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        {
-            GridViewRow gvr = gvAdminProjects.Rows[e.RowIndex];
-            DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateProjectGuide");
-            string selectedname = dropDownList.SelectedValue;
-
-            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
-            {
-                bool valid = ValidateData();
-                if (valid == true)
-                {
-                    if (db.ExecuteNonQuery("UPDATE project SET NAME = ?, DESCRIPTION = ?, DATE = ?, START = ?, END = ?, PLACE = ?, NUMBER = ?, CAPACITY = ?, GID = ? WHERE PID = ?", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], e.NewValues["NUMBER"], Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname), e.Keys[0]) > 0)
-                    {
-                        lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
-                    }
-                    else
-                    {
-                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }
-                    gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects(isFiltered);
-                }
-
-            }
-            else
-            {
-                bool valid = ValidateData();
-                if (valid == true)
-                {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", e.NewValues["NAME"], e.NewValues["DESCRIPTION"], Convert.ToDateTime(e.NewValues["DATE"]).ToShortDateString(), Convert.ToDateTime(e.NewValues["START"]).ToString("HH:mm:ss"), Convert.ToDateTime(e.NewValues["END"]).ToString("HH:mm:ss"), e.NewValues["PLACE"], Convert.ToInt32(e.NewValues["NUMBER"]), Convert.ToInt32(e.NewValues["CAPACITY"]), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
-                    {
-                        lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
-                    }
-                    else
-                    {
-                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }
-                    gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects(isFiltered);
-                    ViewState["isAdding"] = false;
-                }
-            }
-        }
-
+           
         private string ChangeDateFormat()
         {
             string oldDate = txtDate.Text;
+            string newDate = oldDate.Replace(".", "-");
+            return newDate;
+
+        }
+
+        private string ChangeDateFormat2()
+        {
+            string oldDate = txtDate2.Text;
             string newDate = oldDate.Replace(".", "-");
             return newDate;
 
@@ -176,7 +155,7 @@ namespace Ferienspaß.Pages
             bool checkifinteger = true;
 
             //Proof null-values
-            if (txtDate.Text == null || txtStart.Text == null || txtEnd.Text == null || txtCapacity.Text == null || txtName.Text == null || txtDesc.Text == null || txtPlace.Text == null || txtNumber.Text == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind null!  "; }
+            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtPlace.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 txtDate.Text = ChangeDateFormat();
@@ -244,13 +223,82 @@ namespace Ferienspaß.Pages
             lblInfo.Text = errorDescription;//auf Label in Panel ändern!
             return valid;
         }
-
-        protected void gvAdminProjects_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+        private bool ValidateData2()
         {
-            gvAdminProjects.EditIndex = -1;
-            Fill_gvAdminProjects(isFiltered);
-            lblInfo.Text = "";            
+            string errorDescription = "";
+            bool valid = true;
+            bool checkifinteger = true;
+
+            //Proof null-values
+            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtPlace2.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            else
+            {
+                txtDate2.Text = ChangeDateFormat2();
+
+                if (!(txtDate2.Text.Length == 10) || !(txtStart2.Text.Length == 8) || !(txtEnd2.Text.Length == 8)) { valid = false; errorDescription += "DATUM-Format oder ZEIT-Format (START oder END) ist ungültig!  "; }
+                else
+                {
+                    //Proof Date
+                    for (int i = 0; i < txtDate2.Text.Length; i++)
+                    {
+                        if (i != 4 && i != 7)
+                        {
+                            if (!(int.TryParse(txtDate2.Text[i].ToString(), out int n)))
+                            {
+                                checkifinteger = false;
+                            }
+                        }
+                    }
+
+
+                    if (!(txtDate2.Text[4] == '-' && txtDate2.Text[7] == '-' && checkifinteger == true)) { valid = false; errorDescription += "DATE-Format ist ungültig!  "; }
+
+                    //Proof Time
+                    bool checkifintegerStartTime = true;
+                    bool checkifintegerEndTime = true;
+
+                    for (int i = 0; i < txtStart2.Text.Length; i++)
+                    {
+                        if (i != 2 && i != 5)
+                        {
+                            if (!(int.TryParse(txtStart2.Text[i].ToString(), out int n)))
+                            {
+                                checkifintegerStartTime = false;
+                            }
+                        }
+                    }
+
+                    for (int i = 0; i < txtEnd2.Text.Length; i++)
+                    {
+                        if (i != 2 && i != 5)
+                        {
+                            if (!(int.TryParse(txtEnd2.Text[i].ToString(), out int n)))
+                            {
+                                checkifintegerEndTime = false;
+                            }
+                        }
+                    }
+
+                    if (!(txtStart2.Text[2] == ':' && txtStart2.Text[5] == ':' && checkifintegerStartTime == true)) { valid = false; errorDescription += "START-Zeit-Format ist ungültig!  "; }
+                    if (!(txtEnd2.Text.ToString()[2] == ':' && txtEnd2.Text[5] == ':' && checkifintegerEndTime == true)) { valid = false; errorDescription += "END-Zeit-Format ist ungültig!  "; }
+
+                    //Proof Capacity
+
+                    if (!int.TryParse((txtCapacity2.Text), out int a)) { valid = false; errorDescription += "KAPAZITÄT-Format ist ungültig!  "; }
+
+                    //Proof lengths of other VARCHAR attributes
+
+                    if (!(txtName2.Text.Length <= 50)) { valid = false; errorDescription += "NAME ist zu lang!  "; }
+                    if (!(txtDesc2.Text.Length <= 140)) { valid = false; errorDescription += "BESCHREIBUNG ist zu lang!!  "; }
+                    if (!(txtPlace2.Text.Length <= 50)) { valid = false; errorDescription += "ORT ist zu lang!  "; }
+                    if (!(txtNumber2.Text.Length <= 5)) { valid = false; errorDescription += "HAUSNUMMER ist zu lang!  "; }
+
+                }
+            }
+            lblInfo.Text = errorDescription;//auf Label in Panel ändern!
+            return valid;
         }
+     
 
         protected void gvAdminProjects_RowDeleted(object sender, GridViewDeletedEventArgs e)
         {
@@ -274,19 +322,19 @@ namespace Ferienspaß.Pages
                 ViewState["isAdding"] = true;
                 pnlBlockBg.Visible = true;
                 pnlInsert.Visible = true;
-                DataTable dt =  GetAllGuides();
-                for(int i=0; i<dt.Rows.Count;i++)
-                {
-                    ListItem li = new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString());
-                    ddlGuide.Items.Add(li);
-                }
+                //DataTable dt =  GetAllGuides();
+                //for(int i=0; i<dt.Rows.Count;i++)
+                //{
+                //    ListItem li = new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString());
+                //    ddlGuide.Items.Add(li);
+                //}
 
-                ddlGuide.DataValueField = "GID";
-                ddlGuide.DataTextField = "SN";              
+                //ddlGuide.DataValueField = "GID";
+                //ddlGuide.DataTextField = "SN";              
             }
         }
 
-        private string GetTextForDdl(int svalue)
+        private string GetTextForDdl(int svalue)//unused
         {
             DataTable dt = db.Query("SELECT SN FROM projectguide WHERE GID = ?", svalue);
             return dt.Rows[0]["SN"].ToString();
@@ -329,7 +377,7 @@ namespace Ferienspaß.Pages
                 bool valid = ValidateData();
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text).ToShortDateString(), Convert.ToDateTime(txtStart.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd.Text).ToString("HH:mm:ss"), txtPlace.Text, Convert.ToInt32(txtNumber.Text), Convert.ToInt32(txtCapacity.Text), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text), Convert.ToDateTime(txtStart.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd.Text).ToString("HH:mm:ss"), txtPlace.Text, txtNumber.Text, Convert.ToInt32(txtCapacity.Text), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }
@@ -343,7 +391,52 @@ namespace Ferienspaß.Pages
                     pnlInsert.Visible = false;
                 }
             }
-            
+
+        }
+
+        protected void btnUpdate_Click(object sender, EventArgs e)//Update from Popup Panel
+        {
+            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
+            {
+                string selectedname = ddlGuide2.SelectedValue;
+                bool valid = ValidateData2();
+                int id;
+
+                id = Convert.ToInt32(((Label)gvAdminProjects.Rows[idForUpdating].FindControl("lblItemTemplateProjectID")).Text);
+
+                if (valid == true)
+                {
+                    if (db.ExecuteNonQuery("Update project SET NAME=?, DESCRIPTION=?, DATE=?, START=?, END=?, PLACE=?, NUMBER=?, CAPACITY=?, GID=? WHERE PID=?", txtName2.Text, txtDesc2.Text, Convert.ToDateTime(txtDate2.Text).ToShortDateString(), Convert.ToDateTime(txtStart2.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd2.Text).ToString("HH:mm:ss"), txtPlace2.Text, txtNumber2.Text, Convert.ToInt32(txtCapacity2.Text), Convert.ToInt32(selectedname), id) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    {
+                        //lblInfo2.Text = $"<span class='success'> Datensatz geändert! </span>";
+                    }
+                    else
+                    {
+                        //lblInfo2.Text = $"<span class='error'> Nichts passiert! </span>";
+                    }
+
+                    gvAdminProjects.EditIndex = -1;
+                    Fill_gvAdminProjects(isFiltered);
+                    pnlBlockBg.Visible = false;
+                    pnlUpdate.Visible = false;
+                    gvAdminProjects.DataBind();
+                    
+                }
+            }
+        }
+
+        protected void btnBack2_Click(object sender, EventArgs e)
+        {
+            pnlBlockBg.Visible = false;
+            pnlUpdate.Visible = false;
+            gvAdminProjects.EditIndex = -1;
+            Fill_gvAdminProjects(isFiltered);
+            gvAdminProjects.DataBind();
+        }
+
+        protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            //gvAdminProjects.
         }
     }
 }

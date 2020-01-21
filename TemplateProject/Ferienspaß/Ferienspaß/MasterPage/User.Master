@@ -57,23 +57,15 @@
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
             <a class="navbar-brand" href="#">Ferienspaß</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
-              <li id="menu_projects" class="nav-item">
-                <a class="nav-link" href="User_Project_View.aspx">Projektansicht</a>
-              </li>
+                <li id="menu_projects" class="nav-item">
+                    <a class="nav-link" href="User_Project_View.aspx">Projektansicht</a>
+                </li>
                 <li id="menu_participations" class="nav-item">
-                <a class="nav-link" href="User_Participations.aspx">Meine Anmeldungen</a>
-              </li>
-              <%--<li id="menu_registrations" class="nav-item">
-                <a class="nav-link" href="MyRegistrations.aspx">Meine Anmeldungen</a>
-              </li>
-              <li id="menu_mydata" class="nav-item">
-                <a class="nav-link" href="MyData.aspx">Meine Daten</a>
-              </li>--%>
-
-
-              <%--<li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-              </li>--%>
+                    <a class="nav-link" href="User_Participations.aspx">Meine Anmeldungen</a>
+                </li>
+                <li id="menu_children" class="nav-item">
+                    <a class="nav-link" href="User_Add_Child.aspx">Kinder verwalten</a>
+                </li>
             </ul>
             <div class="form-inline my-1 my-lg-0">
                <i class='fa fa-user' style='font-size:22px'></i>

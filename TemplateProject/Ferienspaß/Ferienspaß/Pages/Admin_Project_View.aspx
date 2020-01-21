@@ -16,6 +16,7 @@
                     <asp:Panel ID="pnlInsert" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Inserten eines Eintrages eingefügt werden.--%>                       
                         <div class="form-row"><asp:Label ID="lblDate" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtDate" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:CompareValidator ID="cvldEventDate" runat="server" Operator="DataTypeCheck" Type="Date" ControlToValidate="txtDate" ErrorMessage="Ungültiges Datum!" EnableClientScript="false" ValidationGroup="event" Display="None" />
                         <asp:Label ID="lblStart" Text="Start:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtStart" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblEnd" Text="Ende:" runat="server" CssClass="lblPanel"></asp:Label>

@@ -66,10 +66,10 @@
                 <asp:Label Text="Vorname: " runat="server"></asp:Label>
                 <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
                 <asp:Label Text="Nachname: " runat="server"></asp:Label>
-                <asp:TextBox ID="txtSurname" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtSurname3" runat="server"></asp:TextBox>
                 <div class="form-row">
                     <asp:Label Text="User-Group: " runat="server"></asp:Label>
-                    <asp:DropDownList ID="ddlUserGroup" runat="server"></asp:DropDownList>
+                    <asp:DropDownList ID="ddlUserGroup3" runat="server"></asp:DropDownList>
                 </div>
                 <div>
                     <asp:CheckBox ID="cbxConditionLocked" runat="server" Text="User gesperrt" />
@@ -82,7 +82,7 @@
         </div>
     </div>
     <div>
-         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating" OnRowDataBound="gvAdminUsers_RowDataBound" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7">
+         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7">
                 <Columns>
                     <asp:TemplateField HeaderText="Vorname">
                         <EditItemTemplate>

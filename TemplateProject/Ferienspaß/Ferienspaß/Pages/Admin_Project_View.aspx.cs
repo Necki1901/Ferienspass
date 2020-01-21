@@ -16,13 +16,16 @@ namespace Ferienspaß.Pages
         CsharpDB db = new CsharpDB();
         bool isAdding;
         static bool isFiltered = false;
+        static int idForUpdating;
         protected void Page_Load(object sender, EventArgs e)
         {            
             lblInfo.Text = "";
-            Fill_gvAdminProjects(isFiltered);
+            
+            Fill_gvAdminProjects();
             if(!Page.IsPostBack)
             {
                 isAdding = false;
+                Fillddl();
             }
 
             try
@@ -39,13 +42,13 @@ namespace Ferienspaß.Pages
 
             }
         }
-        private void Fill_gvAdminProjects(bool filter)
+        private void Fill_gvAdminProjects()
         {
             DataTable dt;
             DataView dv;
             string sql;
             bool changed = false;
-            if ((txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty) && filter == true)
+            if ((txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty) && isFiltered == true)
             {
                 sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
 
@@ -81,9 +84,11 @@ namespace Ferienspaß.Pages
         }
 
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
-        {            
-            gvAdminProjects.EditIndex = e.NewEditIndex;          
-            Fill_gvAdminProjects(isFiltered);          
+        {
+            pnlBlockBg.Visible = true;
+            pnlUpdate.Visible = true;
+            idForUpdating = e.NewEditIndex;
+            FillControlsWithValues();         
         }
 
         private void FillControlsWithValues()
@@ -150,8 +155,8 @@ namespace Ferienspaß.Pages
             //Proof null-values
             if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtPlace.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
-            {
-                txtDate.Text = ChangeDateFormat();
+            {               
+                 txtDate.Text = ChangeDateFormat();
 
                 if (!(txtDate.Text.Length == 10) || !(txtStart.Text.Length == 8) || !(txtEnd.Text.Length == 8)) { valid = false; errorDescription += "DATUM-Format oder ZEIT-Format (START oder END) ist ungültig!  "; }
                 else
@@ -167,6 +172,7 @@ namespace Ferienspaß.Pages
                             }
                         }
                     }
+
 
 
                     if (!(txtDate.Text[4] == '-' && txtDate.Text[7] == '-' && checkifinteger == true)) { valid = false; errorDescription += "DATE-Format ist ungültig!  "; }
@@ -409,7 +415,7 @@ namespace Ferienspaß.Pages
                     }
 
                     gvAdminProjects.EditIndex = -1;
-                    Fill_gvAdminProjects(isFiltered);
+                    Fill_gvAdminProjects();
                     pnlBlockBg.Visible = false;
                     pnlUpdate.Visible = false;
                     gvAdminProjects.DataBind();
@@ -423,7 +429,7 @@ namespace Ferienspaß.Pages
             pnlBlockBg.Visible = false;
             pnlUpdate.Visible = false;
             gvAdminProjects.EditIndex = -1;
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
             gvAdminProjects.DataBind();
         }
 

@@ -18,9 +18,6 @@ namespace Ferienspaß
         static bool isFiltered = false;
         static int idForUpdating;
 
-
-        static bool isFiltered = false;
-
         protected void Page_Load(object sender, EventArgs e)
         {
             lblInfo.Text = "";
@@ -89,14 +86,14 @@ namespace Ferienspaß
                     sql += $" HAVING GN LIKE '{txtName.Text}%'";
                     filter = true;
                 }
-                if (txtSurname.Text != "")
+                if (txtSurname3.Text != "")
                 {
-                    if (filter) sql += $" AND SN LIKE '{txtSurname.Text}%'";
+                    if (filter) sql += $" AND SN LIKE '{txtSurname3.Text}%'";
                     else
-                        sql += $" HAVING SN LIKE '{txtSurname.Text}%'";
+                        sql += $" HAVING SN LIKE '{txtSurname3.Text}%'";
                         filter = true;
                 }
-                if(ddlUserGroup.SelectedValue != "Alle")
+                if(ddlUserGroup3.SelectedValue != "Alle")
                 {
                     if (filter) sql += $" AND UGID = {ddlUserGroup.SelectedValue}";
                     else
@@ -159,8 +156,7 @@ namespace Ferienspaß
         protected void gvAdminUsers_RowEditing(object sender, GridViewEditEventArgs e)
         {
             pnlBlockBg.Visible = true;
-            pnlUpdate.Visible = true;
-            gvAdminUsers.EditIndex = e.NewEditIndex;
+            pnlUpdate.Visible = true;           
             idForUpdating = e.NewEditIndex;
             FillControlsWithValues();
         }
@@ -178,52 +174,7 @@ namespace Ferienspaß
             ddlLocked2.SelectedValue = dt.Rows[0]["LOCKED"].ToString();
             ddlEmailConfirmed2.SelectedValue = dt.Rows[0]["EmailConfirmed"].ToString();
         }
-
-        //protected void gvAdminUsers_RowUpdating(object sender, GridViewUpdateEventArgs e)
-        //{
-        //    GridViewRow gvr = gvAdminUsers.Rows[e.RowIndex];
-        //    DropDownList dropDownList = (DropDownList)gvr.FindControl("ddlEditItemTemplateUserGroup");
-        //    string selectedGroup = dropDownList.SelectedValue;           
-        //    if (Convert.ToBoolean(ViewState["isAdding"]) == false)
-        //    {
-        //        bool valid = ValidateData(e);
-        //        if (valid == true)
-        //        {
-        //            if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", e.NewValues["GN"], e.NewValues["SN"], e.NewValues["PHONE"], e.NewValues["EMAIL"], Convert.ToInt32(selectedGroup), e.NewValues["LOCKED"], e.NewValues["EmailConfirmed"], e.Keys[0]) > 0)
-        //            {
-        //                lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
-        //            }
-        //            else
-        //            {
-        //                lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
-        //            }
-        //            gvAdminUsers.EditIndex = -1;
-        //            Fill_gvAdminUsers();
-        //        }
-        //    }
-        //    else
-        //    {
-        //        bool valid = ValidateData(e);
-        //        if (valid == true)
-        //        {
-        //            if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", e.NewValues["GN"], e.NewValues["SN"], e.NewValues["PHONE"], e.NewValues["EMAIL"], e.NewValues["LOCKED"], e.NewValues["EmailConfirmed"],Convert.ToInt32(selectedGroup)) > 0)
-        //            {
-        //                lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
-        //            }
-        //            else
-        //            {
-        //                lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
-        //            }
-        //            gvAdminUsers.EditIndex = -1;
-        //            Fill_gvAdminUsers();
-        //            DataTable u = db.Query("SELECT UID,GN,EMAIL,SN FROM user WHERE EMAIL LIKE ? LIMIT 1", e.NewValues["EMAIL"]);
-        //            string resetHash = PwdResetHash(u.Rows[0]["GN"].ToString(), u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["UID"].ToString());
-        //            bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort zurücksetzen", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/PasswordReset.aspx?hash=" + resetHash);
-        //            ViewState["isAdding"] = false;
-        //        }
-        //    }
-                     
-        //}
+     
 
         public string PwdResetHash(string firstname, string email, string uId)
         {
@@ -300,32 +251,6 @@ namespace Ferienspaß
             return valid;
         }
 
-        //protected void gvAdminUsers_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
-        //{
-        //    gvAdminUsers.EditIndex = -1;
-        //    Fill_gvAdminUsers();
-        //    lblInfo.Text = "";                  
-        //}
-
-        //protected void gvAdminUsers_RowDataBound(object sender, GridViewRowEventArgs e)
-        //{
-        //    if (e.Row.RowType == DataControlRowType.DataRow && gvAdminUsers.EditIndex == e.Row.RowIndex)
-        //    {
-
-        //        Control ctrl = e.Row.FindControl("ddlEditItemTemplateUserGroup");
-        //        DropDownList ddl = ctrl as DropDownList;
-        //        DataTable dt = GetAllUserGroups();
-        //        for (int i = 0; i < dt.Rows.Count; i++)
-        //        {
-        //            //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
-        //            ddl.Items.Add(new ListItem(dt.Rows[i]["DESCRIPTION"].ToString(), dt.Rows[i]["UGID"].ToString()));
-        //        }
-        //        DataRowView dr = e.Row.DataItem as DataRowView;
-        //        ddl.SelectedValue = dr["UGID"].ToString();
-        //        ddl.SelectedItem.Text = dr["DESCRIPTION"].ToString();
-        //    }
-        //}
-
         private DataTable GetAllUserGroups()
         {
             return db.Query("SELECT UGID, DESCRIPTION FROM usergroup");
@@ -401,7 +326,7 @@ namespace Ferienspaß
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }                    
                     pnlBlockBg.Visible = false;
-                    pnlInsert.Visible = false;
+                    pnlUpdate.Visible = false;
                     gvAdminUsers.EditIndex = -1;
                     Fill_gvAdminUsers();
                 }

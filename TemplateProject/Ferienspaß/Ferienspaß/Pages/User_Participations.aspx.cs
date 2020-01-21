@@ -103,7 +103,7 @@ namespace Ferienspaß.Pages
 
         private void Write_cancellation__in_db(int pid, int cid)
         {
-            db.Query($"INSERT INTO cancellations (cid, pid, date) VALUES ({cid}, {pid}, '{DateTime.Now.ToString("dd/MM/yyyy")}')");
+            db.Query($"INSERT INTO cancellations (cid, pid, date) VALUES ({cid}, {pid}, '{DateTime.Now.ToString("yyyy/MM/dd")}')");
         }
 
         private void Send_cancel_mail(int pid, int cid)

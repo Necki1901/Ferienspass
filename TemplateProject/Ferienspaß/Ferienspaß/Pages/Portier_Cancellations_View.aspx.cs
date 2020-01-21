@@ -15,6 +15,7 @@ namespace Ferienspaß.Pages
     public partial class Admin_Cancellations_View : System.Web.UI.Page
     {
         CsharpDB db;
+        static bool isFiltered = false;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -41,10 +42,39 @@ namespace Ferienspaß.Pages
 
         private void FillGvCancellations()
         {
-            DataTable dt = db.Query($"select cancellations.cancel_id, project.NAME, child.GN, child.SN, cancellations.date, project.price, user.phone, user.gn as 'gnUser', user.sn as 'snUser' " +
+            bool filterInUse = false;
+            string sql = $"select cancellations.cancel_id, project.NAME, CONCAT(child.GN,' ',child.SN) AS childName, cancellations.date, project.price, user.phone, CONCAT(user.gn,' ',user.sn) AS userName " +
                 $"from(((cancellations inner join project on cancellations.pid = project.pid) " +
                 $"inner join child on cancellations.cid = child.cid)" +
-                $"inner join user on child.UID = user.uid)");
+                $"inner join user on child.UID = user.uid)";
+
+            if ((txtProjectName.Text != "" || txtStornoDate.Text != "" || txtParentName.Text != "" || txtChildName.Text != "") && isFiltered)
+            {
+                sql += " HAVING ";
+                if(txtProjectName.Text != "")
+                {
+                    filterInUse = true;
+                    sql += $"project.NAME LIKE '{txtProjectName.Text}%'";
+                }
+                if (txtStornoDate.Text != "")
+                {
+                    if (filterInUse) sql += "AND "; else filterInUse = true;
+                    sql += $"cancellations.date = '{txtStornoDate.Text}'";
+                }
+                if (txtParentName.Text != "")
+                {
+                    if (filterInUse) sql += "AND "; else filterInUse = true;
+                    sql += $"userName LIKE '%{txtParentName.Text}%'";
+                }
+                if (txtChildName.Text != "")
+                {
+                    if (filterInUse) sql += "AND ";
+                    sql += $"childName LIKE '%{txtChildName.Text}%'";
+                }
+            }
+
+
+            DataTable dt = db.Query(sql);
 
             DataView dv = new DataView(dt);
 
@@ -71,6 +101,12 @@ namespace Ferienspaß.Pages
                     FillGvCancellations();
                     break;
             }
+        }
+
+        protected void btnSearch_Click(object sender, EventArgs e)
+        {
+            isFiltered = true;
+            FillGvCancellations();
         }
     }
 }

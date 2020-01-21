@@ -22,7 +22,7 @@ namespace Ferienspaß.Pages
             if (!Page.IsPostBack)
             {
                 if(Request.QueryString["id"] == null)
-                    Response.Redirect("Project_View.aspx");
+                    Response.Redirect("User_Project_View.aspx");
                 ViewState["PID"] = Convert.ToInt32(Request.QueryString["id"]);
                 Fill_gv_UserView_Details();
             }
@@ -57,6 +57,8 @@ namespace Ferienspaß.Pages
 
 
             int remaining_capacity = (int)dt.Rows[0]["remainingCapacity"];
+            ViewState["rc"] = remaining_capacity;
+
             SetRegisterOptions(remaining_capacity);
             SetQueueOptions(remaining_capacity, dt.Rows[0]);
         }
@@ -169,22 +171,31 @@ namespace Ferienspaß.Pages
                 }
             }
 
-            foreach(int id in childrenIDs)
+            if(childrenIDs.Count > Convert.ToInt32(ViewState["rc"]))
             {
-                db.Query($"INSERT INTO participation (CID, PID, Date) VALUES({id}, {ViewState["PID"]}, '{DateTime.Now.ToString("dd/MM/yyyy")}')");
+                lblChildrenMessage.Text = $"Es können nicht {childrenIDs.Count} Kinder hinzugefügt werden,\n da das Projekt voll ist";
             }
-
-            foreach (GridViewRow row in gv_Children.Rows)
+            else
             {
-                ((CheckBox)row.FindControl("chkUseChildren")).Checked = false;
+                foreach(int id in childrenIDs)
+                {
+                    db.Query($"INSERT INTO participation (CID, PID, Date) VALUES({id}, {ViewState["PID"]}, '{DateTime.Now.ToString("dd/MM/yyyy")}')");
+                }
+
+                foreach (GridViewRow row in gv_Children.Rows)
+                {
+                    ((CheckBox)row.FindControl("chkUseChildren")).Checked = false;
+                }
+
+
+                SetVisibility_Children(false);
+                lblChildrenMessage.Text = "Kinder wurden hinzugefügt";
+
+                string body = Get_body_for_mail(childrenIDs);
+                Send_mail(body);
             }
+            Fill_gv_UserView_Details();
 
-
-            SetVisibility_Children(false);
-            lblChildrenMessage.Text = "Kinder wurden hinzugefügt";
-
-            string body = Get_body_for_mail(childrenIDs);
-            Send_mail(body);
         }
 
         private string Get_body_for_mail(List<int> childrenIDs)

@@ -115,7 +115,6 @@ namespace Ferienspaß
             return ret;
         }
 
-
         internal string GetUserName(object userid) {
             DataTable loggedInUser = Query("SELECT GN,SN FROM user WHERE UID=?", userid.ToString());
             return loggedInUser.Rows[0].ItemArray[0].ToString() + " " + loggedInUser.Rows[0].ItemArray[1].ToString();

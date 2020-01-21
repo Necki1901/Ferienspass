@@ -7,6 +7,48 @@
 </asp:Content>
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+    <asp:Panel ID="pnlBlockBg" CssClass="pnlBlockBg" runat="server" Visible="false"></asp:Panel><%--Panel um den Hintergrund während Add oder Update Vorgängen zu Blockieren--%>            
+    <div class="form-group">                          
+                    <asp:Panel ID="pnlInsert" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Inserten eines Eintrages eingefügt werden.--%>                       
+                        <div class="form-row"><asp:Label ID="lblGivenName" Text="Vorname:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtGivenName" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblSurName" Text="Nachname:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtSurName" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblPhone" Text="Telefon:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPhone" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+                        <div class="form-row"> <asp:Label ID="lblEMail" Text="EMail:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtEMail" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblUserGroup" Text="User-Gruppe" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlUserGroup" runat="server" CssClass="lblPanel"></asp:DropDownList>
+                        <asp:Label ID="lblLocked" Text="Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlLocked" runat="server" CssClass="txtPanel"></asp:DropDownList> </div>
+                        <div class="form-row"><asp:Label ID="lblEmailConfirmed" Text="EMail-Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlEmailConfirmed" runat="server" CssClass="txtPanel"></asp:DropDownList>                       
+                        <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
+                         <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
+                            </div>
+                    </asp:Panel>
+                    <asp:Panel ID="pnlUpdate" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Updaten eines Eintrages eingefügt werden.--%>                       
+                        <div class="form-row"><asp:Label ID="lblGivenName2" Text="Vorname:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtGivenName2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblSurName2" Text="Nachname:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtSurName2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblPhone2" Text="Telefon:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPhone2" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+                        <div class="form-row"> <asp:Label ID="lblMail2" Text="EMail:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtEMail2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblUserGroup2" Text="User-Gruppe" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlUserGroup2" runat="server" CssClass="lblPanel"></asp:DropDownList>
+                        <asp:Label ID="lblLocked2" Text="Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlLocked2" runat="server" CssClass="txtPanel"></asp:DropDownList> </div>
+                        <div class="form-row"><asp:Label ID="lblEmailConfirmed2" Text="EMail-Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:DropDownList ID="ddlEmailConfirmed2" runat="server" CssClass="txtPanel"></asp:DropDownList>                       
+                        <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
+                        <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>
+                            </div>
+                    </asp:Panel>         
+                </div>   
+    
         <script type="text/javascript">
         function Delete() {
             if (confirm("Datensatz wirklich löschen?")) {
@@ -24,10 +66,10 @@
                 <asp:Label Text="Vorname: " runat="server"></asp:Label>
                 <asp:TextBox ID="txtName" runat="server"></asp:TextBox>
                 <asp:Label Text="Nachname: " runat="server"></asp:Label>
-                <asp:TextBox ID="txtSurname" runat="server"></asp:TextBox>
+                <asp:TextBox ID="txtSurname3" runat="server"></asp:TextBox>
                 <div class="form-row">
                     <asp:Label Text="User-Group: " runat="server"></asp:Label>
-                    <asp:DropDownList ID="ddlUserGroup" runat="server"></asp:DropDownList>
+                    <asp:DropDownList ID="ddlUserGroup3" runat="server"></asp:DropDownList>
                 </div>
                 <div>
                     <asp:CheckBox ID="cbxConditionLocked" runat="server" Text="User gesperrt" />
@@ -40,7 +82,7 @@
         </div>
     </div>
     <div>
-         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowCancelingEdit="gvAdminUsers_RowCancelingEdit" OnRowUpdating="gvAdminUsers_RowUpdating" OnRowDataBound="gvAdminUsers_RowDataBound" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7">
+         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7">
                 <Columns>
                     <asp:TemplateField HeaderText="Vorname">
                         <EditItemTemplate>
@@ -108,13 +150,7 @@
                     </HeaderTemplate>
                     <ItemTemplate>
                             <asp:ImageButton ID="btnEdit" runat="server" CommandName="Edit" ImageUrl="~/App_Themes/default/edit.png" Height="50" Width="50"  />
-                        </ItemTemplate>
-                    <EditItemTemplate>
-                            <asp:ImageButton ID="btnUpdate" runat="server" CommandName="Update" ImageUrl="~/App_Themes/default/ok.png" Height="50" Width="50"/>                          
-                            <br />
-                            <br />
-                             <asp:ImageButton ID="btnCancel" runat="server" CommandName="Cancel" ImageUrl="~/App_Themes/default/cancel.png" Height="50" Width="50"/>
-                        </EditItemTemplate>
+                        </ItemTemplate>                    
                 </asp:TemplateField>
                     <asp:TemplateField HeaderText="Löschen">
                         <ItemTemplate>

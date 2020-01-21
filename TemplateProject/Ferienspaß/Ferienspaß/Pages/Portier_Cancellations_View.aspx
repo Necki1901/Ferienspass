@@ -1,4 +1,4 @@
-﻿<%@ Page Title="Anmeldung hinzufügen" Language="C#" MasterPageFile="~/MasterPage/Admin.Master" AutoEventWireup="true" CodeBehind="Portier_Cancellations_View.aspx.cs" Inherits="Ferienspaß.Pages.Admin_Cancellations_View" %>
+﻿<%@ Page Title="Anmeldung hinzufügen" Language="C#" MasterPageFile="~/MasterPage/Portier.Master" AutoEventWireup="true" CodeBehind="Portier_Cancellations_View.aspx.cs" Inherits="Ferienspaß.Pages.Admin_Cancellations_View" %>
 
 
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">

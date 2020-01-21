@@ -159,6 +159,7 @@
     <Content Include="Pages\MyData.aspx" />
     <Content Include="Login.aspx" />
     <Content Include="Content\Site.css" />
+    <Content Include="Pages\User_Add_Child.aspx" />
     <Content Include="Pages\User_Participations.aspx" />
     <Content Include="PasswordReset.aspx" />
     <Content Include="Pages\Projects.aspx">
@@ -313,6 +314,13 @@
       <DependentUpon>Login.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Pages\User_Add_Child.aspx.cs">
+      <DependentUpon>User_Add_Child.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\User_Add_Child.aspx.designer.cs">
+      <DependentUpon>User_Add_Child.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Pages\User_Participations.aspx.cs">
       <DependentUpon>User_Participations.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>

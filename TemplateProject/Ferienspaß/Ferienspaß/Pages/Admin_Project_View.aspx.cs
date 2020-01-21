@@ -12,20 +12,17 @@ using System.Web.UI.WebControls;
 namespace Ferienspaß.Pages
 {
     public partial class Admin : System.Web.UI.Page
-    {       
+    {
         CsharpDB db = new CsharpDB();
         bool isAdding;
         static bool isFiltered = false;
-        static int idForUpdating;
         protected void Page_Load(object sender, EventArgs e)
-        {
-            gvAdminProjects.Sort("DATE", SortDirection.Ascending);
+        {            
             lblInfo.Text = "";
             Fill_gvAdminProjects(isFiltered);
             if(!Page.IsPostBack)
             {
                 isAdding = false;
-                Fillddl();
             }
 
             try
@@ -62,7 +59,7 @@ namespace Ferienspaß.Pages
                     if (changed) sql += " AND ";
                     sql += $"project.DATE='{datepicker.Text}'";
                 }
-                if (txtOrganizerName.Text != string.Empty)
+                if (txtOrganizerName.Text != "")
                 {
                     if (changed) sql += " AND ";
                     sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
@@ -84,13 +81,9 @@ namespace Ferienspaß.Pages
         }
 
         protected void gvAdminProjects_RowEditing(object sender, GridViewEditEventArgs e)
-        {
-            pnlBlockBg.Visible = true;
-            pnlUpdate.Visible = true;
-            gvAdminProjects.EditIndex = e.NewEditIndex;
-            idForUpdating = e.NewEditIndex;
-            FillControlsWithValues();
-            
+        {            
+            gvAdminProjects.EditIndex = e.NewEditIndex;          
+            Fill_gvAdminProjects(isFiltered);          
         }
 
         private void FillControlsWithValues()
@@ -311,7 +304,7 @@ namespace Ferienspaß.Pages
             string projectID = ((Label)row.FindControl("lblItemTemplateProjectID")).Text;
             db.Query($"delete from project where PID = {projectID}");
 
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
             lblInfo.Text += "Datensatz wurde gelöscht!";
         }
 
@@ -354,13 +347,13 @@ namespace Ferienspaß.Pages
         protected void btnSearch_Click(object sender, EventArgs e)
         {
             isFiltered = true;
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
         }
 
         protected void gvAdminProjects_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvAdminProjects.PageIndex = e.NewPageIndex;
-            Fill_gvAdminProjects(isFiltered);
+            Fill_gvAdminProjects();
         }
 
         protected void btnBack_Click(object sender, EventArgs e)
@@ -385,7 +378,7 @@ namespace Ferienspaß.Pages
                     {
                         lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
-                    Fill_gvAdminProjects(isFiltered);
+                    Fill_gvAdminProjects();
                     ViewState["isAdding"] = false;
                     pnlBlockBg.Visible = false;
                     pnlInsert.Visible = false;

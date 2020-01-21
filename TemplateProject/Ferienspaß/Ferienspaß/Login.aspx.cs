@@ -139,6 +139,12 @@ namespace Ferienspaß {
                                 Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
+                            case 3:
+                                //PORTIER
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("Pages/Portier_Cancellations_View.aspx");
+                                break;
+
                             default:
                                 // NORMALER  BENUTZER
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);

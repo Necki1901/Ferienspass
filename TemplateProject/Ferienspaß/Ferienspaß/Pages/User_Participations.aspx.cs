@@ -79,21 +79,55 @@ namespace Ferienspaß.Pages
                     }
                     else
                     {
-                        Cancel_participation(rowIndex);
+                        //get the ids from the gridview
+                        int pid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_pid")).Text);
+                        int cid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_cid")).Text);
 
-                        lit_msg.Text = CreateMSGString("Anmeldung erfolgreich storniert", "info");
+                        Cancel_participation(pid, cid);
+                        Write_cancellation__in_db(pid, cid);
+                        Send_cancel_mail(pid, cid);
+
+                        lit_msg.Text = CreateMSGString("Ihre Anmeldung wurde storniert", "info");
                         break;
                     }
             }
 
         }
-        private void Cancel_participation(int rowIndex)
-        {
-            int cid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_cid")).Text);
-            int pid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_pid")).Text);
 
+
+        private void Cancel_participation(int pid, int cid)
+        {
             db.Query($"DELETE FROM participation WHERE pid = {pid} AND cid = {cid}");
+            Fill_gv_participations();
         }
+
+        private void Write_cancellation__in_db(int pid, int cid)
+        {
+            db.Query($"INSERT INTO cancellations (cid, pid, date) VALUES ({cid}, {pid}, '{DateTime.Now.ToString("yyyy/MM/dd")}')");
+        }
+
+        private void Send_cancel_mail(int pid, int cid)
+        {
+            DataTable dt = db.Query($"SELECT gn, sn, email FROM user WHERE uid = {User.Identity.Name}");
+
+            string fullname = $"{dt.Rows[0]["gn"]} {dt.Rows[0]["sn"]}";
+
+            db.SendMail((string)dt.Rows[0]["email"], fullname, "Stornierung Ferienspaß", Get_body_for_cancel());
+
+            string Get_body_for_cancel()
+            {
+                DataTable dt_project = db.Query($"SELECT name FROM project WHERE pid = {pid}");
+                DataTable dt_child = db.Query($"SELECT gn, sn FROM child WHERE cid = {cid}");
+
+                string fullname_child = $"{dt_child.Rows[0]["gn"]} {dt_child.Rows[0]["sn"]}";
+
+                return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
+                    $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt";
+               
+            }
+        }
+
+
 
         private string CreateMSGString(string msg, string type)
         {

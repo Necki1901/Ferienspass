@@ -63,7 +63,6 @@
  <script type="text/javascript">
         function Delete() {
             if (confirm("Datensatz wirklich löschen?")) {
-                return true;               
             }
             return false;
         }

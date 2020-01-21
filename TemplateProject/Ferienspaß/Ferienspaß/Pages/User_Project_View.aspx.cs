@@ -141,5 +141,11 @@ namespace Ferienspaß.Pages
             gv_UserView.DataSource = dv;
             gv_UserView.DataBind();
         }
+
+        protected void gv_UserView_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gv_UserView.PageIndex = e.NewPageIndex;
+            Fill_gv_UserView();
+        }
     }
 }

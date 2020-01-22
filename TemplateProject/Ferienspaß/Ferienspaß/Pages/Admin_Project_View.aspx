@@ -34,7 +34,8 @@
                         <asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
-                         <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
+                        <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
+                        <asp:Label ID="lblInfo" runat="server"></asp:Label>
                     </asp:Panel>
                     <asp:Panel ID="pnlUpdate" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Updaten eines Eintrages eingefügt werden.--%>                       
                         <div class="form-row"><asp:Label ID="Label1" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
@@ -57,6 +58,7 @@
                         <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
                         <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>
+                        <asp:Label ID="lblInfo2" runat="server"></asp:Label>
                     </asp:Panel>         
                 </div>   
     
@@ -64,6 +66,7 @@
  <script type="text/javascript">
         function Delete() {
             if (confirm("Datensatz wirklich löschen?")) {
+                return true;
             }
             return false;
         }
@@ -186,13 +189,13 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>       
-       &nbsp;<asp:Label ID="lblInfo" runat="server"></asp:Label>
+       
         </div>
     <p>
         DATE Format: YYYY.MM.DD</p>
     <p>
-        TIME Format: HH:MM:SS</p>
+        TIME Format: HH:MM</p>
     
-        
-       <%-- <asp:Panel ID="pnlUpdateInsert" CssClass="pnlUpdateInsert" runat="server" Visible="true"></asp:Panel>--%>
+        <asp:Label ID="lblInfoBottom" runat="server"></asp:Label>
+      
 </asp:Content>

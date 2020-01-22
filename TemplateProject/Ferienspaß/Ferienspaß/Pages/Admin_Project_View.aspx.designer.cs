@@ -240,6 +240,15 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.Button btnAdd;
 
         /// <summary>
+        /// lblInfo control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblInfo;
+
+        /// <summary>
         /// pnlUpdate control.
         /// </summary>
         /// <remarks>
@@ -429,6 +438,15 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.Button btnUpdate;
 
         /// <summary>
+        /// lblInfo2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblInfo2;
+
+        /// <summary>
         /// txtEventName control.
         /// </summary>
         /// <remarks>
@@ -474,12 +492,12 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.GridView gvAdminProjects;
 
         /// <summary>
-        /// lblInfo control.
+        /// lblInfoBottom control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblInfo;
+        protected global::System.Web.UI.WebControls.Label lblInfoBottom;
     }
 }

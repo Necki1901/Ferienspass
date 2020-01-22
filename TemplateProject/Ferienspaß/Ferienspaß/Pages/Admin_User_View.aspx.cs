@@ -21,12 +21,15 @@ namespace Ferienspaß
         protected void Page_Load(object sender, EventArgs e)
         {
             lblInfo.Text = "";
+            lblInfo2.Text = "";
+            lblInfoBottom.Text = "";
             Fill_gvAdminUsers();
             
             if (!Page.IsPostBack)
             {
                 isAdding = false;
                 FillDdl();
+                Fill_ddlUserGroup3();
             }
             try
             {
@@ -70,55 +73,97 @@ namespace Ferienspaß
 
         private void Fill_gvAdminUsers()
         {
-            if (!isFiltered)
-            {
-                DataTable dt = db.Query("SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID");
-                DataView dv = new DataView(dt);
-                gvAdminUsers.DataSource = dv;
-                gvAdminUsers.DataBind();
-            }
-            else
+            string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
+            if(isFiltered && (txtName.Text != "" || txtSurname3.Text != "" || ddlUserGroup3.SelectedValue != "Alle" || cbxConditionConfirmed.Checked || cbxConditionLocked.Checked))
             {
                 bool filter = false;
-                string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
-                if(txtName.Text != "")
+                sql += " HAVING ";
+
+                if (txtName.Text != "")
                 {
-                    sql += $" HAVING GN LIKE '{txtName.Text}%'";
+                    sql += $"GN LIKE '{txtName.Text}%'";
                     filter = true;
                 }
                 if (txtSurname3.Text != "")
                 {
-                    if (filter) sql += $" AND SN LIKE '{txtSurname3.Text}%'";
-                    else
-                        sql += $" HAVING SN LIKE '{txtSurname3.Text}%'";
-                        filter = true;
+                    if (filter) sql += $" AND "; else filter = true;
+                    sql += $"SN LIKE '{txtSurname3.Text}%'";
                 }
-                if(ddlUserGroup3.SelectedValue != "Alle")
+                if (ddlUserGroup3.SelectedValue != "Alle")
                 {
-                    if (filter) sql += $" AND UGID = {ddlUserGroup.SelectedValue}";
-                    else
-                        sql += $" HAVING UGID = {ddlUserGroup.SelectedValue}";
-                        filter = true;
+                    if (filter) sql += $" AND "; else filter = true;
+                    sql += $"UGID = {ddlUserGroup3.SelectedValue}";
                 }
                 if (cbxConditionConfirmed.Checked)
                 {
-                    if (filter) sql += $" AND EmailConfirmed = 1";
-                    else
-                        sql += $" HAVING EmailConfirmed = 1";
-                        filter = true;
+                    if (filter) sql += $" AND "; else filter = true;
+                    sql += $"EmailConfirmed = 1";
                 }
                 if (cbxConditionLocked.Checked)
                 {
-                    if (filter) sql += $" AND locked = 1";
+                    if (filter) sql += $" AND ";
                     else
-                        sql += $" HAVING locked = 1";
-                        filter = true;
-                }
-                DataTable dt = db.Query(sql);
-                DataView dv = new DataView(dt);
-                gvAdminUsers.DataSource = dv;
-                gvAdminUsers.DataBind();
+                        sql += $"locked = 1";
+                } 
             }
+            DataTable dt = db.Query(sql);
+            DataView dv = new DataView(dt);
+            gvAdminUsers.DataSource = dv;
+            gvAdminUsers.DataBind();
+
+
+
+            //old version
+
+            //if (!isFiltered)
+            //{
+            //    DataTable dt = db.Query("SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID");
+            //    DataView dv = new DataView(dt);
+            //    gvAdminUsers.DataSource = dv;
+            //    gvAdminUsers.DataBind();
+            //}
+            //else
+            //{
+            //    bool filter = false;
+            //    string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
+            //    if(txtName.Text != "")
+            //    {
+            //        sql += $" HAVING GN LIKE '{txtName.Text}%'";
+            //        filter = true;
+            //    }
+            //    if (txtSurname3.Text != "")
+            //    {
+            //        if (filter) sql += $" AND SN LIKE '{txtSurname3.Text}%'";
+            //        else
+            //            sql += $" HAVING SN LIKE '{txtSurname3.Text}%'";
+            //            filter = true;
+            //    }
+            //    if(ddlUserGroup3.SelectedValue != "Alle")
+            //    {
+            //        if (filter) sql += $" AND UGID = {ddlUserGroup3.SelectedValue}";
+            //        else
+            //            sql += $" HAVING UGID = {ddlUserGroup3.SelectedValue}";
+            //            filter = true;
+            //    }
+            //    if (cbxConditionConfirmed.Checked)
+            //    {
+            //        if (filter) sql += $" AND EmailConfirmed = 1";
+            //        else
+            //            sql += $" HAVING EmailConfirmed = 1";
+            //            filter = true;
+            //    }
+            //    if (cbxConditionLocked.Checked)
+            //    {
+            //        if (filter) sql += $" AND locked = 1";
+            //        else
+            //            sql += $" HAVING locked = 1";
+            //            filter = true;
+            //    }
+            //    DataTable dt = db.Query(sql);
+            //    DataView dv = new DataView(dt);
+            //    gvAdminUsers.DataSource = dv;
+            //    gvAdminUsers.DataBind();
+            //}
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -146,13 +191,7 @@ namespace Ferienspaß
                 Response.Redirect(String.Format("Admin_Child_Administration.aspx?id={0}", userID));
             }
         }
-
-        private string GetTextForDdl(int svalue)//Verhindert Leeres Feld in DDL, wenn neuer DS hinzugefügt wird.
-        {
-            DataTable dt = db.Query("SELECT DESCRIPTION FROM usergroup WHERE UGID = ?", svalue);
-            return dt.Rows[0]["DESCRIPTION"].ToString();
-        }
-
+      
         protected void gvAdminUsers_RowEditing(object sender, GridViewEditEventArgs e)
         {
             pnlBlockBg.Visible = true;
@@ -175,7 +214,6 @@ namespace Ferienspaß
             ddlEmailConfirmed2.SelectedValue = dt.Rows[0]["EmailConfirmed"].ToString();
         }
      
-
         public string PwdResetHash(string firstname, string email, string uId)
         {
             string toEncode = firstname + email + uId + DateTime.Now;
@@ -188,11 +226,7 @@ namespace Ferienspaß
            
             if (txtGivenName.Text == "" || txtSurName.Text == "" || txtPhone.Text == "" ||txtEMail.Text == "" || ddlLocked.SelectedValue == null || ddlEmailConfirmed.SelectedValue == null || ddlUserGroup.SelectedValue==null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
-            {
-                ////proof integer values
-                //if ((!int.TryParse((e.NewValues["LOCKED"].ToString()), out int a)) || (e.NewValues["LOCKED"].ToString()!="1" && e.NewValues["LOCKED"].ToString() != "0" )) { valid = false; errorDescription += "ZUSTAND-Format ist ungültig!  "; }
-                //if ((!int.TryParse((e.NewValues["EmailConfirmed"].ToString()), out int b))|| (e.NewValues["EmailConfirmed"].ToString() != "1" && e.NewValues["EmailConfirmed"].ToString() != "0")) { valid = false; errorDescription += "MAIL-ZUSTAND-Format ist ungültig!  "; }
-
+            {                
                 //proof string values
                 if(txtGivenName.Text.Length>50 || txtSurName.Text.Length > 50 || txtPhone.Text.Length > 20 || txtEMail.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
 
@@ -213,6 +247,7 @@ namespace Ferienspaß
 
             }
             lblInfo.Text = errorDescription;
+            lblInfo2.Text = errorDescription;
             return valid;
         }
 
@@ -224,15 +259,11 @@ namespace Ferienspaß
             if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtPhone2.Text == ""|| txtEMail2.Text == ""|| ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
-                ////proof integer values
-                //if ((!int.TryParse((e.NewValues["LOCKED"].ToString()), out int a)) || (e.NewValues["LOCKED"].ToString()!="1" && e.NewValues["LOCKED"].ToString() != "0" )) { valid = false; errorDescription += "ZUSTAND-Format ist ungültig!  "; }
-                //if ((!int.TryParse((e.NewValues["EmailConfirmed"].ToString()), out int b))|| (e.NewValues["EmailConfirmed"].ToString() != "1" && e.NewValues["EmailConfirmed"].ToString() != "0")) { valid = false; errorDescription += "MAIL-ZUSTAND-Format ist ungültig!  "; }
-
+               
                 //proof string values
                 if (txtGivenName2.Text.Length > 50 || txtSurName2.Text.Length > 50 || txtPhone2.Text.Length > 20 || txtEMail2.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
 
                 //proof email
-
                 if (!(txtEMail2.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
                 if (Convert.ToBoolean(ViewState["isAdding"]) == true)
@@ -248,6 +279,7 @@ namespace Ferienspaß
 
             }
             lblInfo.Text = errorDescription;
+            lblInfo2.Text = errorDescription;
             return valid;
         }
 
@@ -259,12 +291,10 @@ namespace Ferienspaß
         protected void gvAdminUsers_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
             GridViewRow row = gvAdminUsers.Rows[e.RowIndex];
-
             string userID = ((Label)row.FindControl("lblItemTemplateUserID")).Text;
             db.Query($"delete from user where UID = {userID}");
-
             Fill_gvAdminUsers();
-            lblInfo.Text += "Datensatz wurde gelöscht!";
+            lblInfoBottom.Text += "Datensatz wurde gelöscht!";
         }
 
         protected void btnChildren_Click(object sender, ImageClickEventArgs e)
@@ -293,11 +323,11 @@ namespace Ferienspaß
                 {
                     if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", txtGivenName.Text, txtSurName.Text, txtSurName.Text, txtEMail.Text, ddlLocked.SelectedValue, ddlEmailConfirmed.SelectedValue, ddlUserGroup.SelectedValue) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
-                        lblInfo.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
+                        lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }
                     else
                     {
-                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+                        lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
                     Fill_gvAdminUsers();
                     ViewState["isAdding"] = false;
@@ -319,11 +349,11 @@ namespace Ferienspaß
                 {
                     if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", txtGivenName2.Text, txtSurName2.Text, txtPhone2.Text, txtEMail2.Text, ddlUserGroup2.SelectedValue, ddlLocked2.SelectedValue, ddlEmailConfirmed2.SelectedValue, id) > 0)
                     {
-                        lblInfo.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
+                        lblInfoBottom.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
                     }
                     else
                     {
-                        lblInfo.Text = $"<span class='error'> Nichts passiert! </span>";
+                        lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
                     }                    
                     pnlBlockBg.Visible = false;
                     pnlUpdate.Visible = false;
@@ -342,16 +372,16 @@ namespace Ferienspaß
             gvAdminUsers.DataBind();
         }
 
-        private void Fill_ddlUserGroup()
+        private void Fill_ddlUserGroup3()
         {
             CsharpDB db = new CsharpDB();
             List<int> usergroups = new List<int>();
             DataTable dt = GetAllUserGroups();
-            ddlUserGroup.Items.Add("Alle");
+            ddlUserGroup3.Items.Add("Alle");
             for (int i = 0; i < dt.Rows.Count; i++)
             {
                 //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
-                ddlUserGroup.Items.Add(new ListItem(dt.Rows[i]["DESCRIPTION"].ToString(), dt.Rows[i]["UGID"].ToString()));
+                ddlUserGroup3.Items.Add(new ListItem(dt.Rows[i]["DESCRIPTION"].ToString(), dt.Rows[i]["UGID"].ToString()));
             }
         }
 

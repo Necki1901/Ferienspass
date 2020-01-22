@@ -26,6 +26,7 @@
                         <asp:DropDownList ID="ddlEmailConfirmed" runat="server" CssClass="txtPanel"></asp:DropDownList>                       
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
                          <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
+                              <asp:Label ID="lblInfo" runat="server"></asp:Label>
                             </div>
                     </asp:Panel>
                     <asp:Panel ID="pnlUpdate" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Updaten eines Eintrages eingefügt werden.--%>                       
@@ -45,6 +46,7 @@
                         <asp:DropDownList ID="ddlEmailConfirmed2" runat="server" CssClass="txtPanel"></asp:DropDownList>                       
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
                         <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>
+                              <asp:Label ID="lblInfo2" runat="server"></asp:Label>
                             </div>
                     </asp:Panel>         
                 </div>   
@@ -172,20 +174,14 @@
                     </asp:TemplateField>
                 </Columns>
             </asp:GridView>
-
-
-         <asp:Label ID="lblInfo" runat="server"></asp:Label>
-
-
+      
          <br />
          Zustand: 0 = nicht gesperrt, 1 = gesperrt<br />
          Email_Zustand: 0 = nicht bestätigt, 1 = bestätigt<br />
          <br />
 
-
+        <asp:Label ID="lblInfoBottom" runat="server"></asp:Label>
         </div>
-
-        </div>
-
+       
    </asp:Content>
 

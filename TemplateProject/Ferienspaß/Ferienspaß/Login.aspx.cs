@@ -32,6 +32,12 @@ namespace Ferienspaß {
 
 
 
+        public string ConfirmationHash(string firstname, string email, string uId) {
+            string toEncode = DateTime.Now + firstname + email + uId ;
+            return Crypt.GenerateSHA256String(toEncode);
+        }
+
+
         protected void Page_Load(object sender, EventArgs e) {
             db = new CsharpDB();
             try {
@@ -41,7 +47,52 @@ namespace Ferienspaß {
             if (!Page.IsPostBack) {
                 Session["loginAttemptCount"] = 0;
                 LoginUser = "";
+
+
+                if (Session["confirmed"] == null) {
+                    //  Email Bestätigen LINK
+                    string hash = Request.QueryString["hash"];
+                    if (!String.IsNullOrEmpty(hash)) {
+
+                        if (db.ExecuteNonQuery("UPDATE user SET EmailConfirmed=1,EmailConfirmationHash=? WHERE EmailConfirmationHash=?;", "", hash) > 0) {
+                            Session["confirmed"] = true;
+                            lit_msg.Text = CreateSuccessMSGString("Erfolgreich bestätigt! <br/>Sie können sich jetzt anmelden.");
+                        } else lit_msg.Text = CreateMSGString("Der Vorgang ist gescheitert! Wenden Sie sich an einen Administrator.", -1);
+                    }
+                }
+
+
+                if (Request["sendEmailConfirmation"] != null) {
+
+                    if(Session["sent"] != null) {
+                        lit_msg.Text = CreateMSGString("Email wurde bereits gesendet!", -1);
+                    } else {
+                        try {
+
+                            DataRow user = (DataRow)Session["user"];
+                            string createhash = ConfirmationHash(user["GN"].ToString(), user["EMAIL"].ToString(), user["UID"].ToString());
+
+                            if (db.ExecuteNonQuery("UPDATE user SET EmailConfirmationHash=? WHERE UID=?;", createhash, user["UID"].ToString()) > 0) {
+                                //Erfolg
+                                CsharpDB db = new CsharpDB();
+                                bool sentEmail = db.SendMail(user["EMAIL"].ToString(), user["GN"].ToString() + " " + user["SN"].ToString(), "EMail-Adresse bestätigen - Ferienspaß", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Login.aspx?hash=" + createhash);
+                                lit_msg.Text = CreateSuccessMSGString("Bestätigungsmail wurde gesendet!");
+                                Session["sent"] = true;
+                            } else {
+                                //Gescheitert
+                                lit_msg.Text = CreateMSGString("Der Vorgang ist gescheitert!", -1);
+                            }
+                        } catch (Exception ex) {
+                            lit_msg.Text = CreateMSGString("Der Vorgang ist gescheitert! Wenden Sie sich an einen Administrator.", -1);
+                        }
+                    }
+                }
             }
+
+
+           
+
+
 
             //FormsAuthentication.RedirectFromLoginPage("1", false);
 
@@ -85,7 +136,7 @@ namespace Ferienspaß {
             }else if (!String.IsNullOrEmpty(LoginUser) && !String.IsNullOrEmpty(tbx_pass.Text)) {
                 try {
                     db = new CsharpDB();
-                    DataTable user = db.Query("SELECT SALT,ENCODEDPASS,UID,LOCKED,UGID,EmailConfirmed FROM user WHERE UID = ?;", LoginUser);
+                    DataTable user = db.Query("SELECT * FROM user WHERE UID = ?;", LoginUser);
 
 
                     if (user.Rows.Count == 0) {
@@ -111,7 +162,8 @@ namespace Ferienspaß {
                     if (String.Compare(hashpw, dbPass) == 0) {
 
                         if (Convert.ToInt32(user.Rows[0]["EmailConfirmed"]) == 0) {
-                            lit_msg.Text = CreateMSGString("<strong>E-Mail Adresse noch nicht bestätigt!</strong><br><a href=''>Bestätigunsemail nochmals anfordern</a>", -1);
+                            lit_msg.Text = CreateMSGString("<strong>E-Mail Adresse noch nicht bestätigt!</strong><br><a href='?sendEmailConfirmation=1'>Bestätigunsemail nochmals anfordern</a>", -1);
+                            Session["user"] = user.Rows[0];
                             return;
                         }
 
@@ -174,7 +226,9 @@ namespace Ferienspaß {
             }
         }
 
-
+        private string CreateSuccessMSGString(string msg) {
+            return "<div class=\"alert alert-success mt-3 mb-1\" role=\"alert\">" + msg + "</div>";
+        }
         private string CreateMSGString(string msg, int loginAttemptleft) {
             if (loginAttemptleft != -1) return "<div class=\"alert alert-danger mt-3 mb-1\" role=\"alert\">" + msg + "<br/><strong>" + loginAttemptleft + " Anmeldeversuche Verbleibend</strong></div>";
             return "<div class=\"alert alert-danger mt-3 mb-1\" role=\"alert\">" + msg + "</div>";

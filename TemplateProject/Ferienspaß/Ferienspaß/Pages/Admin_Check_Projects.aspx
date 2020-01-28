@@ -19,6 +19,8 @@
         }
     </script>
 
+    <asp:Button runat="server" Text="Test" ID="btnTwoWeeks" OnClick="btnTwoWeeks_Click"/>
+
 
      <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false">
             <Columns>

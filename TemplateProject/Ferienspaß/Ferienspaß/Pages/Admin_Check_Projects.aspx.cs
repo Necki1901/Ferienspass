@@ -37,6 +37,8 @@ namespace Ferienspaß.Pages
             }
         }
 
+
+
         private void Fill_gvAdminProjects()
         {
             DataTable dt = db.Query("SELECT * FROM project");
@@ -49,6 +51,41 @@ namespace Ferienspaß.Pages
         {
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
+        }
+     
+        protected void btnTwoWeeks_Click(object sender, EventArgs e)
+        {
+            foreach (GridViewRow row in gvProjects.Rows)
+            {
+                var id = ((Label)row.FindControl("lblPID")).Text;
+
+                DataTable dt = db.Query($"SELECT user.EMAIL, project.name, Concat(user.GN,'',user.SN) as username, Concat(child.GN,' ',child.SN) as childname " +
+                    $"FROM project INNER JOIN participation " +
+                    $"ON participation.PID = project.PID " +
+                    $"INNER JOIN child ON participation.CID = child.cid " +
+                    $"INNER JOIN user ON user.UID = child.UID " +
+                    $"WHERE project.PID = {id}");
+
+
+
+            }
+
+
+
+
+          
+
+
+            //alle infos in eine liste schreiben
+            //Für jedes item eine mail schicken 
+
+
+
+
+            //for(int i = 0; i < dt.Rows.Count; i++)
+            //{
+            //    db.SendMail(dt.Rows[i]["email"], dt.Rows[i]["username"], "Erinnerung für dein Projekt", GetBody())
+            //}
         }
     }
 }

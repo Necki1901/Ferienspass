@@ -174,7 +174,7 @@ namespace Ferienspaß.Pages
                 body += $"{dt.Rows[i]["childname"]}\n";
             }
 
-            db.SendMail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], "Löschung Ihrer Anmeldung", body);
+           // db.SendMail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], "Löschung Ihrer Anmeldung", body);
         }
 
         private List<int> GetUIDsWithinOneWeekNotPaid()

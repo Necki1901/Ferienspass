@@ -11,7 +11,7 @@
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-<asp:Panel ID="pnlBlockBg" CssClass="pnlBlockBg" runat="server" Visible="false"></asp:Panel><%--Panel um den Hintergrund während Add oder Update Vorgängen zu Blockieren--%>            
+    <asp:Panel ID="pnlBlockBg" CssClass="pnlBlockBg" runat="server" Visible="false"></asp:Panel><%--Panel um den Hintergrund während Add oder Update Vorgängen zu Blockieren--%>            
     <div class="form-group">                          
                     <asp:Panel ID="pnlInsert" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Inserten eines Eintrages eingefügt werden.--%>                       
                         <div class="form-row"><asp:Label ID="lblDate" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
@@ -79,7 +79,7 @@
                 </div>
                 <div class="guidename">
                     <asp:Label Text="Verantwortlicher" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtOrganizerName" runat="server"></asp:TextBox>
+                    <asp:DropDownList ID="ddlGuide3" runat="server"></asp:DropDownList>
                 </div>
                 <div class="date">
                     <asp:Label Text="Datum der Veranstaltung" runat="server"></asp:Label>
@@ -92,7 +92,7 @@
     <div>
             <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7" OnSorting="gvAdminProjects_Sorting">
                 <Columns>
-                    <asp:TemplateField HeaderText="Name">
+                    <asp:TemplateField HeaderText="Projektname" SortExpression="NAME">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateProjectName" runat="server" Text='<%# Bind("NAME") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -161,7 +161,7 @@
                             <asp:Label ID="lblItemTemplateProjectGuideId" runat="server" Text='<%# Eval("UID") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Verantwortlicher">
+                    <asp:TemplateField HeaderText="Projektleiter">
                         <EditItemTemplate>
                             <asp:DropDownList ID="ddlEditItemTemplateProjectGuide" runat="server"></asp:DropDownList>
                         </EditItemTemplate>

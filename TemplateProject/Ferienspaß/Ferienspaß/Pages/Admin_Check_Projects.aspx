@@ -19,6 +19,9 @@
         }
     </script>
 
+    <asp:Button runat="server" Text="Erinnerungsmail senden" ID="btnTwoWeeks" OnClick="btnTwoWeeks_Click"/>
+    <asp:Button runat="server" Text="Nicht bezahlte Löschen" ID="btnDelete" OnClick="btnDelete_Click"/>
+
 
      <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false">
             <Columns>
@@ -37,12 +40,6 @@
                 <asp:TemplateField HeaderText="Datum">
                     <ItemTemplate>
                         <asp:Label ID="lblDate" runat="server" Text='<%# Convert.ToDateTime(Eval("date")).ToString("dd/MM/yyyy") %>'></asp:Label>
-                    </ItemTemplate>
-                </asp:TemplateField>
-
-                 <asp:TemplateField HeaderText="Aktion">
-                    <ItemTemplate>
-                        <asp:Button runat="server" Text="Testbutton" CommandName="two_weeks"/>
                     </ItemTemplate>
                 </asp:TemplateField>
              </Columns>

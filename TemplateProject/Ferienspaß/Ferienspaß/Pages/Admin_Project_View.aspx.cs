@@ -16,6 +16,7 @@ namespace Ferienspaß.Pages
         bool isAdding;
         static bool isFiltered = false;
         static int idForUpdating;
+        int sortCounter=0;
         protected void Page_Load(object sender, EventArgs e)
         {            
             lblInfo.Text = "";
@@ -71,6 +72,7 @@ namespace Ferienspaß.Pages
             }
             DataTable dt = db.Query(sql);
             DataView dv = new DataView(dt);
+            dv.Sort = "NAME ASC";
             gvAdminProjects.DataSource = dv;
             gvAdminProjects.DataBind();
         }
@@ -428,9 +430,44 @@ namespace Ferienspaß.Pages
             gvAdminProjects.DataBind();
         }
 
-        protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)//noch zu machen!
+        protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            //gvAdminProjects.
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            DataTable dt = db.Query(sql);
+            if (dt!=null)
+            {
+                ViewState["sortCounter"] = Convert.ToInt32(ViewState["sortCounter"])+1;
+                DataView dv = new DataView(dt);
+                if (Convert.ToInt32(ViewState["sortCounter"]) % 2 == 0)
+                {
+                    e.SortDirection = SortDirection.Ascending;
+                }
+                else
+                {
+                    e.SortDirection = SortDirection.Descending;
+                }
+                dv.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+                gvAdminProjects.DataSource = dv;
+                gvAdminProjects.DataBind();
+            }
+        }
+
+        private string ConvertSortDirectionToSql(SortDirection sortDirection)
+        {
+            string newSortDirection = String.Empty;
+
+            switch (sortDirection)
+            {
+                case SortDirection.Ascending:
+                    newSortDirection = "ASC";
+                    break;
+
+                case SortDirection.Descending:
+                    newSortDirection = "DESC";
+                    break;
+            }
+
+            return newSortDirection;
         }
     }
 }

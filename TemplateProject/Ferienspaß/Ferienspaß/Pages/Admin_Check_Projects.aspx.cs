@@ -85,7 +85,8 @@ namespace Ferienspaß.Pages
             }
 
             //sendMail
-            db.SendMail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], "Erinnerung für dein Projekt", body);
+            db.SendHTMLEmail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], db.GetPortalOption("MAIL_REMINDER_SUBJECT"), body, false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
+            //db.SendMail(, , "Erinnerung für dein Projekt", body);
         }
 
         private List<int> GetUIDsWithinTwoWeeks()

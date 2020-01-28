@@ -111,6 +111,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Pages\Admin_Check_Projects.aspx" />
+    <Content Include="Pages\Admin_Clubs_View.aspx" />
     <Content Include="Pages\Portier_Add_Child.aspx" />
     <Content Include="Pages\Portier_Cancellations_View.aspx" />
     <Content Include="Pages\Admin_Participants_Print.aspx" />
@@ -312,6 +313,13 @@
     </Compile>
     <Compile Include="Pages\Admin_Check_Projects.aspx.designer.cs">
       <DependentUpon>Admin_Check_Projects.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin_Clubs_View.aspx.cs">
+      <DependentUpon>Admin_Clubs_View.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin_Clubs_View.aspx.designer.cs">
+      <DependentUpon>Admin_Clubs_View.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Portier_Add_Child.aspx.cs">
       <DependentUpon>Portier_Add_Child.aspx</DependentUpon>

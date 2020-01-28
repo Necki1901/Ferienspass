@@ -72,7 +72,7 @@ namespace Ferienspaß.Pages
             }
             DataTable dt = db.Query(sql);
             DataView dv = new DataView(dt);
-            dv.Sort = "NAME ASC";
+            //dv.Sort = "NAME ASC";
             gvAdminProjects.DataSource = dv;
             gvAdminProjects.DataBind();
         }

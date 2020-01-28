@@ -380,9 +380,9 @@ namespace Ferienspaß
             ddlUserGroup3.Items.Add("Alle");
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                //ddl.Items.Add(Convert.ToString(dt.Rows[i].ItemArray[0]));
                 ddlUserGroup3.Items.Add(new ListItem(dt.Rows[i]["DESCRIPTION"].ToString(), dt.Rows[i]["UGID"].ToString()));
             }
+            ddlUserGroup3.SelectedValue = "Alle";
         }
 
 

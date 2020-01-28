@@ -79,7 +79,7 @@
                 </div>
                 <div class="guidename">
                     <asp:Label Text="Verantwortlicher" runat="server"></asp:Label>
-                    <asp:TextBox ID="txtOrganizerName" runat="server"></asp:TextBox>
+                    <asp:DropDownList ID="ddlGuide3" runat="server"></asp:DropDownList>
                 </div>
                 <div class="date">
                     <asp:Label Text="Datum der Veranstaltung" runat="server"></asp:Label>

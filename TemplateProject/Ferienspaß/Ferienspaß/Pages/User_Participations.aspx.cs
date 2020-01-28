@@ -83,9 +83,9 @@ namespace Ferienspaß.Pages
                         int pid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_pid")).Text);
                         int cid = Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_cid")).Text);
 
+                        Send_cancel_mail(pid, cid);
                         Cancel_participation(pid, cid);
                         Write_cancellation__in_db(pid, cid);
-                        Send_cancel_mail(pid, cid);
 
                         lit_msg.Text = CreateMSGString("Ihre Anmeldung wurde storniert", "info");
                         break;
@@ -120,8 +120,7 @@ namespace Ferienspaß.Pages
 
                 string fullname_child = $"{dt_child.Rows[0]["gn"]} {dt_child.Rows[0]["sn"]}";
 
-                //if (db.ExecuteNonQuery($"SELECT * FROM participation WHERE pid = {pid} AND cid = {cid} AND paid = 1") > 0)
-                if (Convert.ToInt32(db.Query($"SELECT paid FROM participation WHERE pid = {pid} AND cid = {cid}").Rows[0]) == 1) 
+                if (Convert.ToInt32(db.Query($"SELECT paid FROM participation WHERE pid = {pid} AND cid = {cid}").Rows[0][0]) == 1) 
                 {
                     return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
                     $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt.\n\n" +
@@ -134,8 +133,6 @@ namespace Ferienspaß.Pages
                 }
             }
         }
-
-
 
         private string CreateMSGString(string msg, string type)
         {

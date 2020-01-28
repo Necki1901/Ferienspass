@@ -27,6 +27,7 @@ namespace Ferienspaß.Pages
             {
                 isAdding = false;
                 Fillddl();
+                Fill_ddlGuide3();
             }
 
             try
@@ -45,38 +46,46 @@ namespace Ferienspaß.Pages
         }
         private void Fill_gvAdminProjects()
         {
-            DataTable dt;
-            DataView dv;
-            string sql;
-            bool changed = false;
-            if ((txtEventName.Text != string.Empty || datepicker.Text != string.Empty || txtOrganizerName.Text != string.Empty || txtOrganizerName.Text != string.Empty) && isFiltered == true)
-            {
-                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID WHERE ";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            bool filter = false;
 
-                if (txtEventName.Text != string.Empty)
+            if ((txtEventName.Text != "" || datepicker.Text != "" || ddlGuide3.SelectedValue != "Alle") && isFiltered == true)
+            {
+                sql += " Having ";
+
+                if (txtEventName.Text != "")
                 {
-                    sql += $"project.Name LIKE '%{txtEventName.Text}%'";
-                    changed = true;
+                    sql += $"project.Name LIKE '{txtEventName.Text}%'";
+                    filter = true;
                 }
-                if (datepicker.Text != string.Empty)
+                if (datepicker.Text != "")
                 {
-                    if (changed) sql += " AND ";
+                    if (filter) sql += " AND "; else filter = true;
                     sql += $"project.DATE='{datepicker.Text}'";
                 }
-                if (txtOrganizerName.Text != "")
+                if (ddlGuide3.SelectedValue != "Alle")
                 {
-                    if (changed) sql += " AND ";
-                    sql += $"projectguide.SN LIKE '%{txtOrganizerName.Text}%'";
+                    if (filter) sql += " AND ";
+                    sql += $"projectguide.GID = {ddlGuide3.SelectedValue}";
                 }
             }
-            else
-            {
-                sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
-            }
-            dt = db.Query(sql);
-            dv = new DataView(dt);
+            DataTable dt = db.Query(sql);
+            DataView dv = new DataView(dt);
             gvAdminProjects.DataSource = dv;
             gvAdminProjects.DataBind();
+        }
+
+        public void Fill_ddlGuide3()
+        {
+            CsharpDB db = new CsharpDB();
+            List<int> usergroups = new List<int>();
+            DataTable dt = GetAllGuides();
+            ddlGuide3.Items.Add(new ListItem("Alle"));
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                ddlGuide3.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString()));
+            }
+            ddlGuide.SelectedValue = "Alle";
         }
 
         protected void btnEdit_Click(object sender, ImageClickEventArgs e)

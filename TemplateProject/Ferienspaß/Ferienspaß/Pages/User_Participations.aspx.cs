@@ -111,7 +111,9 @@ namespace Ferienspaß.Pages
 
             string fullname = $"{dt.Rows[0]["gn"]} {dt.Rows[0]["sn"]}";
 
-            db.SendMail((string)dt.Rows[0]["email"], fullname, "Stornierung Ferienspaß", Get_body_for_cancel());
+            db.SendHTMLEmail((string)dt.Rows[0]["email"], fullname, db.GetPortalOption("MAIL_PROJECT_STORNIERUNG_SUBJECT"), Get_body_for_cancel(), false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
+
+           // db.SendMail((string)dt.Rows[0]["email"], fullname, "Stornierung Ferienspaß", Get_body_for_cancel());
 
             string Get_body_for_cancel()
             {

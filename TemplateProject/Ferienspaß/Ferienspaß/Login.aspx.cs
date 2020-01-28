@@ -44,6 +44,12 @@ namespace Ferienspaß {
                 MaxLoginAttempts = Convert.ToInt32(db.GetPortalOption("MAX_LOGIN_ATTEMPTS"));
             } catch (Exception ex) { lit_msg.Text = CreateMSGString("Ein interner Fehler ist aufgetreten! " + Environment.NewLine + ex, 0); }
 
+            if (Session["registrationMSG"] != null) {
+                lit_msg.Text = CreateSuccessMSGString(Session["registrationMSG"].ToString());
+                Session["registrationMSG"] = null;
+            }
+
+
             if (!Page.IsPostBack) {
                 Session["loginAttemptCount"] = 0;
                 LoginUser = "";
@@ -75,7 +81,8 @@ namespace Ferienspaß {
                             if (db.ExecuteNonQuery("UPDATE user SET EmailConfirmationHash=? WHERE UID=?;", createhash, user["UID"].ToString()) > 0) {
                                 //Erfolg
                                 CsharpDB db = new CsharpDB();
-                                bool sentEmail = db.SendMail(user["EMAIL"].ToString(), user["GN"].ToString() + " " + user["SN"].ToString(), "EMail-Adresse bestätigen - Ferienspaß", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Login.aspx?hash=" + createhash);
+                                string url = "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/Login.aspx?hash=" + createhash;
+                                bool sendHtmlEmail = db.SendHTMLEmail(user["EMAIL"].ToString(), user["GN"].ToString() + " " + user["SN"].ToString(), db.GetPortalOption("MAIL_EMAIL_CONFIRMATION_SUBJECT"), db.GetPortalOption("MAIL_EMAIL_CONFIRMATION_BODY"), true, db.GetPortalOption("MAIL_EMAIL_CONFIRMATION_BTN_TEXT"), url, "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
                                 lit_msg.Text = CreateSuccessMSGString("Bestätigungsmail wurde gesendet!");
                                 Session["sent"] = true;
                             } else {

@@ -47,7 +47,7 @@ namespace Ferienspaß.Pages
         }
         private void Fill_gvAdminProjects()
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             bool filter = false;
 
             if ((txtEventName.Text != "" || datepicker.Text != "" || ddlGuide3.SelectedValue != "Alle") && isFiltered == true)
@@ -67,7 +67,7 @@ namespace Ferienspaß.Pages
                 if (ddlGuide3.SelectedValue != "Alle")
                 {
                     if (filter) sql += " AND ";
-                    sql += $"projectguide.GID = {ddlGuide3.SelectedValue}";
+                    sql += $"user.UID = {ddlGuide3.SelectedValue}";
                 }
             }
             DataTable dt = db.Query(sql);
@@ -85,7 +85,7 @@ namespace Ferienspaß.Pages
             ddlGuide3.Items.Add(new ListItem("Alle"));
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                ddlGuide3.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString()));
+                ddlGuide3.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["UID"].ToString()));
             }
             ddlGuide.SelectedValue = "Alle";
         }
@@ -116,7 +116,7 @@ namespace Ferienspaß.Pages
             txtPlace2.Text = dt.Rows[0]["PLACE"].ToString();
             txtNumber2.Text = dt.Rows[0]["NUMBER"].ToString();
             txtDate2.Text = Convert.ToDateTime(dt.Rows[0]["DATE"]).ToString("yyyy/MM/dd");                       
-            ddlGuide2.SelectedValue = dt.Rows[0]["GID"].ToString();//Garantiert, dass der richtige wert ausgewählt ist, aus den werten die zu beginn in die DDl geschrieben wurden (FillDDL)
+            ddlGuide2.SelectedValue = dt.Rows[0]["PLID"].ToString();//Garantiert, dass der richtige wert ausgewählt ist, aus den werten die zu beginn in die DDl geschrieben wurden (FillDDL)
 
         }
 
@@ -125,21 +125,21 @@ namespace Ferienspaß.Pages
             DataTable dt2 = GetAllGuides();
             for (int i = 0; i < dt2.Rows.Count; i++)
             {
-                ListItem li = new ListItem(dt2.Rows[i]["SN"].ToString(), dt2.Rows[i]["GID"].ToString());
+                ListItem li = new ListItem(dt2.Rows[i]["SN"].ToString(), dt2.Rows[i]["UID"].ToString());
                 ddlGuide2.Items.Add(li);
                 ddlGuide.Items.Add(li);
             }
 
-            ddlGuide2.DataValueField = "GID";
+            ddlGuide2.DataValueField = "UID";
             ddlGuide2.DataTextField = "SN";
-            ddlGuide.DataValueField = "GID";
+            ddlGuide.DataValueField = "UID";
             ddlGuide.DataTextField = "SN";
 
         }
       
         private DataTable GetAllGuides()
         {
-            return db.Query("SELECT SN, GID FROM projectguide");
+            return db.Query("SELECT SN, UID FROM user WHERE UGID=1");
         }
            
         private string ChangeDateFormat()
@@ -373,7 +373,7 @@ namespace Ferienspaß.Pages
                 bool valid = ValidateData();
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, GID) Values(?,?,?,?,?,?,?,?,?)", txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text), Convert.ToDateTime(txtStart.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd.Text).ToString("HH:mm:ss"), txtPlace.Text, txtNumber.Text, Convert.ToInt32(txtCapacity.Text), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, PLID) Values(?,?,?,?,?,?,?,?,?)", txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart.Text).ToString("HH:mm"), Convert.ToDateTime(txtEnd.Text).ToString("HH:mm"), txtPlace.Text, txtNumber.Text, Convert.ToInt32(txtCapacity.Text), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }
@@ -402,7 +402,7 @@ namespace Ferienspaß.Pages
 
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("Update project SET NAME=?, DESCRIPTION=?, DATE=?, START=?, END=?, PLACE=?, NUMBER=?, CAPACITY=?, GID=? WHERE PID=?", txtName2.Text, txtDesc2.Text, Convert.ToDateTime(txtDate2.Text).ToShortDateString(), Convert.ToDateTime(txtStart2.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd2.Text).ToString("HH:mm:ss"), txtPlace2.Text, txtNumber2.Text, Convert.ToInt32(txtCapacity2.Text), Convert.ToInt32(selectedname), id) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    if (db.ExecuteNonQuery("Update project SET NAME=?, DESCRIPTION=?, DATE=?, START=?, END=?, PLACE=?, NUMBER=?, CAPACITY=?, PLID=? WHERE PID=?", txtName2.Text, txtDesc2.Text, Convert.ToDateTime(txtDate2.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart2.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd2.Text).ToString("HH:mm:ss"), txtPlace2.Text, txtNumber2.Text, Convert.ToInt32(txtCapacity2.Text), Convert.ToInt32(selectedname), id) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz geändert! </span>";
                     }
@@ -432,7 +432,7 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.GID = user.UID";
             DataTable dt = db.Query(sql);
             if (dt!=null)
             {

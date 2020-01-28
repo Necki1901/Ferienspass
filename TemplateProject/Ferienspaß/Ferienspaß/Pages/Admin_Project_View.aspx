@@ -92,7 +92,7 @@
     <div>
             <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7" OnSorting="gvAdminProjects_Sorting">
                 <Columns>
-                    <asp:TemplateField HeaderText="Name">
+                    <asp:TemplateField HeaderText="Projektname">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateProjectName" runat="server" Text='<%# Bind("NAME") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -161,7 +161,7 @@
                             <asp:Label ID="lblItemTemplateProjectGuideID" runat="server" Text='<%# Eval("GID") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Verantwortlicher">
+                    <asp:TemplateField HeaderText="Projektleiter">
                         <EditItemTemplate>
                             <asp:DropDownList ID="ddlEditItemTemplateProjectGuide" runat="server"></asp:DropDownList>
                         </EditItemTemplate>

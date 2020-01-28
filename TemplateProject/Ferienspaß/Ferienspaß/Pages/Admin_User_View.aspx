@@ -20,9 +20,9 @@
                         <asp:TextBox ID="txtEMail" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblUserGroup" Text="User-Gruppe" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlUserGroup" runat="server" CssClass="lblPanel"></asp:DropDownList>
-                        <asp:Label ID="lblLocked" Text="Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:Label ID="lblLocked" Text="Gesperrt:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlLocked" runat="server" CssClass="txtPanel"></asp:DropDownList> </div>
-                        <div class="form-row"><asp:Label ID="lblEmailConfirmed" Text="EMail-Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <div class="form-row"><asp:Label ID="lblEmailConfirmed" Text="EMail bestätigt:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlEmailConfirmed" runat="server" CssClass="txtPanel"></asp:DropDownList>                       
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
                          <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
@@ -40,9 +40,9 @@
                         <asp:TextBox ID="txtEMail2" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblUserGroup2" Text="User-Gruppe" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlUserGroup2" runat="server" CssClass="lblPanel"></asp:DropDownList>
-                        <asp:Label ID="lblLocked2" Text="Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:Label ID="lblLocked2" Text="Gesperrt:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlLocked2" runat="server" CssClass="txtPanel"></asp:DropDownList> </div>
-                        <div class="form-row"><asp:Label ID="lblEmailConfirmed2" Text="EMail-Zustand:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <div class="form-row"><asp:Label ID="lblEmailConfirmed2" Text="EMail bestätigt:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlEmailConfirmed2" runat="server" CssClass="txtPanel"></asp:DropDownList>                       
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
                         <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>
@@ -130,7 +130,7 @@
                             <asp:Label ID="lblItemTemplateUserGroup" runat="server" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Zustand">
+                    <asp:TemplateField HeaderText="Gesperrt">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateUserState" runat="server" Text='<%# Bind("LOCKED") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -138,7 +138,7 @@
                             <asp:Label ID="lblItemTemplateUserState" runat="server" Text='<%# Eval("LOCKED") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Email_Zustand">
+                    <asp:TemplateField HeaderText="Email bestätigt">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateUserMailState" runat="server" Text='<%# Bind("EmailConfirmed") %>'></asp:TextBox>
                         </EditItemTemplate>

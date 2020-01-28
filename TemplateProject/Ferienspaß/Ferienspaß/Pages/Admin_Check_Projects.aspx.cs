@@ -60,31 +60,77 @@ namespace Ferienspaß.Pages
 
         protected void btnTwoWeeks_Click(object sender, EventArgs e)
         {
-            List<int> userIDs = GetUIDsWithinTwoWeeks();
+            List<int> projectIDs = GetProjectIDsWithinPeriod(14);
 
-            if(userIDs.Count == 0)
+            if (projectIDs.Count == 0)
                 lit_msg.Text = CreateMSGString("Es gibt keine Teilnehmer", "warning");
             else
             {
-                foreach (var id in userIDs)
+                foreach (var pid in projectIDs)
                 {
-                    SendReminderMailToUser(id);
+                    List<int> userIDs = GetUIDsWithinTwoWeeks(pid);
+
+                    foreach (var id in userIDs)
+                    {
+                        if (CheckIfIDExists(pid, id) == true)
+                        {
+                            //get all participation user IDs
+                            DataTable dt = db.Query("SELECT participation.cid, project.name, project.DATE, participation.paid, " +
+                            "user.EMAIL, Concat(user.GN, ' ', user.SN) as username, Concat(child.GN, ' ', child.SN) as childname " +
+                                "FROM project INNER JOIN participation " +
+                                "ON participation.PID = project.PID " +
+                                "INNER JOIN child ON participation.CID = child.cid " +
+                                "INNER JOIN user ON user.UID = child.UID " +
+                                "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 14 DAY " +
+                                $"AND project.pid = {pid}");
+
+                                SendReminderMailToUser(dt);
+                        }
+                    }
                 }
                 lit_msg.Text = CreateMSGString("Emails wurden versandt", "success");
+
             }
+
         }
 
-        private void SendReminderMailToUser(int id)
+        private List<int> GetUIDsWithinTwoWeeks(int pid)
         {
-            //get the needed data for the specific id
-            DataTable dt = db.Query($"SELECT project.PID, project.date, project.name, user.EMAIL, Concat(user.GN, ' ', user.SN) as username, Concat(child.GN, ' ', child.SN) as childname " +
-                  $"FROM project INNER JOIN participation " +
-                  $"ON participation.PID = project.PID " +
-                  $"INNER JOIN child ON participation.CID = child.cid " +
-                  $"INNER JOIN user ON user.UID = child.UID " +
-                  $"WHERE user.uid = {id} " +
-                  $"AND project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 14 DAY");
+            DataTable dt = db.Query("SELECT user.UID " +
+                "FROM project INNER JOIN participation " +
+                "ON participation.PID = project.PID " +
+                "INNER JOIN child ON participation.CID = child.cid " +
+                "INNER JOIN user ON user.UID = child.UID " +
+                "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 14 DAY " +
+                $"AND project.pid = {pid}");
 
+            List<int> ids = new List<int>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                int item = (int)dt.Rows[i]["uid"];
+                if (ids.Contains(item) == false)
+                    ids.Add(item);
+            }
+
+            return ids;
+        }
+
+        private bool CheckIfIDExists(int pid, int uid)
+        {
+            DataTable dt = db.Query("SELECT participation.cid " +
+                               "FROM project INNER JOIN participation " +
+                               "ON participation.PID = project.PID " +
+                               "INNER JOIN child ON participation.CID = child.cid " +
+                               "INNER JOIN user ON user.UID = child.UID " +
+                               "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 14 DAY " +
+                               $"AND project.pid = {pid} AND user.uid = {uid}");
+
+            return dt.Rows.Count != 0;
+        }
+
+        private void SendReminderMailToUser(DataTable dt)
+        {
 
             string body = $"Erinnerungsmail für das Projekt {dt.Rows[0]["name"]}\n";
             body += $"Dieses Projekt findet am {Convert.ToDateTime(dt.Rows[0]["date"]).ToString("dd/MM/yyyy")} statt\n";
@@ -100,58 +146,65 @@ namespace Ferienspaß.Pages
 
         }
 
-        private List<int> GetUIDsWithinTwoWeeks()
-        {
-
-            //get all participation user IDs
-            DataTable dt = db.Query("SELECT user.UID " +
-                "FROM project INNER JOIN participation " +
-                "ON participation.PID = project.PID " +
-                "INNER JOIN child ON participation.CID = child.cid " +
-                "INNER JOIN user ON user.UID = child.UID " +
-                "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 7 DAY");
-
-            List<int> ids = new List<int>();
-
-            //only add the items, which are not yet in the list
-            for(int i = 0; i < dt.Rows.Count; i++)
-            {
-                int item = (int)dt.Rows[i]["uid"];
-                if (ids.Contains(item) == false)
-                    ids.Add(item);
-            }
-
-            return ids;
-        }
 
         protected void btnDelete_Click(object sender, EventArgs e)
         {
-            List<int> userIDs = GetUIDsWithinOneWeekNotPaid();
+            List<int> projectIDs = GetProjectIDsWithinPeriod(7);
 
-            if(userIDs.Count == 0)
+            if(projectIDs.Count == 0)
                 lit_msg.Text = CreateMSGString("Es gibt keine nicht bezahlten Anmeldungen", "warning");
+
             else
             {
-                foreach (var id in userIDs)
+                foreach (var pid in projectIDs)
                 {
-                    //command to get the data
-                    DataTable dt = db.Query("SELECT participation.cid, project.name, project.DATE,  participation.paid, " +
-                        "user.EMAIL, Concat(user.GN, ' ', user.SN) as username, Concat(child.GN, ' ', child.SN) as childname " +
-                        "FROM project INNER JOIN participation " +
-                        "ON participation.PID = project.PID " +
-                        "INNER JOIN child ON participation.CID = child.cid " +
-                        "INNER JOIN user ON user.UID = child.UID " +
-                        "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 7 DAY " +
-                        $"AND user.uid = {id} AND paid = 0");
+                    List<int> userIDs = GetUIDsWithinOneWeekNotPaid(pid);
 
-                    //deletes the participation from the database
-                    DeleteParticipations(dt);
+                    foreach (var id in userIDs)
+                    {
+                        //command to get the data
+                        DataTable dt = db.Query("SELECT participation.cid, project.name, project.DATE, project.pid , participation.paid, " +
+                            "user.EMAIL, Concat(user.GN, ' ', user.SN) as username, Concat(child.GN, ' ', child.SN) as childname " +
+                            "FROM project INNER JOIN participation " +
+                            "ON participation.PID = project.PID " +
+                            "INNER JOIN child ON participation.CID = child.cid " +
+                            "INNER JOIN user ON user.UID = child.UID " +
+                            "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 7 DAY " +
+                            $"AND user.uid = {id} AND paid = 0 AND project.pid = {pid}");
 
-                    //send mail
-                    SendDeletedMailToUser(dt);
+                        //deletes the participation from the database
+                        DeleteParticipations(dt);
+
+                        //send mail
+                        SendDeletedMailToUser(dt);
+                    }
+                    lit_msg.Text = CreateMSGString("Anmeldungen wurden gelöscht", "success");
                 }
-                lit_msg.Text = CreateMSGString("Anmeldungen wurden gelöscht", "success");
             }
+
+        }
+
+        private List<int> GetProjectIDsWithinPeriod(int days)
+        {
+            DataTable dt = db.Query("SELECT project.pid " +
+                       "FROM project INNER JOIN participation " +
+                       "ON participation.PID = project.PID " +
+                       "INNER JOIN child ON participation.CID = child.cid " +
+                       "INNER JOIN user ON user.UID = child.UID " +
+                       $"WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL {days} DAY");
+
+            List<int> projectIDs = new List<int>();
+
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                int item = (int)dt.Rows[i]["pid"];
+                if (projectIDs.Contains(item) == false)
+                    projectIDs.Add(item);
+
+            }
+
+            return projectIDs;
+
         }
 
         private void DeleteParticipations(DataTable dt)
@@ -159,7 +212,7 @@ namespace Ferienspaß.Pages
             //delete every participation for child, which is not paid
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                db.Query($"DELETE FROM participation WHERE cid = {dt.Rows[i]["cid"]}");
+                db.Query($"DELETE FROM participation WHERE cid = {dt.Rows[i]["cid"]} AND pid = {dt.Rows[i]["pid"]}");
             }
         }
 
@@ -177,7 +230,7 @@ namespace Ferienspaß.Pages
             db.SendMail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], "Löschung Ihrer Anmeldung", body);
         }
 
-        private List<int> GetUIDsWithinOneWeekNotPaid()
+        private List<int> GetUIDsWithinOneWeekNotPaid(int pid)
         {
             DataTable dt = db.Query("SELECT user.UID " +
                   "FROM project INNER JOIN participation " +
@@ -185,7 +238,7 @@ namespace Ferienspaß.Pages
                   "INNER JOIN child ON participation.CID = child.cid " +
                   "INNER JOIN user ON user.UID = child.UID " +
                   "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 7 DAY " +
-                  "AND paid = 0");
+                  $"AND paid = 0 AND project.pid = {pid}");
 
             List<int> ids = new List<int>();
 

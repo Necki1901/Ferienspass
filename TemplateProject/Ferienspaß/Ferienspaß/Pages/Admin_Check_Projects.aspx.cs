@@ -113,9 +113,8 @@ namespace Ferienspaß.Pages
                     ids.Add(item);
             }
 
-            //sendMail
-            db.SendHTMLEmail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], db.GetPortalOption("MAIL_REMINDER_SUBJECT"), body, false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
-
+          
+            return ids;
         }
 
         private bool CheckIfIDExists(int pid, int uid)
@@ -229,7 +228,9 @@ namespace Ferienspaß.Pages
                 body += $"{dt.Rows[i]["childname"]}\n";
             }
 
-            db.SendMail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], "Löschung Ihrer Anmeldung", body);
+            //sendMail
+            db.SendHTMLEmail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], db.GetPortalOption("MAIL_REGISTRATION_DELETED_SUBJECT"), body, false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
+
         }
 
         private List<int> GetUIDsWithinOneWeekNotPaid(int pid)

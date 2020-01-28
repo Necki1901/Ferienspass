@@ -432,7 +432,7 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.GID = user.UID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             DataTable dt = db.Query(sql);
             if (dt!=null)
             {

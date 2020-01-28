@@ -47,7 +47,7 @@ namespace Ferienspaß.Pages
         }
         private void Fill_gvAdminProjects()
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             bool filter = false;
 
             if ((txtEventName.Text != "" || datepicker.Text != "" || ddlGuide3.SelectedValue != "Alle") && isFiltered == true)
@@ -67,7 +67,7 @@ namespace Ferienspaß.Pages
                 if (ddlGuide3.SelectedValue != "Alle")
                 {
                     if (filter) sql += " AND ";
-                    sql += $"projectguide.GID = {ddlGuide3.SelectedValue}";
+                    sql += $"user.UID = {ddlGuide3.SelectedValue}";
                 }
             }
             DataTable dt = db.Query(sql);
@@ -85,7 +85,7 @@ namespace Ferienspaß.Pages
             ddlGuide3.Items.Add(new ListItem("Alle"));
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                ddlGuide3.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["GID"].ToString()));
+                ddlGuide3.Items.Add(new ListItem(dt.Rows[i]["SN"].ToString(), dt.Rows[i]["UID"].ToString()));
             }
             ddlGuide.SelectedValue = "Alle";
         }
@@ -139,7 +139,6 @@ namespace Ferienspaß.Pages
       
         private DataTable GetAllGuides()
         {
-            // return db.Query("SELECT SN, GID FROM projectguide");
             return db.Query("SELECT SN, UID FROM user WHERE UGID=1");
         }
            
@@ -433,7 +432,7 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, projectguide.GID, projectguide.GN, projectguide.SN  FROM project INNER JOIN projectguide ON project.GID = projectguide.GID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.GID = user.UID";
             DataTable dt = db.Query(sql);
             if (dt!=null)
             {

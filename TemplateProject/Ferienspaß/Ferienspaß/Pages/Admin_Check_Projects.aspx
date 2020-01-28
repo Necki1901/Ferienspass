@@ -19,8 +19,10 @@
         }
     </script>
 
+    <asp:Button runat="server" Text="Test" ID="btnTwoWeeks" OnClick="btnTwoWeeks_Click"/>
 
-     <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false" OnRowCommand="gvProjects_RowCommand">
+
+     <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false">
             <Columns>
                 <asp:TemplateField HeaderText="PID" Visible="false">
                     <ItemTemplate>

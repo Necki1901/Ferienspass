@@ -52,34 +52,40 @@ namespace Ferienspaß.Pages
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
         }
-
-        protected void gvProjects_RowCommand(object sender, GridViewCommandEventArgs e)
+     
+        protected void btnTwoWeeks_Click(object sender, EventArgs e)
         {
-            switch (e.CommandName)
+            foreach (GridViewRow row in gvProjects.Rows)
             {
-                case "two_weeks":
+                var id = ((Label)row.FindControl("lblPID")).Text;
 
-                    DataTable dt = db.Query("SELECT user.EMAIL, Concat(user.GN,'',user.SN) as username, Concat(child.GN,' ',child.SN) as childname " +
-                        "FROM project INNER JOIN participation " +
-                        "ON participation.PID = project.PID " +
-                        "INNER JOIN child ON participation.CID = child.cid " +
-                        "INNER JOIN user ON user.UID = child.UID " +
-                        "WHERE project.PID = 27");
-
-
-                    //klasse mailinfo deklarieren
-                    //alle infos in eine liste schreiben
-                    //Für jedes item eine mail schicken 
+                DataTable dt = db.Query($"SELECT user.EMAIL, project.name, Concat(user.GN,'',user.SN) as username, Concat(child.GN,' ',child.SN) as childname " +
+                    $"FROM project INNER JOIN participation " +
+                    $"ON participation.PID = project.PID " +
+                    $"INNER JOIN child ON participation.CID = child.cid " +
+                    $"INNER JOIN user ON user.UID = child.UID " +
+                    $"WHERE project.PID = {id}");
 
 
-                    for(int i = 0; i < dt.Rows.Count; i++)
-                    {
-                        var mailInfo = new { mail = dt.Rows[i]["email"].ToString(), username = dt.Rows[i]["username"].ToString(), childname = dt.Rows[i]["childname"].ToString()};
-                    }
 
-
-                    break;
             }
+
+
+
+
+          
+
+
+            //alle infos in eine liste schreiben
+            //Für jedes item eine mail schicken 
+
+
+
+
+            //for(int i = 0; i < dt.Rows.Count; i++)
+            //{
+            //    db.SendMail(dt.Rows[i]["email"], dt.Rows[i]["username"], "Erinnerung für dein Projekt", GetBody())
+            //}
         }
     }
 }

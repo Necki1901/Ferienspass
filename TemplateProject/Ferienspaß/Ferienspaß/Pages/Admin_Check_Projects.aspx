@@ -20,7 +20,7 @@
     </script>
 
 
-     <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false">
+     <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false" OnRowCommand="gvProjects_RowCommand">
             <Columns>
                 <asp:TemplateField HeaderText="PID" Visible="false">
                     <ItemTemplate>

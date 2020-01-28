@@ -17,6 +17,7 @@ namespace Ferienspaß
         bool isAdding;
         static bool isFiltered = false;
         static int idForUpdating;
+        int sortCounter = 0;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -24,7 +25,7 @@ namespace Ferienspaß
             lblInfo2.Text = "";
             lblInfoBottom.Text = "";
             Fill_gvAdminUsers();
-            
+
             if (!Page.IsPostBack)
             {
                 isAdding = false;
@@ -74,7 +75,7 @@ namespace Ferienspaß
         private void Fill_gvAdminUsers()
         {
             string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
-            if(isFiltered && (txtName.Text != "" || txtSurname3.Text != "" || ddlUserGroup3.SelectedValue != "Alle" || cbxConditionConfirmed.Checked || cbxConditionLocked.Checked))
+            if (isFiltered && (txtName.Text != "" || txtSurname3.Text != "" || ddlUserGroup3.SelectedValue != "Alle" || cbxConditionConfirmed.Checked || cbxConditionLocked.Checked))
             {
                 bool filter = false;
                 sql += " HAVING ";
@@ -104,10 +105,11 @@ namespace Ferienspaß
                     if (filter) sql += $" AND ";
                     else
                         sql += $"locked = 1";
-                } 
+                }
             }
             DataTable dt = db.Query(sql);
             DataView dv = new DataView(dt);
+            dv.Sort = "SN ASC";
             gvAdminUsers.DataSource = dv;
             gvAdminUsers.DataBind();
 
@@ -173,17 +175,17 @@ namespace Ferienspaß
         }
 
         protected void gvAdminUsers_RowCommand(object sender, GridViewCommandEventArgs e)
-        {          
+        {
             if (e.CommandName == "Add")
             {
                 if (e.CommandName == "Add")
                 {
                     ViewState["isAdding"] = true;
                     pnlBlockBg.Visible = true;
-                    pnlInsert.Visible = true;                   
+                    pnlInsert.Visible = true;
                 }
             }
-           
+
             if (e.CommandName == "Children")
             {
                 GridViewRow gvr1 = (GridViewRow)((ImageButton)e.CommandSource).NamingContainer;
@@ -191,11 +193,11 @@ namespace Ferienspaß
                 Response.Redirect(String.Format("Admin_Child_Administration.aspx?id={0}", userID));
             }
         }
-      
+
         protected void gvAdminUsers_RowEditing(object sender, GridViewEditEventArgs e)
         {
             pnlBlockBg.Visible = true;
-            pnlUpdate.Visible = true;           
+            pnlUpdate.Visible = true;
             idForUpdating = e.NewEditIndex;
             FillControlsWithValues();
         }
@@ -213,7 +215,7 @@ namespace Ferienspaß
             ddlLocked2.SelectedValue = dt.Rows[0]["LOCKED"].ToString();
             ddlEmailConfirmed2.SelectedValue = dt.Rows[0]["EmailConfirmed"].ToString();
         }
-     
+
         public string PwdResetHash(string firstname, string email, string uId)
         {
             string toEncode = firstname + email + uId + DateTime.Now;
@@ -223,16 +225,16 @@ namespace Ferienspaß
         {
             string errorDescription = "";
             bool valid = true;
-           
-            if (txtGivenName.Text == "" || txtSurName.Text == "" || txtPhone.Text == "" ||txtEMail.Text == "" || ddlLocked.SelectedValue == null || ddlEmailConfirmed.SelectedValue == null || ddlUserGroup.SelectedValue==null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+
+            if (txtGivenName.Text == "" || txtSurName.Text == "" || txtPhone.Text == "" || txtEMail.Text == "" || ddlLocked.SelectedValue == null || ddlEmailConfirmed.SelectedValue == null || ddlUserGroup.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
-            {                
+            {
                 //proof string values
-                if(txtGivenName.Text.Length>50 || txtSurName.Text.Length > 50 || txtPhone.Text.Length > 20 || txtEMail.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
+                if (txtGivenName.Text.Length > 50 || txtSurName.Text.Length > 50 || txtPhone.Text.Length > 20 || txtEMail.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
 
                 //proof email
 
-                if (!(txtEMail.Text.Contains("@"))){ valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
+                if (!(txtEMail.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
                 if (Convert.ToBoolean(ViewState["isAdding"]) == true)
                 {
@@ -256,10 +258,10 @@ namespace Ferienspaß
             string errorDescription = "";
             bool valid = true;
 
-            if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtPhone2.Text == ""|| txtEMail2.Text == ""|| ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtPhone2.Text == "" || txtEMail2.Text == "" || ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
-               
+
                 //proof string values
                 if (txtGivenName2.Text.Length > 50 || txtSurName2.Text.Length > 50 || txtPhone2.Text.Length > 20 || txtEMail2.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
 
@@ -317,7 +319,7 @@ namespace Ferienspaß
         protected void btnAdd_Click1(object sender, EventArgs e)//Klicken des Add buttons am Insert panel
         {
             if (Convert.ToBoolean(ViewState["isAdding"]) == true)
-            {               
+            {
                 bool valid = ValidateData();
                 if (valid == true)
                 {
@@ -354,7 +356,7 @@ namespace Ferienspaß
                     else
                     {
                         lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }                    
+                    }
                     pnlBlockBg.Visible = false;
                     pnlUpdate.Visible = false;
                     gvAdminUsers.EditIndex = -1;
@@ -390,6 +392,46 @@ namespace Ferienspaß
         {
             isFiltered = true;
             Fill_gvAdminUsers();
+        }
+
+        protected void gvAdminUsers_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
+            DataTable dt = db.Query(sql);
+            if (dt != null)
+            {
+                ViewState["sortCounter"] = Convert.ToInt32(ViewState["sortCounter"]) + 1;
+                DataView dv = new DataView(dt);
+                if (Convert.ToInt32(ViewState["sortCounter"]) % 2 == 0)
+                {
+                    e.SortDirection = SortDirection.Ascending;
+                }
+                else
+                {
+                    e.SortDirection = SortDirection.Descending;
+                }
+                dv.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+                gvAdminUsers.DataSource = dv;
+                gvAdminUsers.DataBind();
+            }
+        }
+
+        private string ConvertSortDirectionToSql(SortDirection sortDirection)
+        {
+            string newSortDirection = String.Empty;
+
+            switch (sortDirection)
+            {
+                case SortDirection.Ascending:
+                    newSortDirection = "ASC";
+                    break;
+
+                case SortDirection.Descending:
+                    newSortDirection = "DESC";
+                    break;
+            }
+
+            return newSortDirection;
         }
     }
 }

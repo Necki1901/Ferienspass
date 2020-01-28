@@ -84,9 +84,9 @@
         </div>
     </div>
     <div>
-         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7">
+         <asp:GridView ID="gvAdminUsers" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="UID" EnableViewState="False" CssClass="table table-bordered" OnRowCommand="gvAdminUsers_RowCommand" OnRowEditing="gvAdminUsers_RowEditing" OnRowDeleting="gvAdminUsers_RowDeleting" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminUsers_PageIndexChanging" PageSize="7" OnSorting="gvAdminUsers_Sorting">
                 <Columns>
-                    <asp:TemplateField HeaderText="Vorname">
+                    <asp:TemplateField HeaderText="Vorname" SortExpression="GN">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateUserGN" runat="server" Text='<%# Bind("GN") %>'></asp:TextBox>
                         </EditItemTemplate>
@@ -94,7 +94,7 @@
                             <asp:Label ID="lblItemTemplateUserGN" runat="server" Text='<%# Eval("GN") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Nachname">
+                    <asp:TemplateField HeaderText="Nachname" SortExpression="SN">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateUserSN" runat="server" Text='<%# Bind("SN") %>'></asp:TextBox>
                         </EditItemTemplate>

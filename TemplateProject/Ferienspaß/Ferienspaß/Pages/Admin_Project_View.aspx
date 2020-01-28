@@ -158,7 +158,7 @@
                     </asp:TemplateField>
                      <asp:TemplateField HeaderText="ID_Verantw.">
                          <ItemTemplate>
-                            <asp:Label ID="lblItemTemplateProjectGuideID" runat="server" Text='<%# Eval("GID") %>'></asp:Label>
+                            <asp:Label ID="lblItemTemplateProjectGuideId" runat="server" Text='<%# Eval("UID") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Verantwortlicher">

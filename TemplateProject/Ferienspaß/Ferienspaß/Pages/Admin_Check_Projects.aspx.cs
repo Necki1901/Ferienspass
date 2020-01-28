@@ -133,13 +133,13 @@ namespace Ferienspaß.Pages
         private void SendReminderMailToUser(DataTable dt)
         {
 
-            string body = $"Erinnerungsmail für das Projekt {dt.Rows[0]["name"]}\n";
-            body += $"Dieses Projekt findet am {Convert.ToDateTime(dt.Rows[0]["date"]).ToString("dd/MM/yyyy")} statt\n";
-            body += "Sie Haben folgende Kinder zu dem Projekt angemeldet:\n";
+            string body = $"Erinnerungsmail für das Projekt {dt.Rows[0]["name"]}<br>";
+            body += $"Dieses Projekt findet am {Convert.ToDateTime(dt.Rows[0]["date"]).ToString("dd/MM/yyyy")} statt<br>";
+            body += "Sie Haben folgende Kinder zu dem Projekt angemeldet:<br>";
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                body += $"{dt.Rows[i]["childname"]}\n";
+                body += $"{dt.Rows[i]["childname"]}<br>";
             }
 
             //sendMail
@@ -220,12 +220,12 @@ namespace Ferienspaß.Pages
         private void SendDeletedMailToUser(DataTable dt)
         {
             string body = $"Ihre Anmeldung für das Projekt {dt.Rows[0]["name"]} am {Convert.ToDateTime(dt.Rows[0]["date"]).ToString("dd/MM/yyyy")} wurde gelöscht, " +
-                $"da Sie nicht rechtzeitig bezahlt haben!\n";
-            body += "folgende Anmeldungen sind betroffen:\n";
+                $"da Sie nicht rechtzeitig bezahlt haben!<br>";
+            body += "folgende Anmeldungen sind betroffen:<br>";
 
             for (int i = 0; i < dt.Rows.Count; i++)
             {
-                body += $"{dt.Rows[i]["childname"]}\n";
+                body += $"{dt.Rows[i]["childname"]}<br>";
             }
 
             //sendMail

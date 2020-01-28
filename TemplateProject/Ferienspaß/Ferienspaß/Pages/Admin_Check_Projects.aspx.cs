@@ -55,37 +55,61 @@ namespace Ferienspaß.Pages
      
         protected void btnTwoWeeks_Click(object sender, EventArgs e)
         {
-            foreach (GridViewRow row in gvProjects.Rows)
+            List<int> userIDs = GetUIDsWithinTwoWeeks();
+
+            foreach (var id in userIDs)
             {
-                var id = ((Label)row.FindControl("lblPID")).Text;
+                SendMailToUser(id);
+            }
+        }
 
-                DataTable dt = db.Query($"SELECT user.EMAIL, project.name, Concat(user.GN,'',user.SN) as username, Concat(child.GN,' ',child.SN) as childname " +
-                    $"FROM project INNER JOIN participation " +
-                    $"ON participation.PID = project.PID " +
-                    $"INNER JOIN child ON participation.CID = child.cid " +
-                    $"INNER JOIN user ON user.UID = child.UID " +
-                    $"WHERE project.PID = {id}");
+        private void SendMailToUser(int id)
+        {
+            //get the needed data for the specific id
+            DataTable dt = db.Query($"SELECT project.PID, project.date, project.name, user.EMAIL, Concat(user.GN, ' ', user.SN) as username, Concat(child.GN, ' ', child.SN) as childname " +
+                  $"FROM project INNER JOIN participation " +
+                  $"ON participation.PID = project.PID " +
+                  $"INNER JOIN child ON participation.CID = child.cid " +
+                  $"INNER JOIN user ON user.UID = child.UID " +
+                  $"WHERE user.uid = {id} " +
+                  $"AND project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 14 DAY");
 
 
+            string body = $"Erinnerungsmail für das Projekt {dt.Rows[0]["name"]}\n";
+            body += $"Dieses Projekt findet am {Convert.ToDateTime(dt.Rows[0]["date"]).ToString("dd/MM/yyyy")} statt\n";
+            body += "Sie Haben folgende Kinder zu dem Projekt angemeldet:\n";
 
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                body += $"{dt.Rows[i]["childname"]}\n";
             }
 
+            //sendMail
+            db.SendMail((string)dt.Rows[0]["email"], (string)dt.Rows[0]["username"], "Erinnerung für dein Projekt", body);
+        }
+
+        private List<int> GetUIDsWithinTwoWeeks()
+        {
+            List<int> ids = new List<int>();
+
+            //get all participation user IDs
+            DataTable dt = db.Query("SELECT user.UID " +
+                "FROM project INNER JOIN participation " +
+                "ON participation.PID = project.PID " +
+                "INNER JOIN child ON participation.CID = child.cid " +
+                "INNER JOIN user ON user.UID = child.UID " +
+                "WHERE project.DATE > NOW() AND project.DATE < NOW() + INTERVAL 14 DAY");
 
 
+            //only add the items, which are not yet in the list
+            for(int i = 0; i < dt.Rows.Count; i++)
+            {
+                int item = (int)dt.Rows[i]["uid"];
+                if (ids.Contains(item) == false)
+                    ids.Add(item);
+            }
 
-          
-
-
-            //alle infos in eine liste schreiben
-            //Für jedes item eine mail schicken 
-
-
-
-
-            //for(int i = 0; i < dt.Rows.Count; i++)
-            //{
-            //    db.SendMail(dt.Rows[i]["email"], dt.Rows[i]["username"], "Erinnerung für dein Projekt", GetBody())
-            //}
+            return ids;
         }
     }
 }

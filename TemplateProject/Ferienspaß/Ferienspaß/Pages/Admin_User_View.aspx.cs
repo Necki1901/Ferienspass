@@ -14,7 +14,6 @@ namespace Ferienspaß
     public partial class Admin_User_View : System.Web.UI.Page
     {
         CsharpDB db = new CsharpDB();
-        bool isAdding;
         static bool isFiltered = false;
         static int idForUpdating;
         int sortCounter = 0;
@@ -28,7 +27,6 @@ namespace Ferienspaß
 
             if (!Page.IsPostBack)
             {
-                isAdding = false;
                 FillDdl();
                 Fill_ddlUserGroup3();
             }
@@ -63,10 +61,12 @@ namespace Ferienspaß
                 ddlUserGroup.Items.Add(li);
                 ddlUserGroup2.Items.Add(li);
             }
+            //kann man eigentlich entfernen, da es beim einfügen so übernommen wird
             ddlUserGroup2.DataValueField = "UGID";
             ddlUserGroup2.DataTextField = "DESCRIPTION";
             ddlUserGroup.DataValueField = "UGID";
             ddlUserGroup.DataTextField = "DESCRIPTION";
+            //
 
             ddlLocked.Items.Add(new ListItem("Ja","1"));
             ddlLocked.Items.Add(new ListItem("Nein", "0"));
@@ -76,26 +76,19 @@ namespace Ferienspaß
             ddlEmailConfirmed.Items.Add(new ListItem("Nein", "0"));
             ddlEmailConfirmed2.Items.Add(new ListItem("Ja", "1"));
             ddlEmailConfirmed2.Items.Add(new ListItem("Nein", "0"));
-
-            //ddlLocked.Items.Add("1");
-            //ddlLocked.Items.Add("0");
-            //ddlLocked2.Items.Add("1");
-            //ddlLocked2.Items.Add("0");
-            //ddlEmailConfirmed.Items.Add("1");
-            //ddlEmailConfirmed.Items.Add("0");
-            //ddlEmailConfirmed2.Items.Add("1");
-            //ddlEmailConfirmed2.Items.Add("0");
-
         }
 
         private void Fill_gvAdminUsers()
         {
             string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
+            
+            //überprüfen ob es einen vorhandenen Filter gibt
             if (isFiltered && (txtName.Text != "" || txtSurname3.Text != "" || ddlUserGroup3.SelectedValue != "Alle" || cbxConditionConfirmed.Checked || cbxConditionLocked.Checked))
             {
                 bool filter = false;
                 sql += " HAVING ";
 
+                //einzelne Filter werden hinzugefügt
                 if (txtName.Text != "")
                 {
                     sql += $"GN LIKE '{txtName.Text}%'";
@@ -139,12 +132,8 @@ namespace Ferienspaß
         {
             if (e.CommandName == "Add")
             {
-                if (e.CommandName == "Add")
-                {
-                    ViewState["isAdding"] = true;
-                    pnlBlockBg.Visible = true;
-                    pnlInsert.Visible = true;
-                }
+                pnlBlockBg.Visible = true;
+                pnlInsert.Visible = true;
             }
 
             if (e.CommandName == "Children")
@@ -197,16 +186,8 @@ namespace Ferienspaß
 
                 if (!(txtEMail.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
-                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
-                {
-                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail.Text}'";
-                    db.Connection.Open();
-                    OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
-                    int amount = Convert.ToInt32(cmd.ExecuteScalar());
-                    db.Connection.Close();
-
-                    if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
-                }
+                int amount = Convert.ToInt32(db.ExecuteScalar($"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail.Text}'"));
+                if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
 
             }
             lblInfo.Text = errorDescription;
@@ -222,23 +203,14 @@ namespace Ferienspaß
             if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtPhone2.Text == "" || txtEMail2.Text == "" || ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
-
                 //proof string values
                 if (txtGivenName2.Text.Length > 50 || txtSurName2.Text.Length > 50 || txtPhone2.Text.Length > 20 || txtEMail2.Text.Length > 70) { valid = false; errorDescription += "NAME, TELEFON oder MAIL-Format ist ungültig!  "; }
 
                 //proof email
                 if (!(txtEMail2.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
-                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
-                {
-                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail2.Text}'";
-                    db.Connection.Open();
-                    OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
-                    int amount = Convert.ToInt32(cmd.ExecuteScalar());
-                    db.Connection.Close();
-
-                    if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
-                }
+                int amount = Convert.ToInt32(db.ExecuteScalar($"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail2.Text}'"));
+                if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
 
             }
             lblInfo.Text = errorDescription;
@@ -279,50 +251,41 @@ namespace Ferienspaß
 
         protected void btnAdd_Click1(object sender, EventArgs e)//Klicken des Add buttons am Insert panel
         {
-            if (Convert.ToBoolean(ViewState["isAdding"]) == true)
+            bool valid = ValidateData();
+            if (valid == true)
             {
-                bool valid = ValidateData();
-                if (valid == true)
+                if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", txtGivenName.Text, txtSurName.Text, txtSurName.Text, txtEMail.Text, ddlLocked.SelectedValue, ddlEmailConfirmed.SelectedValue, ddlUserGroup.SelectedValue) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO user (GN, SN, PHONE, EMAIL, LOCKED, EmailConfirmed, UGID) Values(?,?,?,?,?,?,?)", txtGivenName.Text, txtSurName.Text, txtSurName.Text, txtEMail.Text, ddlLocked.SelectedValue, ddlEmailConfirmed.SelectedValue, ddlUserGroup.SelectedValue) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
-                    {
-                        lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
-                    }
-                    else
-                    {
-                        lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }
-                    Fill_gvAdminUsers();
-                    ViewState["isAdding"] = false;
-                    pnlBlockBg.Visible = false;
-                    pnlInsert.Visible = false;
+                    lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                 }
+                else
+                {
+                    lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
+                }
+                Fill_gvAdminUsers();
+                pnlBlockBg.Visible = false;
+                pnlInsert.Visible = false;
             }
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)//Klicken des Update Buttons am update panel
         {
-            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
+            int id = Convert.ToInt32(((Label)gvAdminUsers.Rows[idForUpdating].FindControl("lblItemTemplateUserID")).Text);
+            bool valid = ValidateData2();
+            if (valid == true)
             {
-                int id;
-
-                id = Convert.ToInt32(((Label)gvAdminUsers.Rows[idForUpdating].FindControl("lblItemTemplateUserID")).Text);
-                bool valid = ValidateData2();
-                if (valid == true)
+                if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", txtGivenName2.Text, txtSurName2.Text, txtPhone2.Text, txtEMail2.Text, ddlUserGroup2.SelectedValue, ddlLocked2.SelectedValue, ddlEmailConfirmed2.SelectedValue, id) > 0)
                 {
-                    if (db.ExecuteNonQuery("UPDATE user SET GN = ?, SN = ?, PHONE = ?, EMAIL = ?, UGID = ?, LOCKED = ?, EmailConfirmed = ? WHERE UID = ?", txtGivenName2.Text, txtSurName2.Text, txtPhone2.Text, txtEMail2.Text, ddlUserGroup2.SelectedValue, ddlLocked2.SelectedValue, ddlEmailConfirmed2.SelectedValue, id) > 0)
-                    {
-                        lblInfoBottom.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
-                    }
-                    else
-                    {
-                        lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
-                    }
-                    pnlBlockBg.Visible = false;
-                    pnlUpdate.Visible = false;
-                    gvAdminUsers.EditIndex = -1;
-                    Fill_gvAdminUsers();
+                    lblInfoBottom.Text = $"<span class='success'> Datensatz aktualisiert! </span>";
                 }
+                else
+                {
+                    lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
+                }
+                pnlBlockBg.Visible = false;
+                pnlUpdate.Visible = false;
+                gvAdminUsers.EditIndex = -1;
+                Fill_gvAdminUsers();
             }
         }
 
@@ -357,7 +320,7 @@ namespace Ferienspaß
 
         protected void gvAdminUsers_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";
+            string sql = "SELECT user.UID, user.GN, user.SN, user.PHONE, user.EMAIL, user.LOCKED, user.EmailConfirmed, usergroup.UGID, usergroup.DESCRIPTION FROM user INNER JOIN usergroup ON user.UGID = usergroup.UGID";      
             DataTable dt = db.Query(sql);
             if (dt != null)
             {
@@ -391,7 +354,6 @@ namespace Ferienspaß
                     newSortDirection = "DESC";
                     break;
             }
-
             return newSortDirection;
         }
     }

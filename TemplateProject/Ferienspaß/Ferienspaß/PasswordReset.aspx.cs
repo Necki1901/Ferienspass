@@ -72,7 +72,9 @@ namespace Ferienspaß {
                     if (db.ExecuteNonQuery("INSERT INTO pwdrecovery SET OnUID=?,RecoveryHash=?,ExpireAt=?;",u.Rows[0]["UID"].ToString(),resetHash,DateTime.Now.AddMinutes(5)) > 0) {
                         //Erfolg
                         CsharpDB db = new CsharpDB();
-                        bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort zurücksetzen", "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/PasswordReset.aspx?hash=" + resetHash);
+                        
+                        string url = "http://" + HttpContext.Current.Request.Url.Host + ":" + HttpContext.Current.Request.Url.Port + "/PasswordReset.aspx?hash=" + resetHash;
+                        bool sendHtmlEmail = db.SendHTMLEmail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), db.GetPortalOption("MAIL_PWD_RESET_SUBJECT"), db.GetPortalOption("MAIL_PWD_RESET_BODY"), true, db.GetPortalOption("MAIL_PWD_RESET_BTN_TEXT"), url, "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
                         grp_user.Visible = false;
                         btn_login.Visible = false;
                         lit_msg.Text = CreateMSGString("Eine E-Mail mit dem Link zum erstellen eines neuen Passworts wurde an Ihre hinterlegte E-Mail Adresse gesendet! <strong>Achtung, dieser Link ist nur 5 Minuten gültig!</strong>", "success");
@@ -111,7 +113,8 @@ namespace Ferienspaß {
 
                                 DataTable u = db.Query("SELECT GN,EMAIL,SN FROM user WHERE UID LIKE ? LIMIT 1", PwdResetUserID);
                                 if (u.Rows.Count > 0) {
-                                    bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort wurde geändert!", "Ihr Passwort wurde soeben geändert!");
+                                    //bool sentEmail = db.SendMail(u.Rows[0]["EMAIL"].ToString(), u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), "Passwort wurde geändert!", "");
+                                    db.SendHTMLEmail((string)u.Rows[0]["email"], u.Rows[0]["GN"].ToString() + " " + u.Rows[0]["SN"].ToString(), db.GetPortalOption("MAIL_PWD_CHANGED_SUBJECT"), db.GetPortalOption("MAIL_PWD_CHANGED_BODY"), false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
                                 }
 
                                 lit_msg.Text = CreateMSGString("Das Passwort wurde erfolgreich geändert!", "success");

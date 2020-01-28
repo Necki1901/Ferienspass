@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Web.Security;
 using System.Web.UI.WebControls;
 
 namespace Ferienspaß {
@@ -154,7 +155,10 @@ namespace Ferienspaß {
         }
 
         protected void btn_back_Click(object sender, EventArgs e) {
-            Response.Redirect("Pages/User_Project_View.aspx");
+            Session["registrationMSG"] = "Bestätigen Sie ihre Email-Adresse um fortzufahren!<br>Prüfen Sie Ihr EMail-Postfach.";
+            FormsAuthentication.SignOut();
+            FormsAuthentication.RedirectToLoginPage();
+            Response.Redirect("Pages/Login.aspx");
         }
     }
 }

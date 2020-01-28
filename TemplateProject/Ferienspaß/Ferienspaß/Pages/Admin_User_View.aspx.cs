@@ -14,7 +14,6 @@ namespace Ferienspaß
     public partial class Admin_User_View : System.Web.UI.Page
     {
         CsharpDB db = new CsharpDB();
-        bool isAdding;
         static bool isFiltered = false;
         static int idForUpdating;
         int sortCounter = 0;
@@ -28,7 +27,6 @@ namespace Ferienspaß
 
             if (!Page.IsPostBack)
             {
-                isAdding = false;
                 FillDdl();
                 Fill_ddlUserGroup3();
             }
@@ -76,16 +74,6 @@ namespace Ferienspaß
             ddlEmailConfirmed.Items.Add(new ListItem("Nein", "0"));
             ddlEmailConfirmed2.Items.Add(new ListItem("Ja", "1"));
             ddlEmailConfirmed2.Items.Add(new ListItem("Nein", "0"));
-
-            //ddlLocked.Items.Add("1");
-            //ddlLocked.Items.Add("0");
-            //ddlLocked2.Items.Add("1");
-            //ddlLocked2.Items.Add("0");
-            //ddlEmailConfirmed.Items.Add("1");
-            //ddlEmailConfirmed.Items.Add("0");
-            //ddlEmailConfirmed2.Items.Add("1");
-            //ddlEmailConfirmed2.Items.Add("0");
-
         }
 
         private void Fill_gvAdminUsers()
@@ -139,12 +127,8 @@ namespace Ferienspaß
         {
             if (e.CommandName == "Add")
             {
-                if (e.CommandName == "Add")
-                {
-                    ViewState["isAdding"] = true;
                     pnlBlockBg.Visible = true;
                     pnlInsert.Visible = true;
-                }
             }
 
             if (e.CommandName == "Children")
@@ -197,16 +181,8 @@ namespace Ferienspaß
 
                 if (!(txtEMail.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
-                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
-                {
-                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail.Text}'";
-                    db.Connection.Open();
-                    OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
-                    int amount = Convert.ToInt32(cmd.ExecuteScalar());
-                    db.Connection.Close();
-
-                    if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
-                }
+                int amount = Convert.ToInt32(db.ExecuteScalar($"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail.Text}'"));
+                if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
 
             }
             lblInfo.Text = errorDescription;
@@ -229,16 +205,8 @@ namespace Ferienspaß
                 //proof email
                 if (!(txtEMail2.Text.Contains("@"))) { valid = false; errorDescription += "MAIL-Format ist ungültig!  "; }
 
-                if (Convert.ToBoolean(ViewState["isAdding"]) == true)
-                {
-                    string cmdstrg = $"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail2.Text}'";
-                    db.Connection.Open();
-                    OdbcCommand cmd = new OdbcCommand(cmdstrg, db.Connection);
-                    int amount = Convert.ToInt32(cmd.ExecuteScalar());
-                    db.Connection.Close();
-
-                    if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
-                }
+                int amount = Convert.ToInt32(db.ExecuteScalar($"SELECT COUNT(*) FROM user WHERE EMAIL='{txtEMail2.Text}'"));
+                if (amount > 0) { valid = false; errorDescription += "MAIL bereits vorhanden!"; }
 
             }
             lblInfo.Text = errorDescription;
@@ -279,8 +247,6 @@ namespace Ferienspaß
 
         protected void btnAdd_Click1(object sender, EventArgs e)//Klicken des Add buttons am Insert panel
         {
-            if (Convert.ToBoolean(ViewState["isAdding"]) == true)
-            {
                 bool valid = ValidateData();
                 if (valid == true)
                 {
@@ -293,20 +259,14 @@ namespace Ferienspaß
                         lblInfoBottom.Text = $"<span class='error'> Nichts passiert! </span>";
                     }
                     Fill_gvAdminUsers();
-                    ViewState["isAdding"] = false;
                     pnlBlockBg.Visible = false;
                     pnlInsert.Visible = false;
                 }
-            }
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)//Klicken des Update Buttons am update panel
         {
-            if (Convert.ToBoolean(ViewState["isAdding"]) == false)
-            {
-                int id;
-
-                id = Convert.ToInt32(((Label)gvAdminUsers.Rows[idForUpdating].FindControl("lblItemTemplateUserID")).Text);
+                int id = Convert.ToInt32(((Label)gvAdminUsers.Rows[idForUpdating].FindControl("lblItemTemplateUserID")).Text);
                 bool valid = ValidateData2();
                 if (valid == true)
                 {
@@ -323,7 +283,6 @@ namespace Ferienspaß
                     gvAdminUsers.EditIndex = -1;
                     Fill_gvAdminUsers();
                 }
-            }
         }
 
         protected void btnBack2_Click(object sender, EventArgs e)//Klicken Des Zurück Buttons am Update Panel

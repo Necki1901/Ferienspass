@@ -91,12 +91,26 @@ namespace Ferienspaß.Pages
                     int rowIndex = gvr.RowIndex;
 
                     string id = ((Label)gv_cancellations.Rows[rowIndex].FindControl("lblID")).Text;
-                    db.Query($"DELETE FROM cancellations WHERE cancel_id={id}");
+                    string childname = ((Label)gv_cancellations.Rows[rowIndex].FindControl("lblChild")).Text;
+
+                    if ((db.ExecuteNonQuery($"DELETE FROM cancellations WHERE cancel_id={id}") > 0))
+                    {
+                        lit_msg.Text = CreateMSGString($"Stornierung für {childname} abgeschlossen", "success");
+                    }
+                    else
+                    {
+                        lit_msg.Text = CreateMSGString($"Stornierung konnte nicht abgeschlossen werden", "danger");
+                    }
+
                     FillGvCancellations();
                     break;
             }
         }
 
+        private string CreateMSGString(string msg, string type)
+        {
+            return "<div class=\"alert alert-" + type + " mt-3 mb-1\" role=\"alert\">" + msg + "</div>";
+        }
 
 
         protected void btnSearch_Click(object sender, EventArgs e)

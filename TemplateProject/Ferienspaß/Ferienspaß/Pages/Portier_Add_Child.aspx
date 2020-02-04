@@ -23,7 +23,7 @@
 
     <asp:GridView CssClass="table table-bordered mt-2" CellSpacing="0" HorizontalAlign="Center"  ID="gvChildren" runat="server" AutoGenerateColumns="false" OnRowEditing="gvChildren_RowEditing" DataKeyNames="CID" OnRowUpdating="gvChildren_RowUpdating" OnRowCancelingEdit="gvChildren_RowCancelingEdit" OnRowDeleting="gvChildren_RowDeleting">
         <Columns>
-            <asp:TemplateField HeaderText="CID">
+            <asp:TemplateField HeaderText="CID" Visible="false">
                 <ItemTemplate>
                     <asp:Label ID="lblCID" runat="server" Text='<%# Eval("CID") %>'></asp:Label>    
                 </ItemTemplate>

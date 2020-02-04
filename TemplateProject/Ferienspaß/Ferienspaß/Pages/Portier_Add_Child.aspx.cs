@@ -145,8 +145,6 @@ namespace Ferienspaß.Pages
                 }
                 Fill_gvChildren();  
             }
-
-
         }
 
         private bool ChildHasPaidParticipation(GridViewDeleteEventArgs e, CsharpDB db)

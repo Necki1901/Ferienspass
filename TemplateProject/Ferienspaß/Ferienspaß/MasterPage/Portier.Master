@@ -55,7 +55,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="#">Ferienspaß</a>
+            <a class="navbar-brand">Ferienspaß</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li id="menu_cancellation" class="nav-item">
                 <a class="nav-link" href="Portier_Cancellations_View.aspx">Stornoansicht</a>

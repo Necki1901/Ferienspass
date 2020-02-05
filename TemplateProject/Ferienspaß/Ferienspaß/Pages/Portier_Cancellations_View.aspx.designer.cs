@@ -78,6 +78,15 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.Button btnSearch;
 
         /// <summary>
+        /// lit_msg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lit_msg;
+
+        /// <summary>
         /// gv_cancellations control.
         /// </summary>
         /// <remarks>

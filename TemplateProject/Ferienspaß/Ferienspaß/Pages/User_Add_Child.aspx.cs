@@ -124,17 +124,34 @@ namespace Ferienspaß.Pages
 
         protected void gvChildren_RowDeleting(object sender, GridViewDeleteEventArgs e)
         {
-
             CsharpDB db = new CsharpDB();
-            if (db.ExecuteNonQuery("DELETE FROM child WHERE CID=?;", Convert.ToInt32(e.Keys[0])) > 0)
+
+            if (ChildHasPaidParticipation(e, db))
             {
-                lit_msg.Text = CreateMSGString("Kind erfolgreich entfernt!", "success");
+                lit_msg.Text = CreateMSGString("Kind kann nicht entfernt werden!\n" +
+                    "Es liegt bereits eine bezahlte Anmeldung vor", "danger");
+
             }
             else
             {
-                lit_msg.Text = CreateMSGString("Fehler beim Entfernen eines Kindes!", "warning");
+                if (db.ExecuteNonQuery("DELETE FROM child WHERE CID=?;", Convert.ToInt32(e.Keys[0])) > 0)
+                {
+                    lit_msg.Text = CreateMSGString("Kind erfolgreich entfernt!", "success");
+                }
+                else
+                {
+                    lit_msg.Text = CreateMSGString("Fehler beim Entfernen eines Kindes!", "warning");
+                }
+                Fill_gvChildren();
             }
-            Fill_gvChildren();
+        }
+
+        private bool ChildHasPaidParticipation(GridViewDeleteEventArgs e, CsharpDB db)
+        {
+            var cid = ((Label)gvChildren.Rows[e.RowIndex].FindControl("lblCID")).Text;
+            DataTable dt = db.Query("SELECT * FROM participation WHERE CID=? and paid=1", cid);
+
+            return dt.Rows.Count != 0;
         }
 
         protected void btn_addChild_Click(object sender, EventArgs e)

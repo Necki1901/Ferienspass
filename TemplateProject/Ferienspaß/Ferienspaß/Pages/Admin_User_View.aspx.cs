@@ -68,12 +68,19 @@ namespace Ferienspaß
             ddlUserGroup.DataTextField = "DESCRIPTION";
             //
 
-            ddlLocked.Items.Add(new ListItem("Ja","1"));
             ddlLocked.Items.Add(new ListItem("Nein", "0"));
-            ddlLocked2.Items.Add(new ListItem("Ja", "1"));
+            ddlLocked.Items.Add(new ListItem("Ja","1"));
+            ddlLocked.SelectedValue = "0";
+
             ddlLocked2.Items.Add(new ListItem("Nein", "0"));
+            ddlLocked2.Items.Add(new ListItem("Ja", "1"));
+            ddlLocked2.SelectedValue = "0";
+
+
+
             ddlEmailConfirmed.Items.Add(new ListItem("Ja", "1"));
             ddlEmailConfirmed.Items.Add(new ListItem("Nein", "0"));
+
             ddlEmailConfirmed2.Items.Add(new ListItem("Ja", "1"));
             ddlEmailConfirmed2.Items.Add(new ListItem("Nein", "0"));
         }

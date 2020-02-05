@@ -319,7 +319,7 @@ namespace Ferienspaß
         }
 
 
-        protected void btnSearch_Click(object sender, EventArgs e)
+        protected void btnSearch_Click(object sender, EventArgs e) 
         {
             isFiltered = true;
             Fill_gvAdminUsers();

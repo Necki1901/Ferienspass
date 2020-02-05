@@ -90,7 +90,7 @@
         
     <br />
     <div>
-            <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="PID" EnableViewState="False" OnRowEditing="gvAdminProjects_RowEditing" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7" OnSorting="gvAdminProjects_Sorting">
+            <asp:GridView ID="gvAdminProjects" runat="server" Height="400px" Width="1015px" EnableViewState="false" AutoGenerateColumns="False" DataKeyNames="PID" OnRowEditing="gvAdminProjects_RowEditing" OnRowCommand="gvAdminProjects_RowCommand" OnRowDeleted="gvAdminProjects_RowDeleted" OnRowDeleting="gvAdminProjects_RowDeleting" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnPageIndexChanging="gvAdminProjects_PageIndexChanging" PageSize="7" OnSorting="gvAdminProjects_Sorting">
                 <Columns>
                     <asp:TemplateField HeaderText="Projektname" SortExpression="NAME">
                         <EditItemTemplate>
@@ -105,7 +105,12 @@
                             <asp:TextBox ID="txtEditItemTemplateProjectDesc" runat="server" Text='<%# Bind("DESCRIPTION") %>'></asp:TextBox>
                         </EditItemTemplate>
                         <ItemTemplate>
-                            <asp:Label ID="lblItemTemplateProjectDesc" runat="server" Text='<%# Eval("DESCRIPTION") %>'></asp:Label>
+                            <asp:Label ID="lblDescription" runat="server" Text='<%# Limit(Eval("DESCRIPTION"),20) %>' Tooltip='<%# Eval("Description") %>'></asp:Label>
+                              <asp:LinkButton ID="ReadMoreLinkButton" runat="server" 
+                                        Text="mehr anzeigen"
+                                        Visible='<%# SetVisibility(Eval("Description"),20) %>'
+                                        OnClick="ReadMoreLinkButton_Click">
+                              </asp:LinkButton>
                         </ItemTemplate>
                     </asp:TemplateField>
                      <asp:TemplateField HeaderText="Datum">

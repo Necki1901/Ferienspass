@@ -26,6 +26,8 @@ namespace Ferienspaß.Pages
             Fill_gvAdminProjects();
             if(!Page.IsPostBack)
             {
+                ViewState["readmore"] = false;
+
                 isAdding = false;
                 Fillddl();
                 Fill_ddlGuide3();
@@ -329,11 +331,15 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Add")
+            switch (e.CommandName)
             {
-                ViewState["isAdding"] = true;
-                pnlBlockBg.Visible = true;
-                pnlInsert.Visible = true;               
+               
+
+                case "Add":
+                    ViewState["isAdding"] = true;
+                    pnlBlockBg.Visible = true;
+                    pnlInsert.Visible = true;
+                    break;
             }
         }      
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -468,6 +474,48 @@ namespace Ferienspaß.Pages
             }
 
             return newSortDirection;
+        }
+
+        protected string Limit(object desc, int maxLength)
+        {
+            var description = (string)desc;
+            if (string.IsNullOrEmpty(description)) { return description; }
+            return description.Length <= maxLength ?
+                description : description.Substring(0, maxLength) + "...";
+        }
+
+        protected bool SetVisibility(object desc, int maxLength)
+        {
+            var description = (string)desc;
+            if (string.IsNullOrEmpty(description)) { return false; }
+            return description.Length > maxLength;
+        }
+
+        protected void ReadMoreLinkButton_Click(object sender, EventArgs e)
+        {
+            LinkButton button = (LinkButton)sender;
+            GridViewRow row = button.NamingContainer as GridViewRow;
+
+            Label lblDescription = row.FindControl("lblDescription") as Label;
+
+            if ((bool)ViewState["readmore"])
+            {
+                button.Text = "mehr anzeigen";
+                lblDescription.Text = Limit(lblDescription.Text, 20);
+                ViewState["readmore"] = false;
+            }
+            else
+            {
+                button.Text = "weniger anzeigen";
+                lblDescription.Text = lblDescription.ToolTip;
+                ViewState["readmore"] = true;
+            }
+
+           
+
+
+
+
         }
     }
 }

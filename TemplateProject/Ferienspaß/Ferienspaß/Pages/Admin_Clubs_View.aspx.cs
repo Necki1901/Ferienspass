@@ -57,7 +57,7 @@ namespace Ferienspaß.Pages
             string sql = "SELECT organisation.ORGID, organisation.NAME, organisation.STREET, organisation.NUMBER, organisation.DESCRIPTION, user.UID, user.GN, user.SN FROM organisation INNER JOIN user ON organisation.SPOKESPERSON = user.UID";
             DataTable dt = db.Query(sql);
             DataView dv = new DataView(dt);
-            dv.Sort = "SN ASC";
+            dv.Sort = "ORGID ASC";
             gvAdminClubs.DataSource = dv;
             gvAdminClubs.DataBind();
         }
@@ -88,9 +88,9 @@ namespace Ferienspaß.Pages
             if (Convert.ToBoolean(ViewState["isAdding"]) == true)
             {
                 string selectedname = ddlSpokesPerson.SelectedValue;
-               // bool valid = ValidateData();
-                //if (valid == true)
-                //{
+               bool valid = ValidateData();
+                if (valid == true)
+                {
                     if (db.ExecuteNonQuery("INSERT INTO organisation (NAME, DESCRIPTION, STREET, NUMBER, SPOKESPERSON) Values(?,?,?,?,?)", txtOrganisationName.Text, txtDescription.Text, txtOrganisationStreet.Text, txtOrganisationStreetNumber.Text, Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
@@ -103,8 +103,24 @@ namespace Ferienspaß.Pages
                     ViewState["isAdding"] = false;
                     pnlBlockBg.Visible = false;
                     pnlInsert.Visible = false;
-                //}
+                }
             }
+        }
+
+        private bool ValidateData()
+        {
+            string errorDescription = "";
+            bool valid = true;
+
+            if (txtDescription.Text == "" || txtOrganisationName.Text == "" || txtOrganisationStreet.Text == "" || txtOrganisationStreetNumber.Text == "" || ddlSpokesPerson.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            else
+            {
+                //proof string values
+                if (txtOrganisationName.Text.Length > 50 || txtDescription.Text.Length > 120 || txtOrganisationStreet.Text.Length > 50 || txtOrganisationStreetNumber.Text.Length > 5) { valid = false; errorDescription += "Vereinsnamen-, Beschreibungs- oder Anschrifts-Format ist ungültig!  "; }               
+            }
+            lblInfo.Text = errorDescription;
+            lblInfo2.Text = errorDescription;
+            return valid;
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)//Update Button auf Update PAnel
@@ -112,13 +128,13 @@ namespace Ferienspaß.Pages
             if (Convert.ToBoolean(ViewState["isAdding"]) == false)
             {
                 string selectedname = ddlSpokesPerson2.SelectedValue;
-               // bool valid = ValidateData2();
+               bool valid = ValidateData2();
                 int id;
 
                 id = Convert.ToInt32(((Label)gvAdminClubs.Rows[idForUpdating].FindControl("lblItemTemplateClubID")).Text);
 
-                //if (valid == true)
-                //{
+                if (valid == true)
+                {
                     if (db.ExecuteNonQuery("Update organisation SET NAME=?, DESCRIPTION=?, STREET=?, NUMBER=?, SPOKESPERSON=? WHERE ORGID=?", txtOrganisationName2.Text, txtDescription2.Text, txtOrganisationStreet2.Text, txtOrganisationStreetNumber2.Text, Convert.ToInt32(selectedname), id) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz geändert! </span>";
@@ -134,8 +150,24 @@ namespace Ferienspaß.Pages
                     pnlUpdate.Visible = false;
                     gvAdminClubs.DataBind();
 
-                //}
+                }
             }
+        }
+
+        private bool ValidateData2()
+        {
+            string errorDescription = "";
+            bool valid = true;
+
+            if (txtDescription2.Text == "" || txtOrganisationName2.Text == "" || txtOrganisationStreet2.Text == "" || txtOrganisationStreetNumber2.Text == "" || ddlSpokesPerson2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            else
+            {
+                //proof string values
+                if (txtOrganisationName2.Text.Length > 50 || txtDescription2.Text.Length > 120 || txtOrganisationStreet2.Text.Length > 50 || txtOrganisationStreetNumber2.Text.Length > 5) { valid = false; errorDescription += "Vereinsnamen-, Beschreibungs- oder Anschrifts-Format ist ungültig!  "; }
+            }
+            lblInfo.Text = errorDescription;
+            lblInfo2.Text = errorDescription;
+            return valid;
         }
 
         protected void gvAdminClubs_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -175,6 +207,46 @@ namespace Ferienspaß.Pages
             db.Query($"delete from organisation where ORGID = {clubID}");
             Fill_gvAdminClubs();
             lblInfoBottom.Text += "Datensatz wurde gelöscht!";
+        }
+
+        protected void gvAdminClubs_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            string sql = "SELECT organisation.ORGID, organisation.NAME, organisation.STREET, organisation.NUMBER, organisation.DESCRIPTION, user.UID, user.GN, user.SN FROM organisation INNER JOIN user ON organisation.SPOKESPERSON = user.UID";
+            DataTable dt = db.Query(sql);
+            if (dt != null)
+            {
+                ViewState["sortCounter"] = Convert.ToInt32(ViewState["sortCounter"]) + 1;
+                DataView dv = new DataView(dt);
+                if (Convert.ToInt32(ViewState["sortCounter"]) % 2 == 0)
+                {
+                    e.SortDirection = SortDirection.Ascending;
+                }
+                else
+                {
+                    e.SortDirection = SortDirection.Descending;
+                }
+                dv.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+                gvAdminClubs.DataSource = dv;
+                gvAdminClubs.DataBind();
+            }
+        }
+
+        private string ConvertSortDirectionToSql(SortDirection sortDirection)
+        {
+            string newSortDirection = String.Empty;
+
+            switch (sortDirection)
+            {
+                case SortDirection.Ascending:
+                    newSortDirection = "ASC";
+                    break;
+
+                case SortDirection.Descending:
+                    newSortDirection = "DESC";
+                    break;
+            }
+
+            return newSortDirection;
         }
     }
 }

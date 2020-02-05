@@ -2,6 +2,7 @@
 
 
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">
+    &nbsp;
     <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
     <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden"  OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
     
@@ -81,7 +82,7 @@
         </div>
     </div>--%>
     <div>
-         <asp:GridView ID="gvAdminClubs" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="ORGID" EnableViewState="False" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnRowCommand="gvAdminClubs_RowCommand" OnRowEditing="gvAdminClubs_RowEditing" OnRowDeleting="gvAdminClubs_RowDeleting" >
+         <asp:GridView ID="gvAdminClubs" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="ORGID" EnableViewState="False" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnRowCommand="gvAdminClubs_RowCommand" OnRowEditing="gvAdminClubs_RowEditing" OnRowDeleting="gvAdminClubs_RowDeleting" OnSorting="gvAdminClubs_Sorting" >
                 <Columns>
                     <asp:TemplateField HeaderText="Vereinsname" SortExpression="NAME">
                         <EditItemTemplate>

@@ -107,7 +107,7 @@ namespace Ferienspaß.Pages
 
             if (txtEventName.Text != "")
             {
-                if (filter) sql += " AND"; filter = true;
+                if (filter) sql += " AND"; else filter = true;
                 sql += $" Name Like '%{txtEventName.Text}%'";
             }
 

@@ -72,6 +72,10 @@
                  <li id="menu_check_projects" class="nav-item">
                  <a class="nav-link" href="Admin_Check_Projects.aspx">Mail Aktionen</a>
               </li>
+                </li>
+                 <li id="menu_set_discount" class="nav-item">
+                 <a class="nav-link" href="Admin_Set_Discount.aspx">Rabatt festlegen</a>
+              </li>
               <%--<li id="menu_registrations" class="nav-item">
                 <a class="nav-link" href="MyRegistrations.aspx">Meine Anmeldungen</a>
               </li>

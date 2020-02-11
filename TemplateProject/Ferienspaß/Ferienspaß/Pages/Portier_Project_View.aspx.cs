@@ -40,8 +40,7 @@ namespace Ferienspaß.Pages
             DataView dv;
             RemainingCapacity rc = new RemainingCapacity();
 
-            dt = db.Query($"SELECT * FROM project " +
-                $"WHERE date >= CURDATE()");
+            dt = db.Query($"SELECT * FROM project WHERE date > CURDATE()");
             dt = rc.GetDataTableWithRemainingCapacities(dt);
             dv = new DataView(dt);
 
@@ -77,6 +76,61 @@ namespace Ferienspaß.Pages
         {
             FormsAuthentication.SignOut();
             FormsAuthentication.RedirectToLoginPage();
+        }
+
+        protected void btnFilter_Click(object sender, EventArgs e)
+        {
+            DataTable dt;
+            DataView dv;
+            RemainingCapacity rc = new RemainingCapacity();
+            string sql;
+            bool filter = true;
+
+            if (cbTooManyParticipants.Checked == true && cbNoParticipants.Checked == true)
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING";
+                filter = false;
+            }
+            else if (cbTooManyParticipants.Checked == true)
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING remainingCapacity>0";
+            }
+            else if (cbNoParticipants.Checked == true)
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING remainingCapacity<project.CAPACITY";
+            }
+            else
+            {
+                sql = $"SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING";
+                filter = false;
+            }
+
+            if (txtEventName.Text != "")
+            {
+                if (filter) sql += " AND"; else filter = true;
+                sql += $" Name Like '%{txtEventName.Text}%'";
+            }
+
+            if (datepicker.Text != "")
+            {
+                if (filter) sql += " AND";
+                sql += $" CASE WHEN '{datepicker.Text}' > CURDATE() THEN project.date = '{datepicker.Text}' END";
+                if (Convert.ToDateTime(datepicker.Text) < DateTime.Now) lblMessage.Text = "Datum nicht möglich! Nur aktuelle Projekte anzeigbar!";
+                else lblMessage.Text = "";
+            }
+            else
+            {
+                if (filter) sql += " AND";
+                sql += " project.date > CURDATE()";
+                lblMessage.Text = "";
+            }
+
+            dt = db.Query(sql);
+            dv = new DataView(dt);
+
+
+            gv_UserView.DataSource = dv;
+            gv_UserView.DataBind();
         }
     }
 }

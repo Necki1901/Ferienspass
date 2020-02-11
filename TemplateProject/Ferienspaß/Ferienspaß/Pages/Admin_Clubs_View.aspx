@@ -82,7 +82,7 @@
         </div>
     </div>--%>
     <div>
-         <asp:GridView ID="gvAdminClubs" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="ORGID" EnableViewState="False" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnRowCommand="gvAdminClubs_RowCommand" OnRowEditing="gvAdminClubs_RowEditing" OnRowDeleting="gvAdminClubs_RowDeleting" OnSorting="gvAdminClubs_Sorting" >
+         <asp:GridView ID="gvAdminClubs" runat="server" Height="400px" Width="1015px" AutoGenerateColumns="False" DataKeyNames="ORGID" EnableViewState="False" CssClass="table table-bordered" AllowPaging="True" AllowSorting="True" OnRowCommand="gvAdminClubs_RowCommand" OnRowEditing="gvAdminClubs_RowEditing" OnRowDeleting="gvAdminClubs_RowDeleting" OnSorting="gvAdminClubs_Sorting" OnPageIndexChanging="gvAdminClubs_PageIndexChanging" >
                 <Columns>
                     <asp:TemplateField HeaderText="Vereinsname" SortExpression="NAME">
                         <EditItemTemplate>

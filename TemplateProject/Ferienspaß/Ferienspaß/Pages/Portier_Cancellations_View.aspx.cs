@@ -5,9 +5,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using System.Web.Security;
-using System.Web.UI;
 using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
 using System.Data;
 
 namespace Ferienspaß.Pages
@@ -32,10 +30,8 @@ namespace Ferienspaß.Pages
 
                 lbl_loggedInUser.Text = db.GetUserName(User.Identity.Name);
             }
-            catch (Exception ex)
-            {
-
-            }
+            catch(Exception ex) { }
+            
 
 
         }

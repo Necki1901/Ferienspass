@@ -84,21 +84,21 @@ namespace Ferienspaß.Pages
 
             if (cbTooManyParticipants.Checked == true && cbNoParticipants.Checked == true)
             {
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
             }
             else if (cbTooManyParticipants.Checked == true)
             {
                 condition = true;
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants>0";
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING remainingCapacity>0";
             }
             else if (cbNoParticipants.Checked == true)
             {
                 condition = true;
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants<project.CAPACITY";
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING remainingCapacity<project.CAPACITY";
             }
             else
             {
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
             }
 
 
@@ -111,7 +111,7 @@ namespace Ferienspaß.Pages
 
                 if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
                 {
-                    sql += $" AND project.date={datepicker.Text}";
+                    sql += $" AND project.date='{datepicker.Text}'";
                 }
             }
             else
@@ -147,5 +147,6 @@ namespace Ferienspaß.Pages
             gv_UserView.PageIndex = e.NewPageIndex;
             Fill_gv_UserView();
         }
+
     }
 }

@@ -27,7 +27,7 @@
                     <asp:CheckBox ID="cbTooManyParticipants" runat="server" Text="Keine vollen Projekte"/>
                 </div>
             </div>
-            <asp:Button ID="btnFilter" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnFilter_Click" />
+            <asp:Button ID="btnFilter" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnFilter_Click"/>
         </div>
           <br />
             <asp:GridView ID="gv_UserView" runat="server" 

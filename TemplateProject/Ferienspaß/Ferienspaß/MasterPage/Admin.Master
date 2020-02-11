@@ -55,7 +55,7 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
-            <a class="navbar-brand" href="#">Ferienspaß</a>
+            <a class="navbar-brand">Ferienspaß</a>
             <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
               <li id="menu_projects" class="nav-item">
                 <a class="nav-link" href="Admin_Project_View.aspx">Projekte Verwalten</a>
@@ -65,8 +65,11 @@
               </li>
               <li id="menu_participants" class="nav-item">
                 <a class="nav-link" href="Admin_Participants_View.aspx">Anmeldungen verwalten</a>
+              </li>           
+                <li id="menu_clubs" class="nav-item">
+                <a class="nav-link" href="Admin_Clubs_View.aspx">Vereine Verwalten</a>
               </li>
-              <li id="menu_check_projects" class="nav-item">
+                 <li id="menu_check_projects" class="nav-item">
                  <a class="nav-link" href="Admin_Check_Projects.aspx">Mail Aktionen</a>
               </li>
               <%--<li id="menu_registrations" class="nav-item">

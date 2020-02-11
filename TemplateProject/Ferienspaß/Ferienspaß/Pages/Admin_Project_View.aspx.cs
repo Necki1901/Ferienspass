@@ -26,6 +26,8 @@ namespace Ferienspaß.Pages
             Fill_gvAdminProjects();
             if(!Page.IsPostBack)
             {
+                ViewState["readmore"] = false;
+
                 isAdding = false;
                 Fillddl();
                 Fill_ddlGuide3();
@@ -47,7 +49,7 @@ namespace Ferienspaß.Pages
         }
         private void Fill_gvAdminProjects()
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
+            string sql = "SELECT project.PID, project.DATE, project.STREET, project.START, project.ZIPCODE, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             bool filter = false;
 
             if ((txtEventName.Text != "" || datepicker.Text != "" || ddlGuide3.SelectedValue != "Alle") && isFiltered == true)
@@ -165,7 +167,7 @@ namespace Ferienspaß.Pages
             
 
             //Proof null-values
-            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtPlace.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtZipCode.Text=="") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 txtDate.Text = ChangeDateFormat();
@@ -242,7 +244,7 @@ namespace Ferienspaß.Pages
             
 
             //Proof null-values
-            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtPlace2.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtZipCode2.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 txtDate2.Text = ChangeDateFormat2();              
@@ -329,11 +331,15 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-            if (e.CommandName == "Add")
+            switch (e.CommandName)
             {
-                ViewState["isAdding"] = true;
-                pnlBlockBg.Visible = true;
-                pnlInsert.Visible = true;               
+               
+
+                case "Add":
+                    ViewState["isAdding"] = true;
+                    pnlBlockBg.Visible = true;
+                    pnlInsert.Visible = true;
+                    break;
             }
         }      
         protected void btnAdd_Click(object sender, EventArgs e)
@@ -432,7 +438,7 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.ZIPCODE, project.STREET, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             DataTable dt = db.Query(sql);
             if (dt!=null)
             {
@@ -468,6 +474,48 @@ namespace Ferienspaß.Pages
             }
 
             return newSortDirection;
+        }
+
+        protected string Limit(object desc, int maxLength)
+        {
+            var description = (string)desc;
+            if (string.IsNullOrEmpty(description)) { return description; }
+            return description.Length <= maxLength ?
+                description : description.Substring(0, maxLength) + "...";
+        }
+
+        protected bool SetVisibility(object desc, int maxLength)
+        {
+            var description = (string)desc;
+            if (string.IsNullOrEmpty(description)) { return false; }
+            return description.Length > maxLength;
+        }
+
+        protected void ReadMoreLinkButton_Click(object sender, EventArgs e)
+        {
+            LinkButton button = (LinkButton)sender;
+            GridViewRow row = button.NamingContainer as GridViewRow;
+
+            Label lblDescription = row.FindControl("lblDescription") as Label;
+
+            if ((bool)ViewState["readmore"])
+            {
+                button.Text = "mehr anzeigen";
+                lblDescription.Text = Limit(lblDescription.Text, 20);
+                ViewState["readmore"] = false;
+            }
+            else
+            {
+                button.Text = "weniger anzeigen";
+                lblDescription.Text = lblDescription.ToolTip;
+                ViewState["readmore"] = true;
+            }
+
+           
+
+
+
+
         }
     }
 }

@@ -168,6 +168,24 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.TextBox txtPlace;
 
         /// <summary>
+        /// lblStreet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStreet;
+
+        /// <summary>
+        /// txtStreet control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStreet;
+
+        /// <summary>
         /// lblNumber control.
         /// </summary>
         /// <remarks>
@@ -184,6 +202,24 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumber;
+
+        /// <summary>
+        /// LblZipCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label LblZipCode;
+
+        /// <summary>
+        /// txtZipCode control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtZipCode;
 
         /// <summary>
         /// lblCapacity control.
@@ -366,6 +402,24 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.TextBox txtPlace2;
 
         /// <summary>
+        /// lblStreet2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblStreet2;
+
+        /// <summary>
+        /// txtStreet2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtStreet2;
+
+        /// <summary>
         /// lblNumber2 control.
         /// </summary>
         /// <remarks>
@@ -382,6 +436,24 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtNumber2;
+
+        /// <summary>
+        /// lblZipCode2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblZipCode2;
+
+        /// <summary>
+        /// txtZipCode2 control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtZipCode2;
 
         /// <summary>
         /// lblCapacity2 control.

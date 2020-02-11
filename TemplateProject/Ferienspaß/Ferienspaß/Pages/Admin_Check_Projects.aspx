@@ -19,9 +19,11 @@
         }
     </script>
 
-    <asp:Button runat="server" Text="Erinnerungsmail senden" ID="btnTwoWeeks" OnClick="btnTwoWeeks_Click"/>
-    <asp:Button runat="server" Text="Nicht bezahlte Löschen" ID="btnDelete" OnClick="btnDelete_Click"/>
 
+    <asp:Button runat="server" CssClass="btn btn-primary" Text="Erinnerungsmail senden!" ID="btnTwoWeeks" OnClick="btnTwoWeeks_Click"/>
+    <asp:Button runat="server" CssClass="btn btn-primary" Text="Nicht bezahlte  löschen!" ID="btnDelete" OnClick="btnDelete_Click"/>
+
+    <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
 
      <asp:GridView CssClass="table table-bordered" ID="gvProjects" runat="server" AutoGenerateColumns="false">
             <Columns>
@@ -45,6 +47,5 @@
              </Columns>
         </asp:GridView>
 
-        <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
 
 </asp:Content>

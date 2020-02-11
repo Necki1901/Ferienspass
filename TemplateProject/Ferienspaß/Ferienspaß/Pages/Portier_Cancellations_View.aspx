@@ -8,6 +8,16 @@
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
+
+     <script>
+        function alertCompeteCancellation() {
+            if (confirm("Möchten Sie die Stornierung wirklich abschließen?")) {
+                return true;
+            }
+            return false;
+        }
+    </script>
+
     <div>
         <div class="form-group">
             <div class="form-line">
@@ -29,6 +39,11 @@
             <asp:Button ID="btnSearch" runat="server" Text="Suchen" CssClass="btn btn-primary" OnClick="btnSearch_Click" />
         </div>
     </div>
+
+     <div>
+        <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
+    </div>
+
      <asp:GridView CssClass="table table-bordered" ID="gv_cancellations" Autopost ="true" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_cancellations_RowCommand">
          <Columns>
              <asp:TemplateField HeaderText="ID" Visible="false">
@@ -66,9 +81,10 @@
                     <asp:Label ID="lblDate" runat="server" Text='<%# Convert.ToDateTime(Eval("date")).ToString("dd/MM/yyyy") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+
               <asp:TemplateField HeaderText="Aktion">
                 <ItemTemplate>
-                    <asp:Button runat="server" CssClass="btn btn-primary" CommandName="completed" Text="Stornierung abschließen"/>
+                    <asp:Button runat="server" OnClientClick="return alertCompeteCancellation()" CssClass="btn btn-primary" CommandName="completed" Text="Stornierung abschließen"/>
                 </ItemTemplate>
             </asp:TemplateField>
          </Columns>

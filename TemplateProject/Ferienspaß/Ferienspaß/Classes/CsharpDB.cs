@@ -233,6 +233,11 @@ namespace Ferienspaß
             }
         }
 
+        internal void SendMail(string v1, string v2, string v3, string body)
+        {
+            throw new NotImplementedException();
+        }
+
         public static string GetHTMLEmailContent(string action,string name, bool needButton, string mainText, string url, string btnText, string hinweis, string schlussformel, string kleingedruckt) {
 
             CsharpDB db = new CsharpDB();

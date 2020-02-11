@@ -35,6 +35,8 @@
                         <asp:TextBox ID="txtZipCode" runat="server" CssClass="txtPanel"></asp:TextBox></div>
                         <div class="form-row"><asp:Label ID="lblCapacity" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtCapacity" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblPrice" Text="Preis (in €):" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPrice" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
                         <asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
@@ -62,6 +64,8 @@
                         <asp:TextBox ID="txtZipCode2" runat="server" CssClass="txtPanel"></asp:TextBox></div>                     
                         <div class="form-row"><asp:Label ID="lblCapacity2" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtCapacity2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblPrice2" Text="Preis (in €):" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPrice2" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
                         <asp:Label ID="lblGuide2" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>                       
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
@@ -183,6 +187,14 @@
                         </EditItemTemplate>
                         <ItemTemplate>
                             <asp:Label ID="lblItemTemplateProjectCapacity" runat="server" Text='<%# Eval("CAPACITY") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Preis"> 
+                        <EditItemTemplate>
+                            <asp:TextBox ID="txtEditItemTemplateProjectPrice" runat="server" Text='<%# Bind("PRICE") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                        <ItemTemplate>
+                            <asp:Label ID="lblItemTemplateProjectPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                      <asp:TemplateField HeaderText="ID_Verantw.">

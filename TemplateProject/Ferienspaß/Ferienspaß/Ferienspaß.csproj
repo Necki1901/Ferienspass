@@ -112,6 +112,7 @@
   <ItemGroup>
     <Content Include="Pages\Admin_Check_Projects.aspx" />
     <Content Include="Pages\Admin_Clubs_View.aspx" />
+    <Content Include="Pages\Admin_Set_Discount.aspx" />
     <Content Include="Pages\Portier_Add_Child.aspx" />
     <Content Include="Pages\Portier_Cancellations_View.aspx" />
     <Content Include="Pages\Admin_Participants_Print.aspx" />
@@ -166,6 +167,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Pages\Portier_Project_View.aspx" />
     <Content Include="Pages\Portier_Project_View_Details.aspx" />
+    <Content Include="Pages\Secretary_OpenPayments.aspx" />
     <Content Include="Pages\User_Add_Child.aspx" />
     <Content Include="Pages\User_Participations.aspx" />
     <Content Include="PasswordReset.aspx" />
@@ -196,6 +198,7 @@
     <Content Include="Scripts\esm\popper.js.map" />
     <Content Include="Scripts\esm\popper-utils.min.js.map" />
     <Content Include="Scripts\esm\popper-utils.js.map" />
+    <Content Include="MasterPage\Secretary.Master" />
     <None Include="Scripts\jquery-3.4.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.4.1.js" />
     <Content Include="Scripts\jquery-3.4.1.min.js" />
@@ -307,6 +310,13 @@
     <Compile Include="MasterPage\Portier.Master.designer.cs">
       <DependentUpon>Portier.Master</DependentUpon>
     </Compile>
+    <Compile Include="MasterPage\Secretary.Master.cs">
+      <DependentUpon>Secretary.Master</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="MasterPage\Secretary.Master.designer.cs">
+      <DependentUpon>Secretary.Master</DependentUpon>
+    </Compile>
     <Compile Include="Pages\Admin_Check_Projects.aspx.cs">
       <DependentUpon>Admin_Check_Projects.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -320,6 +330,13 @@
     </Compile>
     <Compile Include="Pages\Admin_Clubs_View.aspx.designer.cs">
       <DependentUpon>Admin_Clubs_View.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Admin_Set_Discount.aspx.cs">
+      <DependentUpon>Admin_Set_Discount.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Admin_Set_Discount.aspx.designer.cs">
+      <DependentUpon>Admin_Set_Discount.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\Portier_Add_Child.aspx.cs">
       <DependentUpon>Portier_Add_Child.aspx</DependentUpon>
@@ -410,6 +427,13 @@
     </Compile>
     <Compile Include="Pages\Portier_Project_View_Details.aspx.designer.cs">
       <DependentUpon>Portier_Project_View_Details.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Pages\Secretary_OpenPayments.aspx.cs">
+      <DependentUpon>Secretary_OpenPayments.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Pages\Secretary_OpenPayments.aspx.designer.cs">
+      <DependentUpon>Secretary_OpenPayments.aspx</DependentUpon>
     </Compile>
     <Compile Include="Pages\User_Add_Child.aspx.cs">
       <DependentUpon>User_Add_Child.aspx</DependentUpon>

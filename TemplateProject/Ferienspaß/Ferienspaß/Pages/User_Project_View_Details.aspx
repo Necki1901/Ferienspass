@@ -47,10 +47,14 @@
                         <asp:Label ID="lblEnd" runat="server" Text='<%# Eval("end") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-
                  <asp:TemplateField HeaderText="Freie Plätze">
                     <ItemTemplate>
                         <asp:Label ID="lblParticipants" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Preis">
+                    <ItemTemplate>
+                        <asp:Label ID="lblPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                   <%-- Details --%>

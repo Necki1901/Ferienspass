@@ -25,11 +25,15 @@
                         <asp:TextBox ID="txtName" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblDesc" Text="Beschreibung:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtDesc" runat="server" CssClass="txtPanel"></asp:TextBox>
-                        <asp:Label ID="lblPlace" Text="Ort/Straße:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:Label ID="lblPlace" Text="Ort:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPlace" runat="server" CssClass="txtPanel"></asp:TextBox> </div>
-                        <div class="form-row"><asp:Label ID="lblNumber" Text="Hausnummer:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <div class="form-row"><asp:Label ID="lblStreet" Text="Straße:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtStreet" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblNumber" Text="Hausnummer:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtNumber" runat="server" CssClass="txtPanel"></asp:TextBox>
-                        <asp:Label ID="lblCapacity" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:Label ID="LblZipCode" Text="PLZ:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtZipCode" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+                        <div class="form-row"><asp:Label ID="lblCapacity" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtCapacity" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
@@ -48,14 +52,18 @@
                         <asp:TextBox ID="txtName2" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblDesc2" Text="Beschreibung:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtDesc2" runat="server" CssClass="txtPanel"></asp:TextBox>
-                        <asp:Label ID="lblPlace2" Text="Ort/Straße:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:Label ID="lblPlace2" Text="Ort:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPlace2" runat="server" CssClass="txtPanel"></asp:TextBox> </div>
-                        <div class="form-row"><asp:Label ID="lblNumber2" Text="Hausnummer:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <div class="form-row"><asp:Label ID="lblStreet2" Text="Straße:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtStreet2" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:Label ID="lblNumber2" Text="Hausnummer:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtNumber2" runat="server" CssClass="txtPanel"></asp:TextBox>
-                        <asp:Label ID="lblCapacity2" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:Label ID="lblZipCode2" Text="PLZ:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtZipCode2" runat="server" CssClass="txtPanel"></asp:TextBox></div>                     
+                        <div class="form-row"><asp:Label ID="lblCapacity2" Text="Kapazität:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtCapacity2" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblGuide2" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
-                        <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>
+                        <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>                       
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
                         <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>
                         <asp:Label ID="lblInfo2" runat="server"></asp:Label>
@@ -137,20 +145,36 @@
                             <asp:Label ID="lblItemTemplateProjectEndTime" runat="server" Text='<%#Eval("END")%>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
-                    <asp:TemplateField HeaderText="Straße">
+                     <asp:TemplateField HeaderText="Ort">
                         <EditItemTemplate>
-                            <asp:TextBox ID="txtEditItemTemplateProjectStreet" runat="server" Text='<%# Bind("PLACE") %>'></asp:TextBox>
+                            <asp:TextBox ID="txtEditItemTemplateProjectLocation" runat="server" Text='<%# Bind("PLACE") %>'></asp:TextBox>
                         </EditItemTemplate>
                          <ItemTemplate>
-                            <asp:Label ID="lblItemTemplateProjectStreet" runat="server" Text='<%# Eval("PLACE") %>'></asp:Label>
+                            <asp:Label ID="lblItemTemplateProjectLocation" runat="server" Text='<%# Eval("PLACE") %>'></asp:Label>
                         </ItemTemplate>
-                    </asp:TemplateField>
+                         </asp:TemplateField>
+                    <asp:TemplateField HeaderText="Straße">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="txtEditItemTemplateProjectStreet" runat="server" Text='<%# Bind("STREET") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                         <ItemTemplate>
+                            <asp:Label ID="lblItemTemplateProjectStreet" runat="server" Text='<%# Eval("STREET") %>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>                 
                     <asp:TemplateField HeaderText="Nummer">
                         <EditItemTemplate>
                             <asp:TextBox ID="txtEditItemTemplateProjectStreetNumber" runat="server" Text='<%# Bind("NUMBER") %>'></asp:TextBox>
                         </EditItemTemplate>
                          <ItemTemplate>
                             <asp:Label ID="lblItemTemplateProjectStreetNumber" runat="server" Text='<%# Eval("NUMBER") %>'></asp:Label>
+                        </ItemTemplate>
+                         </asp:TemplateField>
+                         <asp:TemplateField HeaderText="PLZ">
+                        <EditItemTemplate>
+                            <asp:TextBox ID="txtEditItemTemplateProjectZipCode" runat="server" Text='<%# Bind("ZIPCODE") %>'></asp:TextBox>
+                        </EditItemTemplate>
+                         <ItemTemplate>
+                            <asp:Label ID="lblItemTemplateProjectZipCode" runat="server" Text='<%# Eval("ZIPCODE") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="Kapazität"> 

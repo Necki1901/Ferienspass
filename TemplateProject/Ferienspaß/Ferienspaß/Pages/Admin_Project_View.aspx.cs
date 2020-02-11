@@ -49,7 +49,7 @@ namespace Ferienspaß.Pages
         }
         private void Fill_gvAdminProjects()
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
+            string sql = "SELECT project.PID, project.DATE, project.STREET, project.START, project.ZIPCODE, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             bool filter = false;
 
             if ((txtEventName.Text != "" || datepicker.Text != "" || ddlGuide3.SelectedValue != "Alle") && isFiltered == true)
@@ -167,7 +167,7 @@ namespace Ferienspaß.Pages
             
 
             //Proof null-values
-            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtPlace.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtZipCode.Text=="") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 txtDate.Text = ChangeDateFormat();
@@ -244,7 +244,7 @@ namespace Ferienspaß.Pages
             
 
             //Proof null-values
-            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtPlace2.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtZipCode2.Text == "") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 txtDate2.Text = ChangeDateFormat2();              
@@ -438,7 +438,7 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
+            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.ZIPCODE, project.STREET, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             DataTable dt = db.Query(sql);
             if (dt!=null)
             {

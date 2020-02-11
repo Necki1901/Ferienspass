@@ -183,7 +183,7 @@ namespace Ferienspaß
             string errorDescription = "";
             bool valid = true;
 
-            if (txtGivenName.Text == "" || txtSurName.Text == "" || txtPhone.Text == "" || txtEMail.Text == "" || ddlLocked.SelectedValue == null || ddlEmailConfirmed.SelectedValue == null || ddlUserGroup.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtGivenName.Text == "" || txtSurName.Text == "" ||  txtEMail.Text == "" || ddlLocked.SelectedValue == null || ddlEmailConfirmed.SelectedValue == null || ddlUserGroup.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 //proof string values
@@ -207,7 +207,7 @@ namespace Ferienspaß
             string errorDescription = "";
             bool valid = true;
 
-            if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtPhone2.Text == "" || txtEMail2.Text == "" || ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtGivenName2.Text == "" || txtSurName2.Text == "" || txtEMail2.Text == "" || ddlLocked2.SelectedValue == null || ddlEmailConfirmed2.SelectedValue == null || ddlUserGroup2.SelectedValue == null) { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
                 //proof string values

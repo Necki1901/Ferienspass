@@ -248,5 +248,11 @@ namespace Ferienspaß.Pages
 
             return newSortDirection;
         }
+
+        protected void gvAdminClubs_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvAdminClubs.PageIndex = e.NewPageIndex;
+            Fill_gvAdminClubs();
+        }
     }
 }

@@ -179,7 +179,7 @@ namespace Ferienspaß.Pages
             {
                 foreach(int id in childrenIDs)
                 {
-                    db.Query($"INSERT INTO participation (CID, PID, Date) VALUES({id}, {ViewState["PID"]}, '{DateTime.Now.ToString("dd/MM/yyyy")}')");
+                    db.Query($"INSERT INTO participation (CID, PID, Date) VALUES({id}, {ViewState["PID"]}, '{DateTime.Now.ToString("yyyy/MM/dd")}')");
                 }
 
                 foreach (GridViewRow row in gv_Children.Rows)
@@ -189,13 +189,12 @@ namespace Ferienspaß.Pages
 
 
                 SetVisibility_Children(false);
-                lblChildrenMessage.Text = "Kinder wurden hinzugefügt";
-
+                lblChildrenMessage.Text = "Kinder wurden hinzugefügt";                
+                int amountChildren = childrenIDs.Count;
                 string body = Get_body_for_mail(childrenIDs);
-                Send_mail(body);
+                Send_mail(body,amountChildren);
             }
             Fill_gv_UserView_Details();
-
         }
 
         private string Get_body_for_mail(List<int> childrenIDs)
@@ -215,12 +214,13 @@ namespace Ferienspaß.Pages
                 body += $"{cnt}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]}\n";
                 cnt++;
             }
-
             return body;
         }
 
-        private void Send_mail(string body)
+        private void Send_mail(string body, int amountchildren)
         {
+            string pr = GeneratePaymentReference(amountchildren);
+            body = body + $"Bitte geben Sie folgende Zahlungsreferenz bei Ihrer Überweisung an: {pr}";
             //get data from the user
             DataTable dt_user = db.Query($"SELECT email, sn, gn FROM user WHERE uid = {User.Identity.Name}");
             string fullname = dt_user.Rows[0]["gn"].ToString() + dt_user.Rows[0]["sn"].ToString();
@@ -229,6 +229,16 @@ namespace Ferienspaß.Pages
             db.SendHTMLEmail((string)dt_user.Rows[0]["email"], fullname, db.GetPortalOption("MAIL_PROJECT_REGISTER_SUBJECT"), body, false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
 
 
+        }
+
+        private string GeneratePaymentReference(int amountchildren)
+        {
+            DateTime dt = DateTime.Now;
+            string dts = dt.ToString().Replace(".","");
+            string dts2 = dts.Replace(":", "");
+            string dts3 = dts2.Replace(" ", "");
+            string dts4 = dts3 + amountchildren.ToString();
+            return dts4;
         }
 
         private void SetVisibility_Children(bool visibility)

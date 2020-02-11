@@ -258,6 +258,24 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.TextBox txtPrice;
 
         /// <summary>
+        /// lblPaymentDeadlineAdd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPaymentDeadlineAdd;
+
+        /// <summary>
+        /// txtPaymentDeadlineAdd control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPaymentDeadlineAdd;
+
+        /// <summary>
         /// lblGuide control.
         /// </summary>
         /// <remarks>
@@ -508,6 +526,24 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.TextBox txtPrice2;
+
+        /// <summary>
+        /// lblPaymentDeadlineUpdate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Label lblPaymentDeadlineUpdate;
+
+        /// <summary>
+        /// txtPaymentDeadlineUpdate control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtPaymentDeadlineUpdate;
 
         /// <summary>
         /// lblGuide2 control.

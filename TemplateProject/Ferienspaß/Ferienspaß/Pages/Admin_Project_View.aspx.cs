@@ -13,10 +13,9 @@ namespace Ferienspaß.Pages
     public partial class Admin : System.Web.UI.Page
     {
         CsharpDB db = new CsharpDB();
-        bool isAdding;
         static bool isFiltered = false;
         static int idForUpdating;
-        int sortCounter=0;
+
         protected void Page_Load(object sender, EventArgs e)
         {            
             lblInfo.Text = "";
@@ -28,7 +27,6 @@ namespace Ferienspaß.Pages
             {
                 ViewState["readmore"] = false;
 
-                isAdding = false;
                 Fillddl();
                 Fill_ddlGuide3();
             }
@@ -49,7 +47,7 @@ namespace Ferienspaß.Pages
         }
         private void Fill_gvAdminProjects()
         {
-            string sql = "SELECT project.PID, project.DATE, project.STREET, project.START, project.ZIPCODE, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, project.PRICE, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
+            string sql = "SELECT project.payment_deadline, project.PID, project.DATE, project.STREET, project.START, project.ZIPCODE, project.END, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, project.PRICE, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             bool filter = false;
 
             if ((txtEventName.Text != "" || datepicker.Text != "" || ddlGuide3.SelectedValue != "Alle") && isFiltered == true)
@@ -119,6 +117,9 @@ namespace Ferienspaß.Pages
             txtPlace2.Text = dt.Rows[0]["PLACE"].ToString();
             txtNumber2.Text = dt.Rows[0]["NUMBER"].ToString();
             txtDate2.Text = Convert.ToDateTime(dt.Rows[0]["DATE"]).ToString("yyyy/MM/dd");                       
+            txtStreet2.Text = dt.Rows[0]["STREET"].ToString();
+            txtZipCode2.Text = dt.Rows[0]["ZIPCODE"].ToString();
+            txtPaymentDeadlineUpdate.Text = Convert.ToDateTime(dt.Rows[0]["PAYMENT_DEADLINE"]).ToString("yyyy/MM/dd");
             ddlGuide2.SelectedValue = dt.Rows[0]["PLID"].ToString();//Garantiert, dass der richtige wert ausgewählt ist, aus den werten die zu beginn in die DDl geschrieben wurden (FillDDL)
 
         }
@@ -144,35 +145,16 @@ namespace Ferienspaß.Pages
         {
             return db.Query("SELECT SN, UID FROM user WHERE UGID=1");
         }
+
            
-        private string ChangeDateFormat()
+        private string ChangeDateFormat(string dateTime)
         {
-            string oldDate = txtDate.Text;
-            string newDate = oldDate.Replace(".", "-");
-            return newDate;
-
+           return dateTime.Replace(".", "-");
         }
 
-        private string ChangeDateFormat2()
+        private string ChangePriceFormat(string price)
         {
-            string oldDate = txtDate2.Text;
-            string newDate = oldDate.Replace(".", "-");
-            return newDate;
-
-        }
-
-        private string ChangePriceFormat()
-        {
-            string oldPrice = txtPrice.Text;
-            string newPrice = oldPrice.Replace(".", ",");
-            return newPrice;
-        }
-
-        private string ChangePriceFormat2()
-        {
-            string oldPrice = txtPrice2.Text;
-            string newPrice = oldPrice.Replace(".", ",");
-            return newPrice;
+            return price.Replace(".", ",");
         }
 
         private bool ValidateData()
@@ -182,15 +164,22 @@ namespace Ferienspaß.Pages
             
 
             //Proof null-values
-            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtZipCode.Text=="" || txtPrice.Text=="") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtDate.Text == "" || txtStart.Text == "" || txtEnd.Text == "" || txtCapacity.Text == "" || txtName.Text == "" || txtDesc.Text == "" || txtZipCode.Text=="" || txtPrice.Text=="" || txtPaymentDeadlineAdd.Text =="") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
-                txtDate.Text = ChangeDateFormat();
-                txtPrice.Text = ChangePriceFormat();
+                txtDate.Text = ChangeDateFormat(txtDate.Text);
+                txtPrice.Text = ChangePriceFormat(txtPrice.Text);
+                txtPaymentDeadlineAdd.Text = ChangeDateFormat(txtPaymentDeadlineAdd.Text);
+
                 if (!DateTime.TryParse(txtDate.Text, out DateTime r))
                 {
                     valid = false;
-                    errorDescription += "DATE-Format ist ungültig!  ";
+                    errorDescription += "Projektdatum DATE-Format ist ungültig!  ";
+                }
+                if (!DateTime.TryParse(txtPaymentDeadlineAdd.Text, out DateTime paymentDeadline))
+                {
+                    valid = false;
+                    errorDescription += "Zahlungsziel DATE-Format ist ungültig!  ";
                 }
 
 
@@ -264,21 +253,31 @@ namespace Ferienspaß.Pages
             
 
             //Proof null-values
-            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtZipCode2.Text == "" || txtPrice2.Text=="") { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
+            if (txtDate2.Text == "" || txtStart2.Text == "" || txtEnd2.Text == "" || txtCapacity2.Text == "" || txtName2.Text == "" || txtDesc2.Text == "" || txtZipCode2.Text == "" || txtPrice2.Text=="" || txtPaymentDeadlineUpdate.Text == "") 
+            { valid = false; errorDescription += "Einer oder mehrere der Werte sind leer!  "; }
             else
             {
-                txtDate2.Text = ChangeDateFormat2();
-                txtPrice2.Text = ChangePriceFormat2();
+                txtDate2.Text = ChangeDateFormat(txtDate2.Text);
+                txtPrice2.Text = ChangePriceFormat(txtPrice2.Text);
+                txtPaymentDeadlineUpdate.Text = ChangeDateFormat(txtPaymentDeadlineUpdate.Text);
+
                 if (!DateTime.TryParse(txtDate2.Text, out DateTime r))
                 {
                     valid = false;
-                    errorDescription += "DATE-Format ist ungültig!  ";
+                    errorDescription += "Projektdatum DATE-Format ist ungültig!";
+                } 
+
+                if (!DateTime.TryParse(txtPaymentDeadlineUpdate.Text, out DateTime paymentdeadline))
+                {
+                    valid = false;
+                    errorDescription += "Zahlungsziel DATE-Format ist ungültig!";
                 }
+
 
                 if (!(txtStart2.Text.Length == 5) || !(txtEnd2.Text.Length == 5)) { valid = false; errorDescription += "ZEIT-Format (START oder END) ist ungültig!  "; }
                 else
                 {
-                    
+
                     bool checkifintegerStartTime = true;
                     bool checkifintegerEndTime = true;
 
@@ -309,14 +308,14 @@ namespace Ferienspaß.Pages
                     {
                         string[] s = txtStart2.Text.Split(':');
                         if ((Convert.ToInt32(s[0]) < 0 || Convert.ToInt32(s[0]) >= 24) || (Convert.ToInt32(s[1]) < 0 || Convert.ToInt32(s[1]) >= 60)) { valid = false; errorDescription += "START-Zeit-Format ist ungültig!  "; }
-                       
+
                     }
                     if (!(txtEnd2.Text.ToString()[2] == ':' && checkifintegerEndTime == true)) { valid = false; errorDescription += "END-Zeit-Format ist ungültig!  "; }
                     else
                     {
                         string[] s2 = txtEnd2.Text.Split(':');
                         if ((Convert.ToInt32(s2[0]) < 0 || Convert.ToInt32(s2[0]) >= 24) || (Convert.ToInt32(s2[1]) < 0 || Convert.ToInt32(s2[1]) >= 60)) { valid = false; errorDescription += "END-Zeit-Format ist ungültig!  "; }
-                    }                                  
+                    }
                     //Proof Capacity
 
                     if (!int.TryParse((txtCapacity2.Text), out int a)) { valid = false; errorDescription += "KAPAZITÄT-Format ist ungültig!  "; }
@@ -327,7 +326,7 @@ namespace Ferienspaß.Pages
                     if (!(txtDesc2.Text.Length <= 140)) { valid = false; errorDescription += "BESCHREIBUNG ist zu lang!!  "; }
                     if (!(txtPlace2.Text.Length <= 50)) { valid = false; errorDescription += "ORT ist zu lang!  "; }
                     if (!(txtNumber2.Text.Length <= 5)) { valid = false; errorDescription += "HAUSNUMMER ist zu lang!  "; }
-                 
+
                     // Proof validity of Price
 
                     if (double.TryParse(txtPrice2.Text, out double d) == false) { valid = false; errorDescription += "PREIS ist keine gültige Zahl!"; }
@@ -403,7 +402,10 @@ namespace Ferienspaß.Pages
                 bool valid = ValidateData();
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, PRICE, PLID) Values(?,?,?,?,?,?,?,?,?,?)", txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart.Text).ToString("HH:mm"), Convert.ToDateTime(txtEnd.Text).ToString("HH:mm"), txtPlace.Text, txtNumber.Text, Convert.ToInt32(txtCapacity.Text), Convert.ToDouble(txtPrice.Text), Convert.ToInt32(selectedname)) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, PRICE, PLID, STREET, ZIPCODE, PAYMENT_DEADLINE) Values(?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+                        txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart.Text).ToString("HH:mm"), 
+                        Convert.ToDateTime(txtEnd.Text).ToString("HH:mm"), txtPlace.Text, txtNumber.Text, Convert.ToInt32(txtCapacity.Text), 
+                        Convert.ToDouble(txtPrice.Text), Convert.ToInt32(selectedname), txtStreet.Text, Convert.ToInt32(txtZipCode.Text), txtPaymentDeadlineAdd.Text) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }
@@ -432,7 +434,10 @@ namespace Ferienspaß.Pages
 
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("Update project SET NAME=?, DESCRIPTION=?, DATE=?, START=?, END=?, PLACE=?, NUMBER=?, CAPACITY=?, PRICE=?, PLID=? WHERE PID=?", txtName2.Text, txtDesc2.Text, Convert.ToDateTime(txtDate2.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart2.Text).ToString("HH:mm:ss"), Convert.ToDateTime(txtEnd2.Text).ToString("HH:mm:ss"), txtPlace2.Text, txtNumber2.Text, Convert.ToInt32(txtCapacity2.Text), Convert.ToDouble(txtPrice2.Text), Convert.ToInt32(selectedname), id) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                    if (db.ExecuteNonQuery("Update project SET NAME=?, DESCRIPTION=?, DATE=?, START=?, END=?, PLACE=?, NUMBER=?, CAPACITY=?, PRICE=?, PLID=?, STREET=?, ZIPCODE=?, PAYMENT_DEADLINE=? WHERE PID=?", 
+                        txtName2.Text, txtDesc2.Text, Convert.ToDateTime(txtDate2.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart2.Text).ToString("HH:mm:ss"), 
+                        Convert.ToDateTime(txtEnd2.Text).ToString("HH:mm:ss"), txtPlace2.Text, txtNumber2.Text, Convert.ToInt32(txtCapacity2.Text), 
+                        Convert.ToDouble(txtPrice2.Text), Convert.ToInt32(selectedname), txtStreet2.Text, Convert.ToInt32(txtZipCode2.Text), Convert.ToDateTime(txtPaymentDeadlineUpdate.Text).ToString("yyyy/MM/dd"), id) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz geändert! </span>";
                     }

@@ -16,6 +16,14 @@ namespace Ferienspaß.Pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0 && ug != 4)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
             db = new CsharpDB();
 
             if (!Page.IsPostBack)
@@ -46,7 +54,7 @@ namespace Ferienspaß.Pages
                 "INNER JOIN child on participation.CID = child.CID) " +
                 "INNER JOIN user on child.UID = user.UID) " +
                 "INNER JOIN project on participation.PID = project.PID) " +
-                "WHERE paid = 0");
+                "WHERE paid = 0 AND project.price > 0");
 
             DataView dv = new DataView(dt);
 

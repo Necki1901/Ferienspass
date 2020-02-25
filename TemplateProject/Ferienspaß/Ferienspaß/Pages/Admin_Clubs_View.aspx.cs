@@ -18,6 +18,15 @@ namespace Ferienspaß.Pages
         int sortCounter = 0;
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
+
             lblInfo.Text = "";
             lblInfo2.Text = "";
             lblInfoBottom.Text = "";

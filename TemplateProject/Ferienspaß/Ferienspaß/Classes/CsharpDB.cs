@@ -25,6 +25,21 @@ namespace Ferienspaß
         }
 
 
+        public static int GetUserGroup(object obj)
+        {
+            int usergroup = 2;
+            if (obj != null)
+            {
+                if (int.TryParse(obj.ToString(), out usergroup))
+                {
+                    return usergroup;
+                }
+                else return -1;
+            }
+            else return -1;
+        }
+
+
         /// <summary>
         /// Connection to database
         /// </summary>

@@ -4,9 +4,6 @@
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">
     <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
     <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden"  OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
-
-    
-
 </asp:Content>
 
 
@@ -37,12 +34,17 @@
                         <asp:TextBox ID="txtCapacity" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblPrice" Text="Preis (in €):" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPrice" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
-                        <asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
+
+                        <asp:Label ID="lblPaymentDeadlineAdd" Text="Zahlungsziel" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPaymentDeadlineAdd" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+
+                        <div class="form-row"><asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
                         <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>
                         <asp:Label ID="lblInfo" runat="server"></asp:Label>
                     </asp:Panel>
+
                     <asp:Panel ID="pnlUpdate" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Updaten eines Eintrages eingefügt werden.--%>                       
                         <div class="form-row"><asp:Label ID="Label1" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtDate2" runat="server" CssClass="txtPanel"></asp:TextBox>
@@ -66,6 +68,10 @@
                         <asp:TextBox ID="txtCapacity2" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblPrice2" Text="Preis (in €):" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPrice2" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
+
+                        <asp:Label ID="lblPaymentDeadlineUpdate" Text="Zahlungsziel" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPaymentDeadlineUpdate" runat="server" CssClass="txtPanel"></asp:TextBox>
+
                         <asp:Label ID="lblGuide2" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>                       
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
@@ -197,6 +203,13 @@
                             <asp:Label ID="lblItemTemplateProjectPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
                         </ItemTemplate>
                     </asp:TemplateField>
+
+                    <asp:TemplateField HeaderText="Zahlungsziel"> 
+                        <ItemTemplate>
+                            <asp:Label ID="lblPaymentDeadline" runat="server" Text='<%#Convert.ToDateTime(Eval("payment_deadline")).ToString("yyyy/MM/dd")%>'></asp:Label>
+                        </ItemTemplate>
+                    </asp:TemplateField>
+
                      <asp:TemplateField HeaderText="ID_Verantw.">
                          <ItemTemplate>
                             <asp:Label ID="lblItemTemplateProjectGuideId" runat="server" Text='<%# Eval("UID") %>'></asp:Label>

@@ -5,7 +5,14 @@
     <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden" OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
 </asp:Content>
 
+
+
 <asp:Content ID="Content2" ContentPlaceHolderID="MainContent" runat="server">
+
+        <div>
+            <asp:Literal ID="lit_msg" runat="server"></asp:Literal>
+        </div>
+
         <asp:GridView CssClass="table table-bordered" ID="gv_User_View_Details" runat="server" AutoGenerateColumns="False" OnRowCommand="gv_User_View_Details_RowCommand">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
@@ -47,10 +54,14 @@
                         <asp:Label ID="lblEnd" runat="server" Text='<%# Eval("end") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-
                  <asp:TemplateField HeaderText="Freie Plätze">
                     <ItemTemplate>
                         <asp:Label ID="lblParticipants" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Preis">
+                    <ItemTemplate>
+                        <asp:Label ID="lblPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                   <%-- Details --%>
@@ -63,7 +74,9 @@
                
              </Columns>
         </asp:GridView>
-        <asp:Label ID="lblMessage" runat="server"></asp:Label>
+        <div>
+            <asp:Literal ID="lit_children_msg" runat="server"></asp:Literal>
+        </div>
 
         <asp:GridView ID="gv_Children" CssClass="table table-bordered" runat="server" AutoGenerateColumns="False" Visible="False">
             <columns>
@@ -92,12 +105,8 @@
                         <asp:CheckBox ID="chkUseChildren" runat="server" CommandName="checked" />
                     </ItemTemplate>
                 </asp:TemplateField>
-
-
             </columns>
         </asp:GridView>
-
-        <asp:Label ID="lblChildrenMessage" runat="server"></asp:Label><br />
 
         <asp:Button ID="btnAddChildren" class="btn btn-primary" runat="server" OnClick="btnAddChildren_Click" Text="Kinder hinzufügen" Visible="False" />
 </asp:Content>

@@ -16,6 +16,15 @@ namespace Ferienspaß.Pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
+
             db = new CsharpDB();
             lblMessage.Text = string.Empty;
             if (!Page.IsPostBack)

@@ -27,7 +27,7 @@
                     <asp:CheckBox ID="cbTooManyParticipants" runat="server" Text="Keine vollen Projekte"/>
                 </div>
             </div>
-            <asp:Button ID="btnFilter" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnFilter_Click" />
+            <asp:Button ID="btnFilter" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnFilter_Click"/>
         </div>
           <br />
             <asp:GridView ID="gv_UserView" runat="server" 
@@ -74,12 +74,16 @@
                         <asp:Label ID="lblEnd" runat="server" Text='<%# Eval("end") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                   <asp:TemplateField HeaderText="Kapazität">
+                <asp:TemplateField HeaderText="Kapazität">
                     <ItemTemplate>
                         <asp:Label ID="lblRemaining" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-
+                <asp:TemplateField HeaderText="Preis">
+                    <ItemTemplate>
+                        <asp:Label ID="lblPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
 
                     <%-- Details --%>
                 <asp:TemplateField HeaderText="Details">

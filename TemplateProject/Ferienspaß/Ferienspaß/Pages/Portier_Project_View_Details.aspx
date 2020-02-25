@@ -53,6 +53,11 @@
                         <asp:Label ID="lblParticipants" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
+                <asp:TemplateField HeaderText="Preis">
+                    <ItemTemplate>
+                        <asp:Label ID="lblPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
                   <%-- Details --%>
                 <asp:TemplateField HeaderText="Aktion">
                     <ItemTemplate>

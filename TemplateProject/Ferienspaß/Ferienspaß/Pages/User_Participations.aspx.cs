@@ -15,6 +15,13 @@ namespace Ferienspaß.Pages
         CsharpDB db;
         protected void Page_Load(object sender, EventArgs e)
         {
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0 && ug != 2 && ug != 1)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
             db = new CsharpDB();
             if (!Page.IsPostBack)
             {
@@ -34,11 +41,10 @@ namespace Ferienspaß.Pages
 
         private void Fill_gv_participations()
         {
-            DataTable dt = db.Query($"SELECT participation.CID, participation.pid, gn, sn, bd, name, project.DATE " +
+            DataTable dt = db.Query($"SELECT participation.CID, participation.pid, project.price, paid, gn, sn, bd, name, project.DATE " +
                 $"FROM participation " +
-                $"LEFT JOIN child ON child.CID = participation.cid " +
-                $"LEFT JOIN project " +
-                $"ON participation.PID = project.PID " +
+                $"INNER JOIN child ON child.CID = participation.cid " +
+                $"INNER JOIN project ON participation.PID = project.PID " +
                 $"WHERE child.UID = {User.Identity.Name}");
 
             if (dt.Rows.Count == 0)
@@ -85,7 +91,7 @@ namespace Ferienspaß.Pages
 
                         Send_cancel_mail(pid, cid);
                         Cancel_participation(pid, cid);
-                        Write_cancellation__in_db(pid, cid);
+                        if (Convert.ToInt32(((Label)gv_participations.Rows[rowIndex].FindControl("lbl_projectprice")).Text) != 0 && ((Label)gv_participations.Rows[rowIndex].FindControl("lbl_projectpaid")).Text == "1") Write_cancellation_in_db(pid, cid);
 
                         lit_msg.Text = CreateMSGString("Ihre Anmeldung wurde storniert", "info");
                         break;
@@ -100,7 +106,7 @@ namespace Ferienspaß.Pages
             Fill_gv_participations();
         }
 
-        private void Write_cancellation__in_db(int pid, int cid)
+        private void Write_cancellation_in_db(int pid, int cid)
         {
             db.Query($"INSERT INTO cancellations (cid, pid, date) VALUES ({cid}, {pid}, '{DateTime.Now.ToString("yyyy/MM/dd")}')");
         }

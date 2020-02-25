@@ -6,10 +6,33 @@
 
 
 <asp:Content ID="BodyContent" ContentPlaceHolderID="MainContent" runat="server">
-        <asp:GridView ID="gv_UserView" runat="server" 
-            AutoGenerateColumns="False" 
-            AllowPaging="True" 
-            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" CssClass="table table-bordered" OnPageIndexChanging="gv_UserView_PageIndexChanging" >
+    <div>
+        <div class="form-group">
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <asp:Label Text="Name der Veranstaltung" runat="server"></asp:Label>
+                    <asp:TextBox ID="txtEventName" runat="server"></asp:TextBox>
+                </div>
+                <div>
+                    <asp:CheckBox ID="cbNoParticipants" runat="server" Text="Keine leeren Projekte"/>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <asp:Label Text="Datum der Veranstaltung" runat="server"></asp:Label>
+                    <asp:TextBox ID="datepicker" placeholder="Datum" cssclass="datepicker-field" TextMode="Date" runat="server"></asp:TextBox>
+                </div>
+                <div>
+                    <asp:CheckBox ID="cbTooManyParticipants" runat="server" Text="Keine vollen Projekte"/>
+                </div>
+            </div>
+            <asp:Button ID="btnFilter" Text="Suchen" class="btn btn-primary" runat="server" OnClick="btnFilter_Click" />
+            <asp:Label ID="lblMessage" runat="server"></asp:Label>
+        </div>
+        <asp:GridView ID="gv_UserView" runat="server"
+            AutoGenerateColumns="False"
+            AllowPaging="True"
+            AllowSorting="True" OnRowCommand="gv_UserView_RowCommand" CssClass="table table-bordered" OnPageIndexChanging="gv_UserView_PageIndexChanging">
             <Columns>
                 <asp:TemplateField HeaderText="ID" Visible="False">
                     <ItemTemplate>
@@ -30,7 +53,7 @@
                     <ItemTemplate>
                         <asp:Label ID="lblDate" runat="server" Text='<%# Convert.ToDateTime(Eval("Date")).ToString("dd/MM/yyyy") %>'></asp:Label>
                     </ItemTemplate>
-                </asp:TemplateField>    
+                </asp:TemplateField>
                 <asp:TemplateField HeaderText="Straße">
                     <ItemTemplate>
                         <asp:Label ID="lblPlace" runat="server" Text='<%# Eval("Place") %>'></asp:Label>
@@ -41,7 +64,7 @@
                         <asp:Label ID="lblNumber" runat="server" Text='<%# Eval("Number") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                 <asp:TemplateField HeaderText="Kapazität">
+                <asp:TemplateField HeaderText="Kapazität">
                     <ItemTemplate>
                         <asp:Label ID="lblRemaining" runat="server" Text='<%# Eval("remainingCapacity") %>'></asp:Label>
                     </ItemTemplate>
@@ -50,9 +73,15 @@
                     <ItemTemplate>
                         <asp:Label ID="lblStart" runat="server" Text='<%# Eval("start") %>'></asp:Label>
                     </ItemTemplate>
-                </asp:TemplateField><asp:TemplateField HeaderText="Ende">
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Ende">
                     <ItemTemplate>
                         <asp:Label ID="lblEnd" runat="server" Text='<%# Eval("end") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
+                <asp:TemplateField HeaderText="Preis">
+                    <ItemTemplate>
+                        <asp:Label ID="lblPrice" runat="server" Text='<%# Eval("PRICE") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
 

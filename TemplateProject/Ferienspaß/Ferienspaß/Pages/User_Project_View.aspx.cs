@@ -13,11 +13,19 @@ namespace Ferienspaß.Pages
 {
     public partial class Projectview : System.Web.UI.Page
     {
-
         CsharpDB db = new CsharpDB();
+        static bool isFiltered = false;
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0 && ug != 2 && ug != 1)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
             if (!Page.IsPostBack)
             {
                 Fill_gv_UserView();
@@ -39,13 +47,50 @@ namespace Ferienspaß.Pages
         {
             DataTable dt;
             DataView dv;
-            RemainingCapacity rc = new RemainingCapacity();
+            string sql;
+            bool filter = false;
+            if (isFiltered)
+            {
 
-            dt = db.Query($"SELECT * FROM project");
-            dt = rc.GetDataTableWithRemainingCapacities(dt);
+                if (cbTooManyParticipants.Checked == true && cbNoParticipants.Checked == true)
+                {
+                    sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+                }
+                else if (cbTooManyParticipants.Checked == true)
+                {
+                    filter = true;
+                    sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING remainingCapacity>0";
+                }
+                else if (cbNoParticipants.Checked == true)
+                {
+                    filter = true;
+                    sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING remainingCapacity<project.CAPACITY";
+                }
+                else
+                {
+                    sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+                }
+
+                if (txtSuchen.Text != string.Empty)
+                {
+                    if (filter) sql += " And "; else sql += " HAVING "; filter = true;
+                    sql += $"Name Like '%{txtSuchen.Text.ToLower()}%'";
+                }
+
+                if (datepicker.Text != string.Empty)
+                {
+                    if (filter) sql += " And "; else sql += " HAVING ";
+                    sql += $"project.date='{datepicker.Text}'";
+                }
+            }
+            else
+            {
+                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'remainingCapacity' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
+            }
+
+            dt = db.Query(sql);
             dv = new DataView(dt);
 
-           
             gv_UserView.DataSource = dv;
             gv_UserView.DataBind();
 
@@ -55,7 +100,6 @@ namespace Ferienspaß.Pages
 
         protected void gv_UserView_RowCommand(object sender, GridViewCommandEventArgs e)
         {
-
             switch (e.CommandName)
             {
                 case "details":
@@ -64,8 +108,6 @@ namespace Ferienspaß.Pages
                     string projectID = ((Label)gvr.FindControl("lblProjectID")).Text;
                     Response.Redirect($"User_Project_View_Details.aspx?id={projectID}");
                     break;
-
-
             }
         }
 
@@ -77,69 +119,8 @@ namespace Ferienspaß.Pages
 
         protected void btnFilter_Click(object sender, EventArgs e)
         {
-            DataTable dt;
-            DataView dv;
-            string sql;
-            bool condition = false;
-
-            if (cbTooManyParticipants.Checked == true && cbNoParticipants.Checked == true)
-            {
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
-            }
-            else if (cbTooManyParticipants.Checked == true)
-            {
-                condition = true;
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants>0";
-            }
-            else if (cbNoParticipants.Checked == true)
-            {
-                condition = true;
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID HAVING participants<project.CAPACITY";
-            }
-            else
-            {
-                sql = "SELECT *, (project.CAPACITY - COUNT( participation.PID)) AS 'participants' FROM project LEFT JOIN participation ON project.PID = participation.PID GROUP BY project.PID";
-            }
-
-
-            if (condition == true)
-            {
-                if (txtSuchen.Text != string.Empty)
-                {
-                    sql += $" AND Name Like '%{txtSuchen.Text.ToLower()}%'";
-                }
-
-                if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
-                {
-                    sql += $" AND project.date={datepicker.Text}";
-                }
-            }
-            else
-            {
-                if (txtSuchen.Text != string.Empty)
-                {
-                    sql += $" Having Name Like '%{txtSuchen.Text.ToLower()}%'";
-                    if (datepicker.Text != string.Empty)
-                    {
-                        sql += $" AND project.date='{datepicker.Text}'";
-                    }
-                }
-
-                if (datepicker.Text != string.Empty && txtSuchen.Text == string.Empty)
-                {
-                    sql += $" Having project.date='{datepicker.Text}'";
-                }
-            }
-
-
-
-            dt = db.Query(sql);
-
-            dv = new DataView(dt);
-
-
-            gv_UserView.DataSource = dv;
-            gv_UserView.DataBind();
+            isFiltered = true;
+            Fill_gv_UserView();
         }
 
         protected void gv_UserView_PageIndexChanging(object sender, GridViewPageEventArgs e)
@@ -147,5 +128,6 @@ namespace Ferienspaß.Pages
             gv_UserView.PageIndex = e.NewPageIndex;
             Fill_gv_UserView();
         }
+
     }
 }

@@ -34,11 +34,10 @@ namespace Ferienspaß.Pages
 
         private void Fill_gv_participations()
         {
-            DataTable dt = db.Query($"SELECT participation.CID, participation.pid, gn, sn, bd, name, project.DATE " +
+            DataTable dt = db.Query($"SELECT participation.CID, participation.pid, project.price, gn, sn, bd, name, project.DATE " +
                 $"FROM participation " +
-                $"LEFT JOIN child ON child.CID = participation.cid " +
-                $"LEFT JOIN project " +
-                $"ON participation.PID = project.PID " +
+                $"INNER JOIN child ON child.CID = participation.cid " +
+                $"INNER JOIN project ON participation.PID = project.PID " +
                 $"WHERE child.UID = {User.Identity.Name}");
 
             if (dt.Rows.Count == 0)

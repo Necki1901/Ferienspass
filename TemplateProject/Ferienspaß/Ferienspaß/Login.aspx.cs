@@ -175,7 +175,7 @@ namespace Ferienspaß {
                         }
 
 
-                        if(!CsharpDB.IsUserAllowedToLogin()) {
+                        if (!CsharpDB.IsUserAllowedToLogin() && usertype == 2) {
                             DateTime[] dates = CsharpDB.GetPortalLoginDates();
                             lit_msg.Text = CreateMSGString("<strong>Ferienspaß nicht verfügbar!</strong><br>Ferienspaß ist wieder verfügbar von:<br> "+dates[0].ToLocalTime()+" bis "+dates[1].ToLocalTime(),-1);
                             return;

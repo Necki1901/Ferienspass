@@ -52,14 +52,19 @@
                     <asp:Label ID="lbl_projectname" runat="server" Text='<%# Eval("name") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
+            <asp:TemplateField HeaderText="Projektdatum">
+                <ItemTemplate>
+                    <asp:Label ID="lbl_project_date" runat="server" Text='<%# Convert.ToDateTime(Eval("date")).ToString("dd/MM/yyyy") %>'></asp:Label>
+                </ItemTemplate>
+            </asp:TemplateField>
             <asp:TemplateField HeaderText="Preis">
                 <ItemTemplate>
                     <asp:Label ID="lbl_projectprice" runat="server" Text='<%# Eval("price") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Projektdatum">
+            <asp:TemplateField HeaderText="Bezahlt">
                 <ItemTemplate>
-                    <asp:Label ID="lbl_project_date" runat="server" Text='<%# Convert.ToDateTime(Eval("date")).ToString("dd/MM/yyyy") %>'></asp:Label>
+                    <asp:Label ID="lbl_projectpaid" runat="server" Text='<%# Eval("paid") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
             <%-- AKTION --%>

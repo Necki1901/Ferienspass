@@ -46,7 +46,7 @@ namespace Ferienspaß.Pages
                 "INNER JOIN child on participation.CID = child.CID) " +
                 "INNER JOIN user on child.UID = user.UID) " +
                 "INNER JOIN project on participation.PID = project.PID) " +
-                "WHERE paid = 0");
+                "WHERE paid = 0 AND project.price > 0");
 
             DataView dv = new DataView(dt);
 

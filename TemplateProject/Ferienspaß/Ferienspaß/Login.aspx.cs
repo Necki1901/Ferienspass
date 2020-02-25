@@ -187,15 +187,15 @@ namespace Ferienspaß {
                         switch (usertype) {
 
                             case 0:
-                                //MANAGEMENT
+                                //ADMIN
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
                             case 1:
-                                //MANAGEMENT
+                                //INVOLVED USER
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Pages/Admin_Project_View.aspx");
+                                Response.Redirect("Pages/User_Project_View.aspx");
                                 break;
 
                             case 3:
@@ -204,8 +204,14 @@ namespace Ferienspaß {
                                 Response.Redirect("Pages/Portier_Cancellations_View.aspx");
                                 break;
 
+                            case 4:
+                                //SECRETARY
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("Pages/Secretary_OpenPayments.aspx");
+                                break;
+
                             default:
-                                // NORMALER  BENUTZER
+                                //USER
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/User_Project_View.aspx");
                                 break;

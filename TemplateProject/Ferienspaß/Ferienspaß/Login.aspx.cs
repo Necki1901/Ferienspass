@@ -175,7 +175,7 @@ namespace Ferienspaß {
                         }
 
 
-                        if(!CsharpDB.IsUserAllowedToLogin()) {
+                        if (!CsharpDB.IsUserAllowedToLogin() && usertype == 2) {
                             DateTime[] dates = CsharpDB.GetPortalLoginDates();
                             lit_msg.Text = CreateMSGString("<strong>Ferienspaß nicht verfügbar!</strong><br>Ferienspaß ist wieder verfügbar von:<br> "+dates[0].ToLocalTime()+" bis "+dates[1].ToLocalTime(),-1);
                             return;
@@ -197,7 +197,7 @@ namespace Ferienspaß {
                                 //INVOLVED USER
                                 Session["usergroup"] = 1;
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Pages/Admin_Project_View.aspx");
+                                Response.Redirect("Pages/User_Project_View.aspx");
                                 break;
 
                             case 3:
@@ -213,6 +213,12 @@ namespace Ferienspaß {
                                 Session["usergroup"] = 4;
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/Portier_Cancellations_View.aspx");
+                                break;
+
+                            case 4:
+                                //SECRETARY
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("Pages/Secretary_OpenPayments.aspx");
                                 break;
 
                             default:

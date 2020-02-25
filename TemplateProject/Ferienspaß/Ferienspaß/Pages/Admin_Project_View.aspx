@@ -4,9 +4,6 @@
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">
     <asp:Label ID="lbl_loggedInUser" Font-Bold="true" CssClass="mr-1 ml-2 pr-1" runat="server"></asp:Label>
     <asp:LinkButton ID="btnLogout" runat="server" Text="Abmelden" ToolTip="Abmelden"  OnClick="btnLogout_Click" CssClass="btn-sm btn-outline-primary my-2 my-sm-0"><i class='fa fa-sign-out' style='font-size:28px'></i></asp:LinkButton>
-
-    
-
 </asp:Content>
 
 
@@ -39,9 +36,9 @@
                         <asp:TextBox ID="txtPrice" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
 
                         <asp:Label ID="lblPaymentDeadlineAdd" Text="Zahlungsziel" runat="server" CssClass="lblPanel"></asp:Label>
-                        <asp:TextBox ID="txtPaymentDeadlineAdd" runat="server" CssClass="txtPanel"></asp:TextBox>
+                        <asp:TextBox ID="txtPaymentDeadlineAdd" runat="server" CssClass="txtPanel"></asp:TextBox></div>
 
-                        <asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <div class="form-row"><asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
                         <asp:Button ID="btnAdd" Text="Hinzufügen" CssClass="btnspace" runat="server" OnClick="btnAdd_Click1"></asp:Button>

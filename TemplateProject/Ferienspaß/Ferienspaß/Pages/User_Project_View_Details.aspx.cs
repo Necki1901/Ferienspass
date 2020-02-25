@@ -71,9 +71,9 @@ namespace Ferienspaß.Pages
            
         }
 
-        private string GetDiscountAmount()
+        private int GetDiscountAmount()
         {
-            return (string)db.Query($"SELECT MyValue FROM settings WHERE MyKey = 'GLOBAL_DISCOUNT'").Rows[0]["MyValue"];
+            return Convert.ToInt32(db.Query($"SELECT MyValue FROM settings WHERE MyKey = 'GLOBAL_DISCOUNT'").Rows[0]["MyValue"]);
         }
 
         private int GetParticipationAmountForUser()
@@ -255,8 +255,6 @@ namespace Ferienspaß.Pages
                 }
             }
 
-
-
             Fill_gv_UserView_Details();
         }
 
@@ -286,18 +284,40 @@ namespace Ferienspaß.Pages
             string body = string.Empty;
 
             //project name and description
-            body += $"Anmeldungen zum Projekt {dt.Rows[0]["name"].ToString()}\n";
-            body += $"Beschreibung: {dt.Rows[0]["description"].ToString()}\n\n";
+            body += $"Anmeldungen zum Projekt {dt.Rows[0]["name"].ToString()}<br>";
+            body += $"Beschreibung: {dt.Rows[0]["description"].ToString()}<br><br>";
 
-            int cnt = 1;
+            //2
+            //1
+
+            int participationAmount = GetParticipationAmountForUser() - childrenIDs.Count;
+
+            int number = 1;
+            float priceSum = 0;
             //print children (1. xxx xxx)
             foreach(int cid in childrenIDs)
             {
                 DataTable dt_children = db.Query($"SELECT sn, gn FROM child WHERE cid = {cid}");
-                body += $"{cnt}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]}\n";
-                cnt++;
+                float price = price = GetPriceForProject();
+
+                if ((participationAmount + number) >= 3)
+                {
+                    price = (float)((price * (100 - GetDiscountAmount())) / 100);  //calculate the price minus the discount
+                }
+
+                body += $"{number}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]} Preis: {price}€<br>";
+
+                priceSum += price;
+                number++;
             }
+            body += $"Gesamtpreis {priceSum}€<br><br>";
             return body;
+        }
+
+        private float GetPriceForProject()
+        {
+            DataTable dt = db.Query("SELECT price FROM project WHERE pid = ?", ViewState["PID"]);
+            return (float)dt.Rows[0]["price"];
         }
 
        

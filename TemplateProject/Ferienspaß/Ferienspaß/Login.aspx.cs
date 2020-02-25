@@ -188,24 +188,36 @@ namespace Ferienspaß {
 
                             case 0:
                                 //MANAGEMENT
+                                Session["usergroup"] = 0;
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
                             case 1:
-                                //MANAGEMENT
+                                //INVOLVED USER
+                                Session["usergroup"] = 1;
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/Admin_Project_View.aspx");
                                 break;
 
                             case 3:
                                 //PORTIER
+                                Session["usergroup"] = 3;
+                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
+                                Response.Redirect("Pages/Portier_Cancellations_View.aspx");
+                                break;
+
+
+                            case 4:
+                                //SECRETARY
+                                Session["usergroup"] = 4;
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/Portier_Cancellations_View.aspx");
                                 break;
 
                             default:
                                 // NORMALER  BENUTZER
+                                Session["usergroup"] = 2;
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/User_Project_View.aspx");
                                 break;

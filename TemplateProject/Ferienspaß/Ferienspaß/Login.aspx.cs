@@ -207,16 +207,9 @@ namespace Ferienspaß {
                                 Response.Redirect("Pages/Portier_Cancellations_View.aspx");
                                 break;
 
-
                             case 4:
                                 //SECRETARY
                                 Session["usergroup"] = 4;
-                                FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
-                                Response.Redirect("Pages/Portier_Cancellations_View.aspx");
-                                break;
-
-                            case 4:
-                                //SECRETARY
                                 FormsAuthentication.RedirectFromLoginPage(user.Rows[0]["UID"].ToString(), false);
                                 Response.Redirect("Pages/Secretary_OpenPayments.aspx");
                                 break;

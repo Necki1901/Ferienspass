@@ -34,21 +34,21 @@
 
     </div>
 
-    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand">
+    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand" AllowSorting="true" OnSorting="gv_Participants_Sorting">
         <Columns>
             <asp:TemplateField HeaderText="ID">
                 <ItemTemplate>
                     <asp:Label ID="lblChildID" runat="server" Text='<%# Eval("CID") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Vorname">
+            <asp:TemplateField HeaderText="Vorname" SortExpression="GN">
                 <ItemTemplate>
-                    <asp:Label ID="lblSurname" runat="server" Text='<%# Eval("SN") %>'></asp:Label>
+                    <asp:Label ID="lblSurname" runat="server" Text='<%# Eval("GN") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
-            <asp:TemplateField HeaderText="Nachname">
+            <asp:TemplateField HeaderText="Nachname" SortExpression="SN">
                 <ItemTemplate>
-                    <asp:Label ID="lblGivenname" runat="server" Text='<%# Eval("GN") %>'></asp:Label>
+                    <asp:Label ID="lblGivenname" runat="server" Text='<%# Eval("SN") %>'></asp:Label>
                 </ItemTemplate>
             </asp:TemplateField>
             <asp:TemplateField HeaderText="Geburtsdatum">

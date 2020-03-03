@@ -330,13 +330,13 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.Panel pnlUpdate;
 
         /// <summary>
-        /// Label1 control.
+        /// lblDate2 control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label Label1;
+        protected global::System.Web.UI.WebControls.Label lblDate2;
 
         /// <summary>
         /// txtDate2 control.

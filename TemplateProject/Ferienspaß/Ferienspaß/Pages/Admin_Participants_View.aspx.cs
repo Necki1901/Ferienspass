@@ -212,6 +212,12 @@ namespace Ferienspaß.Pages
         {
             Response.Redirect($"Admin_Participants_Print.aspx?project={ddl_Projects.SelectedItem.Value}");
         }
+
+        protected void gv_Participants_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gv_Participants.PageIndex = e.NewPageIndex;
+            Fill_Gv_Participants();
+        }
     }
     
 

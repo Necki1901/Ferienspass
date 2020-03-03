@@ -34,7 +34,7 @@
 
     </div>
 
-    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand">
+    <asp:GridView CssClass="table table-bordered" ID="gv_Participants" runat="server" AutoGenerateColumns="False" OnRowDeleting="gv_Participants_RowDeleting" OnRowEditing="gv_Participants_RowEditing" OnRowUpdating="gv_Participants_RowUpdating" OnRowDataBound="gv_Participants_RowDataBound" OnRowCancelingEdit="gv_Participants_RowCancelingEdit" OnRowCommand="gv_Participants_RowCommand" OnPageIndexChanging="gv_Participants_PageIndexChanging">
         <Columns>
             <asp:TemplateField HeaderText="ID">
                 <ItemTemplate>

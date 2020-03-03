@@ -48,11 +48,12 @@ textarea {
     position: absolute; /* or absolute */
     width: 60%;
     height: 40%;
-    background-color:aliceblue;
-    border: 3px solid;
-    border-color:cornflowerblue;
-    border-radius: 3px;
-    padding-top:30px;
+    background-color: #f5faff;
+    border: 2px solid;
+    border-color: darkgray;
+    padding-top: 15px;
+    padding-left: 7px;
+   
 }
 /*position: absolute; 
 width:60%;

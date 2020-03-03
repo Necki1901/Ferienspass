@@ -34,10 +34,8 @@
                         <asp:TextBox ID="txtCapacity" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblPrice" Text="Preis (in €):" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPrice" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
-
                         <asp:Label ID="lblPaymentDeadlineAdd" Text="Zahlungsziel" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPaymentDeadlineAdd" runat="server" CssClass="txtPanel"></asp:TextBox></div>
-
                         <div class="form-row"><asp:Label ID="lblGuide" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide" runat="server"></asp:DropDownList></div>
                         <asp:Button ID="btnBack" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack_Click"></asp:Button>
@@ -46,7 +44,7 @@
                     </asp:Panel>
 
                     <asp:Panel ID="pnlUpdate" CssClass="pnlUpdateInsert" runat="server" Visible="false"><%--Panel in welches Textboxes und Dropdownlists zum Updaten eines Eintrages eingefügt werden.--%>                       
-                        <div class="form-row"><asp:Label ID="Label1" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <div class="form-row"><asp:Label ID="lblDate2" Text="Datum:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtDate2" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblStart2" Text="Start:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtStart2" runat="server" CssClass="txtPanel"></asp:TextBox>
@@ -68,11 +66,9 @@
                         <asp:TextBox ID="txtCapacity2" runat="server" CssClass="txtPanel"></asp:TextBox>
                         <asp:Label ID="lblPrice2" Text="Preis (in €):" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:TextBox ID="txtPrice2" runat="server" CssClass="txtPanel" Text="0"></asp:TextBox>
-
                         <asp:Label ID="lblPaymentDeadlineUpdate" Text="Zahlungsziel" runat="server" CssClass="lblPanel"></asp:Label>
-                        <asp:TextBox ID="txtPaymentDeadlineUpdate" runat="server" CssClass="txtPanel"></asp:TextBox>
-
-                        <asp:Label ID="lblGuide2" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
+                        <asp:TextBox ID="txtPaymentDeadlineUpdate" runat="server" CssClass="txtPanel"></asp:TextBox></div>
+                        <div class="form-row"><asp:Label ID="lblGuide2" Text="Ansprechperson:" runat="server" CssClass="lblPanel"></asp:Label>
                         <asp:DropDownList ID="ddlGuide2" runat="server"></asp:DropDownList></div>                       
                         <asp:Button ID="btnBack2" Text="Zurück" CssClass="btnspace" runat="server" OnClick="btnBack2_Click"></asp:Button>
                         <asp:Button ID="btnUpdate" Text="Ändern" CssClass="btnspace" runat="server" OnClick="btnUpdate_Click"></asp:Button>

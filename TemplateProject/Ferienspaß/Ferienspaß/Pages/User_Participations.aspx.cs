@@ -130,13 +130,13 @@ namespace Ferienspaß.Pages
 
                 if (Convert.ToInt32(db.Query($"SELECT paid FROM participation WHERE pid = {pid} AND cid = {cid}").Rows[0][0]) == 1) 
                 {
-                    return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
-                    $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt.\n\n" +
+                    return $"Stornierung Projekt {dt_project.Rows[0]["name"]}<br>" +
+                    $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt.<br><br>" +
                     "Den bereits überwiesenen Betrag können Sie sich im Gemeindegebäude vom Portier zurückerstatten lassen.";
                 }
                 else
                 {
-                    return $"Stornierung Projekt {dt_project.Rows[0]["name"]}\n" +
+                    return $"Stornierung Projekt {dt_project.Rows[0]["name"]}<br>" +
                         $"Die Stornierung der Anmeldung von {fullname_child} ist erfolgt";
                 }
             }

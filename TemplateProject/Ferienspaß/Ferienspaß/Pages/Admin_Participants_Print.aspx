@@ -1,4 +1,4 @@
-﻿0<%@ Page Title="Anmeldungen drucken" Language="C#" MasterPageFile="~/MasterPage/Admin.Master" AutoEventWireup="true" CodeBehind="Admin_Participants_Print.aspx.cs" Inherits="Ferienspaß.Pages.Admin_Participants_Print" %>
+﻿<%@ Page Title="Anmeldungen drucken" Language="C#" MasterPageFile="~/MasterPage/Admin.Master" AutoEventWireup="true" CodeBehind="Admin_Participants_Print.aspx.cs" Inherits="Ferienspaß.Pages.Admin_Participants_Print" %>
 
 
 <asp:Content ID="UserContent" ContentPlaceHolderID="LoggedInUserContent" runat="server">

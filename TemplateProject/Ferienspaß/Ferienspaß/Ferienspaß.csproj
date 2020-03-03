@@ -113,6 +113,7 @@
     <Content Include="Pages\Admin_Check_Projects.aspx" />
     <Content Include="Pages\Admin_Clubs_View.aspx" />
     <Content Include="Pages\Admin_Set_Discount.aspx" />
+    <Content Include="Pages\NotPermittedPage.html" />
     <Content Include="Pages\Portier_Add_Child.aspx" />
     <Content Include="Pages\Portier_Cancellations_View.aspx" />
     <Content Include="Pages\Admin_Participants_Print.aspx" />

@@ -19,11 +19,21 @@ namespace Ferienspaß.Pages
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0 && ug != 2 && ug != 1)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
             if (!Page.IsPostBack)
             {
                 if(Request.QueryString["id"] == null)
                     Response.Redirect("User_Project_View.aspx");
                 ViewState["PID"] = Convert.ToInt32(Request.QueryString["id"]);
+
+                RemainingCapacity rc = new RemainingCapacity();
+                DisplayDiscountMessage();
                 Fill_gv_UserView_Details();
             }
             try
@@ -40,6 +50,43 @@ namespace Ferienspaß.Pages
 
             }
 
+        }
+
+        private int GetCapacity()
+        {
+            return Convert.ToInt32(db.Query($"SELECT capacity FROM project WHERE pid = ?", ViewState["PID"]));
+        }
+
+        private void DisplayDiscountMessage()
+        {
+            int participationAmount = GetParticipationAmountForUser();
+            string discountMessage = string.Empty;
+
+            if(Convert.ToInt32(participationAmount) < 3)
+            {
+                discountMessage = $"Sie haben {participationAmount} Anmeldungen <br>" +
+                    $"Ab der dritten Anmeldung wird Ihnen ein Rabatt von {GetDiscountAmount()} angerechnet";
+            }
+            else
+            {
+                discountMessage = $"Sie haben {participationAmount} Anmeldungen <br>" +
+                    $"Für jede Weitere Anmeldung wird Ihnen ein Rabatt in der Höhe von {GetDiscountAmount()}% angerechnet";
+            }
+
+            lit_msg.Text = CreateMSGString(discountMessage, "warning");
+           
+        }
+
+        private int GetDiscountAmount()
+        {
+            return Convert.ToInt32(db.Query($"SELECT MyValue FROM settings WHERE MyKey = 'GLOBAL_DISCOUNT'").Rows[0]["MyValue"]);
+        }
+
+        private int GetParticipationAmountForUser()
+        {
+            DataTable dt = db.Query("SELECT COUNT(*) uid FROM participation " +
+                "INNER JOIN child ON participation.CID = child.CID WHERE uid = ?", User.Identity.Name);
+            return Convert.ToInt32(dt.Rows[0]["uid"]);
         }
 
         private void Fill_gv_UserView_Details()
@@ -59,7 +106,6 @@ namespace Ferienspaß.Pages
             int remaining_capacity = (int)dt.Rows[0]["remainingCapacity"];
             ViewState["rc"] = remaining_capacity;
 
-            SetRegisterOptions(remaining_capacity);
             SetQueueOptions(remaining_capacity, dt.Rows[0]);
         }
 
@@ -74,8 +120,8 @@ namespace Ferienspaß.Pages
             {
                 btnQueue.Visible = true;
                 btnRegister.Visible = false;
-                lblMessage.Text = "Das Projekt ist leider ausgebucht." +
-                    "Um über eventuelle Verfügbarkeit informiert zu werden, können sie sich in die Warteschlange eintragen";
+                lit_msg.Text = CreateMSGString("Das Projekt ist leider ausgebucht<br>" +
+                    "Um über eventuelle Verfügbarkeit informiert zu werden, können sie sich in die Warteschlange eintragen", "warning");
             }
         }
 
@@ -96,10 +142,10 @@ namespace Ferienspaß.Pages
                 switch (remaining_capacity)
                 {
                     case 0:
-                        lblMessage.Text = "Für dieses Projekt kann man sich nicht mehr anmelden";
+                        lit_msg.Text = CreateMSGString("Für dieses Projekt kann man sich nicht mehr anmelden", "warning");
                         break;
                     default:
-                        lblMessage.Text = "Für dieses Projekt kann man sich nur noch persönlich im Gemeindeamt anmelden";
+                        lit_msg.Text = CreateMSGString("Für dieses Projekt kann man sich nur noch persönlich im Gemeindeamt anmelden", "warning");
                         break;
 
                 }
@@ -121,16 +167,16 @@ namespace Ferienspaß.Pages
                         if(dt.Rows.Count == 0)
                         {
                             db.Query($"INSERT INTO queue (UID, PID) VALUES({User.Identity.Name}, {ViewState["PID"]})");
-                            lblMessage.Text = "Sie wurden zur Warteschlange hinzugefügt";
+                            lit_msg.Text = CreateMSGString("Sie wurden zur Warteschlange hinzugefügt", "success");
                         }
                         else
                         {
-                            lblMessage.Text = "Sie haben sich bereits in die Warteschlange eingetragen";
+                            lit_msg.Text = CreateMSGString("Sie haben sich bereits in die Warteschlange eingetragen", "danger");
                         }
                     }
                     catch(Exception ex)
                     {
-                        lblMessage.Text = ex.Message;
+                        lit_msg.Text = CreateMSGString(ex.Message, "danger");
                     }
                     break;
                 
@@ -145,7 +191,8 @@ namespace Ferienspaß.Pages
             dt = db.Query($"select * from child where child.cid not in(select participation.cid from participation where participation.PID = {ViewState["PID"]}) AND  child.UID = {User.Identity.Name}");
             if (dt.Rows.Count == 0)
             {
-                lblChildrenMessage.Text = "Sie können keine Kinder mehr auswählen";
+                lit_msg.Text = CreateMSGString("Sie können keine Kinder mehr auswählen", "danger");
+
                 SetVisibility_Children(false);
             }
             else
@@ -173,11 +220,11 @@ namespace Ferienspaß.Pages
 
             if(childrenIDs.Count > Convert.ToInt32(ViewState["rc"]))
             {
-                lblChildrenMessage.Text = $"Es können nicht {childrenIDs.Count} Kinder hinzugefügt werden,\n da das Projekt voll ist";
+                lit_msg.Text = CreateMSGString($"{childrenIDs.Count} Kind/er können nicht hinzugefügt werden, da das Projekt voll ist", "danger");
             }
             else
             {
-                foreach(int id in childrenIDs)
+                foreach (int id in childrenIDs)
                 {
                     db.Query($"INSERT INTO participation (CID, PID, Date) VALUES({id}, {ViewState["PID"]}, '{DateTime.Now.ToString("yyyy/MM/dd")}')");
                 }
@@ -189,12 +236,50 @@ namespace Ferienspaß.Pages
 
 
                 SetVisibility_Children(false);
-                lblChildrenMessage.Text = "Kinder wurden hinzugefügt";                
-                int amountChildren = childrenIDs.Count;
-                string body = Get_body_for_mail(childrenIDs);
-                Send_mail(body,amountChildren);
+
+                string discountMessage = GetDiscountMessageWhenChildAdded();
+                lit_msg.Text = CreateMSGString($"Kinder wurden hinzugefügt<br>{discountMessage}", "success");
+
+                Send_mail();
+
+                void Send_mail()
+                {
+                    int amountChildren = childrenIDs.Count;
+                    string body = Get_body_for_mail(childrenIDs);
+
+                    string pr = GeneratePaymentReference(amountChildren);
+                    body = body + $"Bitte geben Sie folgende Zahlungsreferenz bei Ihrer Überweisung an: {pr}";
+                    //get data from the user
+                    DataTable dt_user = db.Query($"SELECT email, sn, gn FROM user WHERE uid = {User.Identity.Name}");
+                    string fullname = dt_user.Rows[0]["gn"].ToString() + dt_user.Rows[0]["sn"].ToString();
+
+                    //db.SendMail(dt_user.Rows[0]["email"].ToString(), fullname, "Projekt-Anmeldung", body);
+                    db.SendHTMLEmail((string)dt_user.Rows[0]["email"], fullname, db.GetPortalOption("MAIL_PROJECT_REGISTER_SUBJECT"), body, false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
+                }
             }
+         
+
             Fill_gv_UserView_Details();
+        }
+
+        private string GetDiscountMessageWhenChildAdded()
+        {
+
+            int participationAmount = GetParticipationAmountForUser();
+            string discountMessage = string.Empty;
+            string discountAmount = GetDiscountAmount() + "%";
+
+            if (participationAmount >= 3)
+            {
+                discountMessage = $"Ihnen wurde ein Rabatt von {discountAmount} für diese Anmeldung angerechnet";
+            }
+            else
+            {
+                int participationsLeftForDiscount = 3 - participationAmount;    //3 is the requirement for getting a discount
+                discountMessage = $" Bei {participationsLeftForDiscount} weiteren Anmeldung/en wird Ihnen ein Rabatt von {discountAmount} angerechnet";
+            }
+
+            return discountMessage;
         }
 
         private string Get_body_for_mail(List<int> childrenIDs)
@@ -203,33 +288,43 @@ namespace Ferienspaß.Pages
             string body = string.Empty;
 
             //project name and description
-            body += $"Anmeldungen zum Projekt {dt.Rows[0]["name"].ToString()}\n";
-            body += $"Beschreibung: {dt.Rows[0]["description"].ToString()}\n\n";
+            body += $"Anmeldungen zum Projekt {dt.Rows[0]["name"].ToString()}<br>";
+            body += $"Beschreibung: {dt.Rows[0]["description"].ToString()}<br><br>";
 
-            int cnt = 1;
+            //2
+            //1
+
+            int participationAmount = GetParticipationAmountForUser() - childrenIDs.Count;
+
+            int number = 1;
+            float priceSum = 0;
             //print children (1. xxx xxx)
             foreach(int cid in childrenIDs)
             {
                 DataTable dt_children = db.Query($"SELECT sn, gn FROM child WHERE cid = {cid}");
-                body += $"{cnt}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]}\n";
-                cnt++;
+                float price = price = GetPriceForProject();
+
+                if ((participationAmount + number) >= 3)
+                {
+                    price = (float)((price * (100 - GetDiscountAmount())) / 100);  //calculate the price minus the discount
+                }
+
+                body += $"{number}. {dt_children.Rows[0]["gn"]} {dt_children.Rows[0]["sn"]} |  Preis: {price}€<br>";
+
+                priceSum += price;
+                number++;
             }
+            body += $"Gesamtpreis {priceSum}€<br><br>";
             return body;
         }
 
-        private void Send_mail(string body, int amountchildren)
+        private float GetPriceForProject()
         {
-            string pr = GeneratePaymentReference(amountchildren);
-            body = body + $"Bitte geben Sie folgende Zahlungsreferenz bei Ihrer Überweisung an: {pr}";
-            //get data from the user
-            DataTable dt_user = db.Query($"SELECT email, sn, gn FROM user WHERE uid = {User.Identity.Name}");
-            string fullname = dt_user.Rows[0]["gn"].ToString() + dt_user.Rows[0]["sn"].ToString();
-
-            //db.SendMail(dt_user.Rows[0]["email"].ToString(), fullname, "Projekt-Anmeldung", body);
-            db.SendHTMLEmail((string)dt_user.Rows[0]["email"], fullname, db.GetPortalOption("MAIL_PROJECT_REGISTER_SUBJECT"), body, false, "", "", "", db.GetPortalOption("MAIL_GRUSSFORMEL"), db.GetPortalOption("MAIL_HINWEIS"));
-
-
+            DataTable dt = db.Query("SELECT price FROM project WHERE pid = ?", ViewState["PID"]);
+            return (float)dt.Rows[0]["price"];
         }
+
+       
 
         private string GeneratePaymentReference(int amountchildren)
         {
@@ -239,6 +334,10 @@ namespace Ferienspaß.Pages
             string dts3 = dts2.Replace(" ", "");
             string dts4 = dts3 + amountchildren.ToString();
             return dts4;
+        }
+        private string CreateMSGString(string msg, string type)
+        {
+            return "<div class=\"alert alert-" + type + " mt-3 mb-1\" role=\"alert\">" + msg + "</div>";
         }
 
         private void SetVisibility_Children(bool visibility)

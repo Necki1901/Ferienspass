@@ -17,7 +17,15 @@ namespace Ferienspaß.Pages
         static int idForUpdating;
 
         protected void Page_Load(object sender, EventArgs e)
-        {            
+        {
+
+            // PRIVILLEGE CHECK
+            int ug = CsharpDB.GetUserGroup(Session["usergroup"]);
+            if (ug != 0)
+            {
+                Response.Redirect("NotPermittedPage.html");
+            }
+
             lblInfo.Text = "";
             lblInfo2.Text = "";
             lblInfoBottom.Text = "";
@@ -402,10 +410,11 @@ namespace Ferienspaß.Pages
                 bool valid = ValidateData();
                 if (valid == true)
                 {
-                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, PRICE, PLID, STREET, ZIPCODE, PAYMENT_DEADLINE) Values(?,?,?,?,?,?,?,?,?,?,?,?,?)", 
+
+                    if (db.ExecuteNonQuery("INSERT INTO project (NAME, DESCRIPTION, DATE, START, END, PLACE, NUMBER, CAPACITY, PRICE, PLID, STREET, ZIPCODE, PAYMENT_DEADLINE, Discount) Values(?,?,?,?,?,?,?,?,?,?,?,?,?,?)", 
                         txtName.Text, txtDesc.Text, Convert.ToDateTime(txtDate.Text).ToString("yyyy/MM/dd"), Convert.ToDateTime(txtStart.Text).ToString("HH:mm"), 
                         Convert.ToDateTime(txtEnd.Text).ToString("HH:mm"), txtPlace.Text, txtNumber.Text, Convert.ToInt32(txtCapacity.Text), 
-                        Convert.ToDouble(txtPrice.Text), Convert.ToInt32(selectedname), txtStreet.Text, Convert.ToInt32(txtZipCode.Text), txtPaymentDeadlineAdd.Text) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
+                        Convert.ToDouble(txtPrice.Text), Convert.ToInt32(selectedname), txtStreet.Text, Convert.ToInt32(txtZipCode.Text), txtPaymentDeadlineAdd.Text, GetDiscountForProject()) > 0)//Keine Newvalues mehr sondern Bootstrap pop up
                     {
                         lblInfoBottom.Text = $"<span class='success'> Datensatz hinzugefügt! </span>";
                     }
@@ -420,6 +429,12 @@ namespace Ferienspaß.Pages
                 }
             }
 
+        }
+
+        private string GetDiscountForProject()
+        {
+            DataTable dt = db.Query($"SELECT MyValue FROM settings WHERE MyKey = 'GLOBAL_DISCOUNT'");
+            return (string)(dt.Rows[0]["MyValue"]);
         }
 
         protected void btnUpdate_Click(object sender, EventArgs e)//Update from Popup Panel
@@ -467,7 +482,7 @@ namespace Ferienspaß.Pages
 
         protected void gvAdminProjects_Sorting(object sender, GridViewSortEventArgs e)
         {
-            string sql = "SELECT project.PID, project.DATE, project.START, project.END, project.ZIPCODE, project.STREET, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, project.PRICE, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
+            string sql = "SELECT project.payment_deadline, project.PID, project.DATE, project.START, project.END, project.ZIPCODE, project.STREET, project.NAME, project.DESCRIPTION, project.PLACE, project.NUMBER, project.CAPACITY, project.PRICE, user.UID, user.GN, user.SN  FROM project INNER JOIN user ON project.PLID = user.UID";
             DataTable dt = db.Query(sql);
             if (dt!=null)
             {

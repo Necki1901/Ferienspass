@@ -75,7 +75,7 @@
 
                  <asp:TemplateField HeaderText="Zahlungsziel">
                     <ItemTemplate>
-                        <asp:Label ID="lblPaymentDeadline" runat="server" Text='<%# Eval("payment_deadline") %>'></asp:Label>
+                        <asp:Label ID="lblPaymentDeadline" runat="server" Text='<%# Convert.ToDateTime(Eval("payment_deadline")).ToString("dd/MM/yyyy")%>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
 

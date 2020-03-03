@@ -15,6 +15,7 @@ namespace Ferienspaß.Pages
 
         CsharpDB db;
         static bool isSorted = false;
+        static string sortExpression = null;
 
         protected void Page_Load(object sender, EventArgs e)
         {
@@ -100,20 +101,24 @@ namespace Ferienspaß.Pages
 
         private void Fill_Gv_Participants()
         {
-            DataTable dt = db.Query($"SELECT child.GN, child.SN, child.BD, participation.paid, participation.CID, user.PHONE " +
-                $"FROM child " +
-                $"INNER JOIN participation " +
-                $"ON child.CID = participation.CID " +
-                $"INNER JOIN user " +
-                $"ON user.UID = child.UID " +
-                $"WHERE participation.PID = {ddl_Projects.SelectedValue}");
+            if (!isSorted)
+            {
+                DataTable dt = db.Query($"SELECT child.GN, child.SN, child.BD, participation.paid, participation.CID, user.PHONE " +
+                    $"FROM child " +
+                    $"INNER JOIN participation " +
+                    $"ON child.CID = participation.CID " +
+                    $"INNER JOIN user " +
+                    $"ON user.UID = child.UID " +
+                    $"WHERE participation.PID = {ddl_Projects.SelectedValue}");
 
-            if (dt.Rows.Count == 0)
-                lbl_Message.Text = "Keine Anmeldungen vorhanden";
-            DataView dv = new DataView(dt);
+                if (dt.Rows.Count == 0)
+                    lbl_Message.Text = "Keine Anmeldungen vorhanden";
+                DataView dv = new DataView(dt);
 
-            gv_Participants.DataSource = dv;
-            gv_Participants.DataBind();
+                gv_Participants.DataSource = dv;
+                gv_Participants.DataBind();
+            }
+            else gv_Participants_Sort();
         }
 
 
@@ -232,11 +237,25 @@ namespace Ferienspaß.Pages
                 {
                     e.SortDirection = SortDirection.Descending;
                 }
-                dv.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+                sortExpression = ConvertSortDirectionToSql(e.SortDirection);
+                dv.Sort = e.SortExpression + " " + sortExpression;
+                sortExpression = " ORDER BY " + e.SortExpression + " " + sortExpression;
                 gv_Participants.DataSource = dv;
                 gv_Participants.DataBind();
                 isSorted = true;
             }
+        }
+
+        protected void gv_Participants_Sort()
+        {
+            string sql = $"SELECT child.GN, child.SN, child.BD, participation.paid, participation.CID, user.PHONE FROM child INNER JOIN participation " +
+                $"ON child.CID = participation.CID INNER JOIN user ON user.UID = child.UID WHERE participation.PID = {ddl_Projects.SelectedValue}";
+            sql += sortExpression;
+
+            DataTable dt = db.Query(sql);
+            DataView dv = new DataView(dt);
+            gv_Participants.DataSource = dv;
+            gv_Participants.DataBind();
         }
 
         private string ConvertSortDirectionToSql(SortDirection sortDirection)

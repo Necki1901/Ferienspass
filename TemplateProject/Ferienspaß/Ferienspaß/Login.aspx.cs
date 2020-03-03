@@ -207,7 +207,6 @@ namespace Ferienspaß {
                                 Response.Redirect("Pages/Portier_Cancellations_View.aspx");
                                 break;
 
-
                             case 4:
                                 //SECRETARY
                                 Session["usergroup"] = 4;

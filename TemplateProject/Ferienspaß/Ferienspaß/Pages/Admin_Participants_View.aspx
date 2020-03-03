@@ -75,8 +75,8 @@
                             <asp:Button ID="btn_add_participation" CssClass="btn btn-primary" runat="server" Text="Anmeldung Hinzufügen" CommandName="add" EnableViewState="false"/>
                         </HeaderTemplate>
                     <ItemTemplate>
-                        <asp:ImageButton ID="btnEditParticipant" runat="server" CommandName="edit" ImageUrl="~/App_Themes/default/edit.png" EnableViewState="false" />
-                        <asp:ImageButton ID="btnDeleteParticipant" runat="server" CommandName="delete" ImageUrl="~/App_Themes/default/trash.png" EnableViewState="false" OnClientClick="return Delete()" />
+                        <asp:ImageButton ID="btnEditParticipant" runat="server" CommandName="edit" ImageUrl="~/App_Themes/default/edit.png" Height="50px" Width="50px" EnableViewState="false" />
+                        <asp:ImageButton ID="btnDeleteParticipant" runat="server" CommandName="delete" ImageUrl="~/App_Themes/default/trash.png" Height="50px" Width="50px" EnableViewState="false" OnClientClick="return Delete()" />
                     </ItemTemplate>
                      <EditItemTemplate>     
                         <asp:ImageButton ID="btnUpdate" runat="server" CommandName="Update" ImageUrl="~/App_Themes/default/ok.png"  />

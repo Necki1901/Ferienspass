@@ -33,6 +33,15 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.LinkButton btnLogout;
 
         /// <summary>
+        /// lit_msg control.
+        /// </summary>
+        /// <remarks>
+        /// Auto-generated field.
+        /// To modify move field declaration from designer file to code-behind file.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal lit_msg;
+
+        /// <summary>
         /// gv_User_View_Details control.
         /// </summary>
         /// <remarks>
@@ -42,13 +51,13 @@ namespace Ferienspaß.Pages
         protected global::System.Web.UI.WebControls.GridView gv_User_View_Details;
 
         /// <summary>
-        /// lblMessage control.
+        /// lit_children_msg control.
         /// </summary>
         /// <remarks>
         /// Auto-generated field.
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblMessage;
+        protected global::System.Web.UI.WebControls.Literal lit_children_msg;
 
         /// <summary>
         /// gv_Children control.
@@ -58,15 +67,6 @@ namespace Ferienspaß.Pages
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gv_Children;
-
-        /// <summary>
-        /// lblChildrenMessage control.
-        /// </summary>
-        /// <remarks>
-        /// Auto-generated field.
-        /// To modify move field declaration from designer file to code-behind file.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Label lblChildrenMessage;
 
         /// <summary>
         /// btnAddChildren control.

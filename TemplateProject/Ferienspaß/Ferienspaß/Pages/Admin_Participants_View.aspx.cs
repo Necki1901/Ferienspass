@@ -14,6 +14,8 @@ namespace Ferienspaß.Pages
     {
 
         CsharpDB db;
+        static bool isSorted = false;
+
         protected void Page_Load(object sender, EventArgs e)
         {
             db = new CsharpDB();
@@ -203,6 +205,48 @@ namespace Ferienspaß.Pages
         protected void print_Click(object sender, EventArgs e)
         {
             Response.Redirect($"Admin_Participants_Print.aspx?project={ddl_Projects.SelectedItem.Value}");
+        }
+
+        protected void gv_Participants_Sorting(object sender, GridViewSortEventArgs e)
+        {
+            string sql = $"SELECT child.GN, child.SN, child.BD, participation.paid, participation.CID, user.PHONE FROM child INNER JOIN participation " +
+                $"ON child.CID = participation.CID INNER JOIN user ON user.UID = child.UID WHERE participation.PID = {ddl_Projects.SelectedValue}";
+            DataTable dt = db.Query(sql);
+            if (dt != null)
+            {
+                ViewState["sortCounter"] = Convert.ToInt32(ViewState["sortCounter"]) + 1;
+                DataView dv = new DataView(dt);
+                if (Convert.ToInt32(ViewState["sortCounter"]) % 2 == 0)
+                {
+                    e.SortDirection = SortDirection.Ascending;
+                }
+                else
+                {
+                    e.SortDirection = SortDirection.Descending;
+                }
+                dv.Sort = e.SortExpression + " " + ConvertSortDirectionToSql(e.SortDirection);
+                gv_Participants.DataSource = dv;
+                gv_Participants.DataBind();
+                isSorted = true;
+            }
+        }
+
+        private string ConvertSortDirectionToSql(SortDirection sortDirection)
+        {
+            string newSortDirection = String.Empty;
+
+            switch (sortDirection)
+            {
+                case SortDirection.Ascending:
+                    newSortDirection = "ASC";
+                    break;
+
+                case SortDirection.Descending:
+                    newSortDirection = "DESC";
+                    break;
+            }
+
+            return newSortDirection;
         }
     }
     

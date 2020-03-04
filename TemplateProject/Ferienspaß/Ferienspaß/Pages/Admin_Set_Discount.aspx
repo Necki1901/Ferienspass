@@ -7,8 +7,8 @@
         Rabatt für alle Projekte ohne Anmeldungen setzen:
 
         Wert[%]: <asp:TextBox ID="txtDiscount" runat="server"></asp:TextBox>
-        <asp:Button ID="btnCommit" runat="server" Text="Bestätigen" OnClick="btnCommit_Click" />
-                <asp:Button ID="btnCancel" runat="server" Text="Zurück" OnClick="btnCancel_Click" />
+        <asp:Button ID="btnCommit" runat="server" Text="Bestätigen" CssClass="btn btn-primary" OnClick="btnCommit_Click" />
+                <asp:Button ID="btnCancel" runat="server" Text="Zurück" CssClass="btn btn-primary" OnClick="btnCancel_Click" />
 
         <br />
         <asp:Label ID="lblMessage" runat="server"></asp:Label>
